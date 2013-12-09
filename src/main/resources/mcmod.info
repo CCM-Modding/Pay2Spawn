@@ -1,0 +1,16 @@
+[
+{
+  "modid": "P2S",
+  "name": "Pay2Spawn",
+  "description": "Screw or help your favorite streamer!",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://github.com/CCM-Modding/Pay2Spawn",
+  "updateUrl": "",
+  "authors": ["Dries007", "CCM team"],
+  "credits": "Nattadash, Wyld, Therevrun for the idea.",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
