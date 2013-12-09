@@ -46,7 +46,7 @@ public class DonationsTickHandler implements IScheduledTickHandler
                 NBTTagCompound root = new NBTTagCompound();
 
                 root.setString("donator", "Randomness");
-                root.setString("amount", "rnd$");
+                root.setString("amount", "$10.00");
 
                 EnumSpawnType spawnType = EnumSpawnType.values()[Helper.RANDOM.nextInt(EnumSpawnType.values().length)];
                 spawnType.createAndSend(root, spawnType.makeRandomData());
