@@ -1,5 +1,7 @@
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.network.P2SPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -35,13 +37,17 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public NBTTagCompound makeRandomData()
+                public void createAndSend(NBTTagCompound nbt, Object data)
                 {
-                    NBTTagCompound nbt = new NBTTagCompound();
+                    ItemStack itemStack = (ItemStack) data;
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(nbt.getString("donator") + " donated " + nbt.getString("amount") + " and thus a " + itemStack.getDisplayName() + " was spawned!");
+                    send(this, itemStack.writeToNBT(new NBTTagCompound()));
+                }
 
-                    new ItemStack(Item.appleGold).writeToNBT(nbt);
-
-                    return nbt;
+                @Override
+                public Object makeRandomData()
+                {
+                    return new ItemStack(Item.appleGold);
                 }
             },
     EFFECT
@@ -58,20 +64,22 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public NBTTagCompound makeRandomData()
+                public void createAndSend(NBTTagCompound nbt, Object data)
                 {
-                    NBTTagCompound nbt = new NBTTagCompound();
+                    PotionEffect effect = (PotionEffect) data;
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(nbt.getString("donator") + " donated " + nbt.getString("amount") + " and thus the heavens let " + effect.getEffectName() + " rain upon " + Minecraft.getMinecraft().thePlayer.getDisplayName() + ".");
+                    send(this, effect.writeCustomPotionEffectToNBT(new NBTTagCompound()));
+                }
 
+                @Override
+                public Object makeRandomData()
+                {
                     Potion potion = null;
-
                     while (potion == null)
                     {
                         potion = Potion.potionTypes[Helper.RANDOM.nextInt(Potion.potionTypes.length)];
                     }
-
-                    new PotionEffect(potion.getId(), (int) (Helper.RANDOM.nextDouble() * 1000)).writeCustomPotionEffectToNBT(nbt);
-
-                    return nbt;
+                    return new PotionEffect(potion.getId(), (int) (Helper.RANDOM.nextDouble() * 1000));
                 }
             },
     ENTITY
@@ -94,13 +102,19 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public NBTTagCompound makeRandomData()
+                public void createAndSend(NBTTagCompound nbt, Object data)
                 {
-                    NBTTagCompound nbt = new NBTTagCompound();
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(nbt.getString("donator") + " donated " + nbt.getString("amount") + " and thus a " + EntityList.getStringFromID((Integer) data) + " was spawned!");
 
-                    nbt.setInteger("id", Helper.getRndEntity());
+                    NBTTagCompound dataTag = new NBTTagCompound();
+                    dataTag.setInteger("id", (Integer) data);
+                    send(this, dataTag);
+                }
 
-                    return nbt;
+                @Override
+                public Object makeRandomData()
+                {
+                    return Helper.getRndEntity();
                 }
             };
 
@@ -108,5 +122,12 @@ public enum EnumSpawnType
 
     public abstract void spawnFromData(EntityPlayer player, NBTTagCompound data);
 
-    public abstract NBTTagCompound makeRandomData();
+    public abstract void createAndSend(NBTTagCompound nbt, Object data);
+
+    public abstract Object makeRandomData();
+
+    private static void send(EnumSpawnType type, NBTTagCompound data)
+    {
+        new P2SPacket(type, data).sendToServer();
+    }
 }

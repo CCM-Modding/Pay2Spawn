@@ -7,6 +7,7 @@ import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.EnumSet;
 import java.util.Random;
@@ -42,8 +43,14 @@ public class DonationsTickHandler implements IScheduledTickHandler
         switch (Helper.RANDOM.nextInt(10))
         {
             case 0:
+                NBTTagCompound root = new NBTTagCompound();
+
+                root.setString("donator", "Randomness");
+                root.setString("amount", "rnd$");
+
                 EnumSpawnType spawnType = EnumSpawnType.values()[Helper.RANDOM.nextInt(EnumSpawnType.values().length)];
-                new P2SPacket(spawnType, spawnType.makeRandomData()).sendToServer();
+                spawnType.createAndSend(root, spawnType.makeRandomData());
+
                 break;
         }
     }
