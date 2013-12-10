@@ -1,10 +1,12 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
+import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.TickRegistry;
@@ -28,6 +30,8 @@ public class Pay2Spawn
 
     private P2SConfig config;
 
+    private File configFolder;
+
     public static String getVersion()
     {
         return instance.metadata.version;
@@ -36,8 +40,11 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        config = new P2SConfig(event.getSuggestedConfigurationFile());
-        rewards = new RewardsDB(new File(event.getModConfigurationDirectory(), NAME + ".json"));
+        configFolder = new File (event.getModConfigurationDirectory(), NAME);
+        configFolder.mkdirs();
+
+        config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
+        rewards = new RewardsDB(new File(configFolder, NAME + ".json"));
         MetricsHelper.init();
     }
 
@@ -45,5 +52,11 @@ public class Pay2Spawn
     public void init(FMLInitializationEvent event)
     {
         TickRegistry.registerScheduledTickHandler(DonationsTickHandler.getInstance(), Side.CLIENT);
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event)
+    {
+        if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
     }
 }

@@ -2,7 +2,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.network.P2SPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -12,6 +12,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 
 public enum EnumSpawnType
@@ -33,13 +34,19 @@ public enum EnumSpawnType
                     ItemStack itemStack = (ItemStack) data;
                     Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
                             "amount") + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
-                    send(this, itemStack.writeToNBT(new NBTTagCompound()));
+                    send(this, getNBTfromData(data));
                 }
 
                 @Override
                 public Object makeRandomData()
                 {
                     return new ItemStack(Item.appleGold);
+                }
+
+                @Override
+                public NBTTagCompound getNBTfromData(Object data)
+                {
+                    return ((ItemStack) data).writeToNBT(new NBTTagCompound());
                 }
             },
     EFFECT
@@ -58,7 +65,7 @@ public enum EnumSpawnType
                     PotionEffect effect = (PotionEffect) data;
                     Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
                             "amount") + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
-                    send(this, effect.writeCustomPotionEffectToNBT(new NBTTagCompound()));
+                    send(this, getNBTfromData(data));
                 }
 
                 @Override
@@ -71,13 +78,19 @@ public enum EnumSpawnType
                     }
                     return new PotionEffect(potion.getId(), (int) (Helper.RANDOM.nextDouble() * 1000));
                 }
+
+                @Override
+                public NBTTagCompound getNBTfromData(Object data)
+                {
+                    return ((PotionEffect) data).writeCustomPotionEffectToNBT(new NBTTagCompound());
+                }
             },
     ENTITY
             {
                 @Override
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
-                    System.out.println(Archive.MODID + ": Spawning " + EntityList.getStringFromID(data.getInteger("id")) + " near " + player.getDisplayName()); //TODO: debug line
+                    System.out.println(Archive.MODID + ": Spawning " + data.getString("name") + " near " + player.getDisplayName()); //TODO: debug line
                     double x, y, z;
 
                     y = player.posY + 1;
@@ -85,7 +98,17 @@ public enum EnumSpawnType
                     x = player.posX + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
                     z = player.posZ + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
 
-                    ItemMonsterPlacer.spawnCreature(player.getEntityWorld(), data.getInteger("id"), x, y, z);
+                    Entity entity = EntityList.createEntityByName(data.getString("name"), player.getEntityWorld());
+                    if (entity != null && entity instanceof EntityLivingBase)
+                    {
+                        EntityLiving entityliving = (EntityLiving) entity;
+                        entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
+                        entityliving.rotationYawHead = entityliving.rotationYaw;
+                        entityliving.renderYawOffset = entityliving.rotationYaw;
+                        entityliving.onSpawnWithEgg((EntityLivingData) null);
+                        player.getEntityWorld().spawnEntityInWorld(entity);
+                        entityliving.playLivingSound();
+                    }
                 }
 
                 @Override
@@ -93,16 +116,21 @@ public enum EnumSpawnType
                 {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
                             "amount") + "] " + EnumChatFormatting.WHITE + EntityList.getStringFromID((int) data) + " spawned!");
-
-                    NBTTagCompound dataTag = new NBTTagCompound();
-                    dataTag.setInteger("id", (Integer) data);
-                    send(this, dataTag);
+                    send(this, getNBTfromData(data));
                 }
 
                 @Override
                 public Object makeRandomData()
                 {
                     return Helper.getRndEntity();
+                }
+
+                @Override
+                public NBTTagCompound getNBTfromData(Object data)
+                {
+                    NBTTagCompound dataTag = new NBTTagCompound();
+                    dataTag.setString("name", (String) data);
+                    return dataTag;
                 }
             };
 
@@ -113,6 +141,8 @@ public enum EnumSpawnType
     public abstract void createAndSend(NBTTagCompound nbt, Object data);
 
     public abstract Object makeRandomData();
+
+    public abstract NBTTagCompound getNBTfromData(Object data);
 
     private static void send(EnumSpawnType type, NBTTagCompound data)
     {

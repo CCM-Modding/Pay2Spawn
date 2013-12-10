@@ -1,18 +1,16 @@
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.util.EnumSpawnType;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import com.google.gson.stream.JsonWriter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.*;
 import java.util.HashMap;
 
 public class RewardsDB
 {
-    //TODO: Pick the right map, start using it.
     HashMap<CheatyBiKey<String, Double>, Reward> map = new HashMap<>();
 
     RewardsDB(File file)
@@ -29,8 +27,30 @@ public class RewardsDB
                     add(new Reward(element.getAsJsonObject()));
                 }
             }
+            else
+            {
+                //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
+                JsonArray rootArray = new JsonArray();
+                for (EnumSpawnType type : EnumSpawnType.values())
+                {
+                    JsonObject element = new JsonObject();
+
+                    element.addProperty("name", "DEMO_" + type.name());
+                    element.addProperty("type", type.name());
+                    element.addProperty("amount", 45.01);
+                    element.add("data", JsonNBTHelper.parseNBT(type.getNBTfromData(type.makeRandomData())));
+
+                    rootArray.add(element);
+                }
+
+                BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+                Gson gson = new GsonBuilder().setPrettyPrinting().create();
+                bw.write(gson.toJson(rootArray));
+                bw.close();
+            }
         }
-        catch (FileNotFoundException e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
