@@ -2,10 +2,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.network.P2SPacket;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -14,13 +11,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.potion.PotionHelper;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
-
-import java.util.Random;
 
 public enum EnumSpawnType
 {
@@ -29,20 +21,18 @@ public enum EnumSpawnType
                 @Override
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
-                    if (player != null)
-                    {
-                        ItemStack itemStack = ItemStack.loadItemStackFromNBT(data);
-                        System.out.println(Data.MODID + ": Giving " + player.getDisplayName() + " item " + itemStack); //TODO: debug line
-                        EntityItem entityItem = player.dropPlayerItem(itemStack);
-                        entityItem.delayBeforeCanPickup = 0;
-                    }
+                    ItemStack itemStack = ItemStack.loadItemStackFromNBT(data);
+                    System.out.println(Archive.MODID + ": Giving " + player.getDisplayName() + " item " + itemStack); //TODO: debug line
+                    EntityItem entityItem = player.dropPlayerItem(itemStack);
+                    entityItem.delayBeforeCanPickup = 0;
                 }
 
                 @Override
                 public void createAndSend(NBTTagCompound nbt, Object data)
                 {
                     ItemStack itemStack = (ItemStack) data;
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString("amount") + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
+                            "amount") + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
                     send(this, itemStack.writeToNBT(new NBTTagCompound()));
                 }
 
@@ -57,19 +47,17 @@ public enum EnumSpawnType
                 @Override
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
-                    if (player != null)
-                    {
-                        PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(data);
-                        System.out.println(Data.MODID + ": Giving " + player.getDisplayName() + " effect " + effect); //TODO: debug line
-                        player.addPotionEffect(effect);
-                    }
+                    PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(data);
+                    System.out.println(Archive.MODID + ": Giving " + player.getDisplayName() + " effect " + effect); //TODO: debug line
+                    player.addPotionEffect(effect);
                 }
 
                 @Override
                 public void createAndSend(NBTTagCompound nbt, Object data)
                 {
                     PotionEffect effect = (PotionEffect) data;
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString("amount") + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
+                            "amount") + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
                     send(this, effect.writeCustomPotionEffectToNBT(new NBTTagCompound()));
                 }
 
@@ -89,24 +77,22 @@ public enum EnumSpawnType
                 @Override
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
-                    if (player != null)
-                    {
-                        System.out.println(Data.MODID + ": Spawning " + EntityList.getStringFromID(data.getInteger("id")) + " near " + player.getDisplayName()); //TODO: debug line
-                        double x, y, z;
+                    System.out.println(Archive.MODID + ": Spawning " + EntityList.getStringFromID(data.getInteger("id")) + " near " + player.getDisplayName()); //TODO: debug line
+                    double x, y, z;
 
-                        y = player.posY + 1;
+                    y = player.posY + 1;
 
-                        x = player.posX + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
-                        z = player.posZ + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
+                    x = player.posX + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
+                    z = player.posZ + (RADIUS - Helper.RANDOM.nextInt(RADIUS));
 
-                        ItemMonsterPlacer.spawnCreature(player.getEntityWorld(), data.getInteger("id"), x, y, z);
-                    }
+                    ItemMonsterPlacer.spawnCreature(player.getEntityWorld(), data.getInteger("id"), x, y, z);
                 }
 
                 @Override
                 public void createAndSend(NBTTagCompound nbt, Object data)
                 {
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString("amount") + "] " + EnumChatFormatting.WHITE + EntityList.getStringFromID((int) data) + " spawned!");
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
+                            "amount") + "] " + EnumChatFormatting.WHITE + EntityList.getStringFromID((int) data) + " spawned!");
 
                     NBTTagCompound dataTag = new NBTTagCompound();
                     dataTag.setInteger("id", (Integer) data);

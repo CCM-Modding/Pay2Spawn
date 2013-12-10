@@ -1,10 +1,9 @@
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.util.Data;
+import ccm.pay2spawn.util.Archive;
 import ccm.pay2spawn.util.EnumSpawnType;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class P2SPacket
@@ -19,7 +18,7 @@ public class P2SPacket
 
     public void sendToServer()
     {
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Data.MODID, Helper.nbtToByteArray(getNBT())));
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Archive.MODID, Helper.nbtToByteArray(getNBT())));
     }
 
     public NBTTagCompound getNBT()

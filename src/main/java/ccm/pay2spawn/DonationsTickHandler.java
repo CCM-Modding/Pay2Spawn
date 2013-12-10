@@ -1,7 +1,6 @@
 package ccm.pay2spawn;
 
-import ccm.pay2spawn.network.P2SPacket;
-import ccm.pay2spawn.util.Data;
+import ccm.pay2spawn.util.Archive;
 import ccm.pay2spawn.util.EnumSpawnType;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.IScheduledTickHandler;
@@ -10,7 +9,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.EnumSet;
-import java.util.Random;
 
 public class DonationsTickHandler implements IScheduledTickHandler
 {
@@ -64,6 +62,6 @@ public class DonationsTickHandler implements IScheduledTickHandler
     @Override
     public String getLabel()
     {
-        return Data.MODID + "_" + this.getClass().getSimpleName();
+        return Archive.MODID + "_" + this.getClass().getSimpleName();
     }
 }
