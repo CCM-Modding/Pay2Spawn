@@ -3,13 +3,11 @@ package ccm.pay2spawn.util;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.Objects;
-
 public class Reward
 {
-    private String name;
-    private EnumSpawnType type;
-    private Double amount;
+    private String         name;
+    private EnumSpawnType  type;
+    private Double         amount;
     private NBTTagCompound data;
 
     public Reward(JsonObject json)

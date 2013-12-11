@@ -22,7 +22,10 @@
  */
 package ccm.pay2spawn.util;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.*;
 
 import java.util.Map;
@@ -96,12 +99,9 @@ public class JsonNBTHelper
 
     public static NBTBase parseJSON(JsonElement element)
     {
-        if (element.isJsonObject())
-            return parseJSON(element.getAsJsonObject());
-        else if (element.isJsonArray())
-            return parseJSON(element.getAsJsonArray());
-        else if (element.isJsonPrimitive())
-            return parseJSON(element.getAsJsonPrimitive());
+        if (element.isJsonObject()) return parseJSON(element.getAsJsonObject());
+        else if (element.isJsonArray()) return parseJSON(element.getAsJsonArray());
+        else if (element.isJsonPrimitive()) return parseJSON(element.getAsJsonPrimitive());
 
         return null;
     }

@@ -1,12 +1,8 @@
 package ccm.pay2spawn.util;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 
 import java.io.*;
 import java.util.Random;

@@ -4,7 +4,6 @@ import ccm.pay2spawn.Pay2Spawn;
 import org.mcstats.Metrics;
 
 import java.io.IOException;
-import java.util.Collection;
 
 public class MetricsHelper
 {

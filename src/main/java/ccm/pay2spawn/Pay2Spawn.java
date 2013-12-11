@@ -1,6 +1,7 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
+import ccm.pay2spawn.paypal.IpnHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
@@ -13,8 +14,11 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import static ccm.pay2spawn.util.Archive.*;
+import static ccm.pay2spawn.util.Archive.MODID;
+import static ccm.pay2spawn.util.Archive.NAME;
 
 @Mod(modid = MODID, name = NAME)
 @NetworkMod(clientSideRequired = false, serverSideRequired = true, packetHandler = PacketHandler.class, channels = {MODID})
@@ -30,7 +34,8 @@ public class Pay2Spawn
 
     private P2SConfig config;
 
-    private File configFolder;
+    private File   configFolder;
+    private Logger logger;
 
     public static String getVersion()
     {
@@ -42,15 +47,22 @@ public class Pay2Spawn
         return instance.rewardsDB;
     }
 
+    public synchronized static Logger getLogger() { return instance.logger; }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+        logger = event.getModLog();
+        logger.setLevel(Level.ALL);
+
         configFolder = new File(event.getModConfigurationDirectory(), NAME);
         configFolder.mkdirs();
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
         rewardsDB = new RewardsDB(new File(configFolder, NAME + ".json"));
         MetricsHelper.init();
+
+        logger.info("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
     }
 
     @Mod.EventHandler
@@ -64,6 +76,13 @@ public class Pay2Spawn
     {
         if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
 
-
+        try
+        {
+            IpnHandler.init(config.port);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

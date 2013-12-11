@@ -4,8 +4,6 @@ import ccm.pay2spawn.util.EnumSpawnType;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;

@@ -5,20 +5,16 @@ import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
 import com.google.gson.*;
-import com.google.gson.stream.JsonWriter;
 
 import java.io.*;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
 
 public class RewardsDB
 {
-    private final HashMap<String, Reward> nameMap = new HashMap<>();
+    private final HashMap<String, Reward> nameMap   = new HashMap<>();
     private final HashMap<Double, Reward> amountMap = new HashMap<>();
 
-    public final int[] amountsPerType = new int[EnumSpawnType.values().length];
+    public final int[]    amountsPerType  = new int[EnumSpawnType.values().length];
     public final double[] minPricePerType = new double[EnumSpawnType.values().length];
     public final double[] maxPricePerType = new double[EnumSpawnType.values().length];
     public final double[] avgPricePerType = new double[EnumSpawnType.values().length];
@@ -42,7 +38,7 @@ public class RewardsDB
                     amountMap.put(reward.getAmount(), reward);
 
                     totalPricePerType[reward.getType().ordinal()] += reward.getAmount();
-                    amountsPerType[reward.getType().ordinal()] ++;
+                    amountsPerType[reward.getType().ordinal()]++;
                     if (reward.getAmount() < minPricePerType[reward.getType().ordinal()]) minPricePerType[reward.getType().ordinal()] = reward.getAmount();
                     if (reward.getAmount() > maxPricePerType[reward.getType().ordinal()]) maxPricePerType[reward.getType().ordinal()] = reward.getAmount();
                 }
