@@ -15,7 +15,7 @@ public class Reward
     public Reward(JsonObject json)
     {
         name = json.get("name").getAsString();
-        type = EnumSpawnType.valueOf(json.get("type").getAsString());
+        type = EnumSpawnType.valueOf(json.get("type").getAsString().toUpperCase());
         amount = json.get("amount").getAsDouble();
         data = JsonNBTHelper.parseJSON(json.get("data").getAsJsonObject());
     }

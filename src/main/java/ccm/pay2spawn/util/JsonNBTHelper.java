@@ -37,26 +37,32 @@ import java.util.Map;
  */
 public class JsonNBTHelper
 {
+    /**
+     * To avoid idiocy later we need to store all things as a string with the type in the string. :(
+     * Please tell your users about this!
+     *
+     * @see ccm.pay2spawn.util.JsonNBTHelper#parseJSON(com.google.gson.JsonPrimitive)
+     */
     public static JsonElement parseNBT(NBTBase element)
     {
         switch (element.getId())
         {
             // 0 = END
             case 1:
-                return new JsonPrimitive(((NBTTagByte) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagByte) element).data);
             case 2:
-                return new JsonPrimitive(((NBTTagShort) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagShort) element).data);
             case 3:
-                return new JsonPrimitive(((NBTTagInt) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagInt) element).data);
             case 4:
-                return new JsonPrimitive(((NBTTagLong) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagLong) element).data);
             case 5:
-                return new JsonPrimitive(((NBTTagFloat) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagFloat) element).data);
             case 6:
-                return new JsonPrimitive(((NBTTagDouble) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagDouble) element).data);
             // 7 = BYTE[]
             case 8:
-                return new JsonPrimitive(((NBTTagString) element).data);
+                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagString) element).data);
             case 9:
                 return parseNBT((NBTTagList) element);
             case 10:
@@ -100,22 +106,58 @@ public class JsonNBTHelper
         return null;
     }
 
+    /**
+     * There is no way to detect number types and NBT is picky about this. Lets hope the original type id is there, otherwise we are royally screwed.
+     */
     public static NBTBase parseJSON(JsonPrimitive element)
     {
-        if (element.isString()) return new NBTTagString("", element.getAsString());
-        else if (element.isBoolean()) return new NBTTagByte("", (byte) (element.getAsBoolean() ? 1 : 0));
-        else if (element.isNumber())
+        String string = element.getAsString();
+        if (string.contains(":"))
         {
-            if (element.getAsNumber() instanceof Byte) return new NBTTagByte("", element.getAsByte());
-            else if (element.getAsNumber() instanceof Short) return new NBTTagShort("", element.getAsShort());
-            else if (element.getAsNumber() instanceof Integer) return new NBTTagInt("", element.getAsInt());
-            else if (element.getAsNumber() instanceof Long) return new NBTTagLong("", element.getAsLong());
-            else if (element.getAsNumber() instanceof Float) return new NBTTagFloat("", element.getAsFloat());
-            else if (element.getAsNumber() instanceof Double) return new NBTTagDouble("", element.getAsDouble());
-            else if (element.getAsNumber() instanceof Integer) return new NBTTagInt("", element.getAsInt());
+            for (int id = 0; id < NBTBase.NBTTypes.length; id++)
+            {
+                if (string.startsWith(NBTBase.NBTTypes[id] + ":"))
+                {
+                    String value = string.replace(NBTBase.NBTTypes[id] + ":", "");
+                    switch (id)
+                    {
+                        // 0 = END
+                        case 1:
+                            return new NBTTagByte("", Byte.parseByte(value));
+                        case 2:
+                            return new NBTTagShort("", Short.parseShort(value));
+                        case 3:
+                            return new NBTTagInt("", Integer.parseInt(value));
+                        case 4:
+                            return new NBTTagLong("", Long.parseLong(value));
+                        case 5:
+                            return new NBTTagFloat("", Float.parseFloat(value));
+                        case 6:
+                            return new NBTTagDouble("", Double.parseDouble(value));
+                        // 7 = BYTE[]
+                        case 8:
+                            return new NBTTagString("", value);
+                        // 9 = LIST != JsonPrimitive
+                        // 10 = COMPOUND != JsonPrimitive
+                        // 11 = INT[]
+                    }
+                }
+            }
         }
 
-        return null;
+        // Now it becomes guesswork.
+        if (element.isString()) return new NBTTagString("", string);
+        if (element.isBoolean()) return new NBTTagByte("", (byte) (element.getAsBoolean() ? 1 : 0));
+
+        Number n = element.getAsNumber();
+        if (n instanceof Byte) return new NBTTagByte("", n.byteValue());
+        if (n instanceof Short) return new NBTTagShort("", n.shortValue());
+        if (n instanceof Integer) return new NBTTagInt("", n.intValue());
+        if (n instanceof Long) return new NBTTagLong("", n.longValue());
+        if (n instanceof Float) return new NBTTagFloat("", n.floatValue());
+        if (n instanceof Double) return new NBTTagDouble("", n.doubleValue());
+
+        throw new NumberFormatException(element.toString() + " is was not able to be parsed.");
     }
 
     public static NBTTagCompound parseJSON(JsonObject data)

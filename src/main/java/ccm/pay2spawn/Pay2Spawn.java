@@ -26,7 +26,7 @@ public class Pay2Spawn
     @Mod.Metadata(MODID)
     private ModMetadata metadata;
 
-    private RewardsDB rewards;
+    private RewardsDB rewardsDB;
 
     private P2SConfig config;
 
@@ -37,14 +37,19 @@ public class Pay2Spawn
         return instance.metadata.version;
     }
 
+    public static RewardsDB getRewardsDB()
+    {
+        return instance.rewardsDB;
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
-        configFolder = new File (event.getModConfigurationDirectory(), NAME);
+        configFolder = new File(event.getModConfigurationDirectory(), NAME);
         configFolder.mkdirs();
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
-        rewards = new RewardsDB(new File(configFolder, NAME + ".json"));
+        rewardsDB = new RewardsDB(new File(configFolder, NAME + ".json"));
         MetricsHelper.init();
     }
 
@@ -58,5 +63,7 @@ public class Pay2Spawn
     public void postInit(FMLPostInitializationEvent event)
     {
         if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
+
+
     }
 }

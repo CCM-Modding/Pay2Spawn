@@ -115,7 +115,7 @@ public enum EnumSpawnType
                 public void createAndSend(NBTTagCompound nbt, Object data)
                 {
                     Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
-                            "amount") + "] " + EnumChatFormatting.WHITE + EntityList.getStringFromID((int) data) + " spawned!");
+                            "amount") + "] " + EnumChatFormatting.WHITE + data + " spawned!");
                     send(this, getNBTfromData(data));
                 }
 
