@@ -24,4 +24,4 @@ Current todo list
 * Sample code that makes a nice web page pulled from the json file.
 * Optionally display donators name as the item name or nametag of the entity.
 * Entitys with custom data
-* Lightning and XP orgs
+* Lightning and XP orbs
