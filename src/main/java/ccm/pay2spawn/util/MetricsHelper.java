@@ -1,6 +1,8 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.types.TypeBase;
+import ccm.pay2spawn.types.TypeRegistry;
 import org.mcstats.Metrics;
 
 import java.io.IOException;
@@ -19,14 +21,14 @@ public class MetricsHelper
             // Amount of rewards
             {
                 Metrics.Graph graph = metrics.createGraph("Amount of rewards");
-                for (final EnumSpawnType type : EnumSpawnType.values())
+                for (final TypeBase type : TypeRegistry.getAllTypes())
                 {
-                    graph.addPlotter(new Metrics.Plotter(type.name().toLowerCase())
+                    graph.addPlotter(new Metrics.Plotter(type.getName().toLowerCase())
                     {
                         @Override
                         public int getValue()
                         {
-                            return Pay2Spawn.getRewardsDB().amountsPerType[type.ordinal()];
+                            return type.getAmountOfRewards();
                         }
                     });
                 }
@@ -34,14 +36,14 @@ public class MetricsHelper
             // Avg price of rewards
             {
                 Metrics.Graph graph = metrics.createGraph("Average price");
-                for (final EnumSpawnType type : EnumSpawnType.values())
+                for (final TypeBase type : TypeRegistry.getAllTypes())
                 {
-                    graph.addPlotter(new Metrics.Plotter(type.name().toLowerCase())
+                    graph.addPlotter(new Metrics.Plotter(type.getName().toLowerCase())
                     {
                         @Override
                         public int getValue()
                         {
-                            return (int) Pay2Spawn.getRewardsDB().avgPricePerType[type.ordinal()];
+                            return type.getAvgPrice();
                         }
                     });
                 }
@@ -49,14 +51,14 @@ public class MetricsHelper
             // Max price of rewards
             {
                 Metrics.Graph graph = metrics.createGraph("Maximum price");
-                for (final EnumSpawnType type : EnumSpawnType.values())
+                for (final TypeBase type : TypeRegistry.getAllTypes())
                 {
-                    graph.addPlotter(new Metrics.Plotter(type.name().toLowerCase())
+                    graph.addPlotter(new Metrics.Plotter(type.getName().toLowerCase())
                     {
                         @Override
                         public int getValue()
                         {
-                            return (int) Pay2Spawn.getRewardsDB().maxPricePerType[type.ordinal()];
+                            return (int) type.getMaxPrice();
                         }
                     });
                 }
@@ -64,14 +66,14 @@ public class MetricsHelper
             // Min price of rewards
             {
                 Metrics.Graph graph = metrics.createGraph("Minimum price");
-                for (final EnumSpawnType type : EnumSpawnType.values())
+                for (final TypeBase type : TypeRegistry.getAllTypes())
                 {
-                    graph.addPlotter(new Metrics.Plotter(type.name().toLowerCase())
+                    graph.addPlotter(new Metrics.Plotter(type.getName().toLowerCase())
                     {
                         @Override
                         public int getValue()
                         {
-                            return (int) Pay2Spawn.getRewardsDB().minPricePerType[type.ordinal()];
+                            return (int) type.getMinPrice();
                         }
                     });
                 }

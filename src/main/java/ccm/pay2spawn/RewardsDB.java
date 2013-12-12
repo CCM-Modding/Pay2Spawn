@@ -1,6 +1,7 @@
 package ccm.pay2spawn;
 
-import ccm.pay2spawn.util.EnumSpawnType;
+import ccm.pay2spawn.types.TypeBase;
+import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
@@ -15,11 +16,6 @@ public class RewardsDB
 {
     private final HashMap<Double, Reward> amountMap = new HashMap<>();
 
-    public final int[]    amountsPerType  = new int[EnumSpawnType.values().length];
-    public final double[] minPricePerType = new double[EnumSpawnType.values().length];
-    public final double[] maxPricePerType = new double[EnumSpawnType.values().length];
-    public final double[] avgPricePerType = new double[EnumSpawnType.values().length];
-
     RewardsDB(File file)
     {
         try
@@ -29,23 +25,21 @@ public class RewardsDB
                 JsonParser parser = new JsonParser();
                 JsonArray rootArray = parser.parse(new FileReader(file)).getAsJsonArray();
 
-                double[] totalPricePerType = new double[EnumSpawnType.values().length];
-
                 for (JsonElement element : rootArray)
                 {
                     Reward reward = new Reward(element.getAsJsonObject());
 
                     amountMap.put(reward.getAmount(), reward);
+                    reward.getType().totalPrice += reward.getAmount();
+                    reward.getType().amountOfRewards++;
 
-                    totalPricePerType[reward.getType().ordinal()] += reward.getAmount();
-                    amountsPerType[reward.getType().ordinal()]++;
-                    if (reward.getAmount() < minPricePerType[reward.getType().ordinal()]) minPricePerType[reward.getType().ordinal()] = reward.getAmount();
-                    if (reward.getAmount() > maxPricePerType[reward.getType().ordinal()]) maxPricePerType[reward.getType().ordinal()] = reward.getAmount();
+                    if (reward.getAmount() < reward.getType().minPrice) reward.getType().minPrice = reward.getAmount();
+                    if (reward.getAmount() > reward.getType().maxPrice) reward.getType().maxPrice = reward.getAmount();
                 }
 
-                for (int i = 0; i < EnumSpawnType.values().length; i++)
+                for (TypeBase type : TypeRegistry.getAllTypes())
                 {
-                    avgPricePerType[i] = totalPricePerType[i] / amountsPerType[i];
+                    type.avgPrice = type.totalPrice / type.amountOfRewards;
                 }
             }
             else
@@ -53,14 +47,14 @@ public class RewardsDB
                 //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
                 JsonArray rootArray = new JsonArray();
-                for (EnumSpawnType type : EnumSpawnType.values())
+                for (TypeBase type : TypeRegistry.getAllTypes())
                 {
                     JsonObject element = new JsonObject();
 
-                    element.addProperty("name", "DEMO_" + type.name());
-                    element.addProperty("type", type.name().toLowerCase());
+                    element.addProperty("name", "DEMO_" + type.getName());
+                    element.addProperty("type", type.getName().toLowerCase());
                     element.addProperty("amount", (double) ((int) (Helper.RANDOM.nextDouble() * 10000) / 10) / 100);
-                    element.add("data", JsonNBTHelper.parseNBT(type.getNBTfromData(type.makeRandomData())));
+                    element.add("data", JsonNBTHelper.parseNBT(type.convertToNBT(type.getExample())));
 
                     rootArray.add(element);
                 }

@@ -1,6 +1,6 @@
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.util.EnumSpawnType;
+import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
@@ -17,7 +17,7 @@ public class PacketHandler implements IPacketHandler
         try
         {
             NBTTagCompound root = Helper.byteArrayToNBT(packet.data);
-            EnumSpawnType.values()[root.getInteger("type")].spawnFromData((EntityPlayer) player, root.getCompoundTag("data"));
+            TypeRegistry.getByName(root.getString("type")).spawnServerSide((EntityPlayer) player, root.getCompoundTag("data"));
         }
         catch (Exception e)
         {

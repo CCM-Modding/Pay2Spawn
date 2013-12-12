@@ -12,12 +12,12 @@ import java.net.URL;
 
 public class DonationCheckerThread extends Thread
 {
-    final JsonParser parser = new JsonParser();
+    final                JsonParser parser = new JsonParser();
     final int    interval;
     final String channel;
     final String API_Key;
     final String URL;
-    String lastKnownDonation;
+    String lastKnownDonation /* = ""; /*TODO: Never forget to comment this line out! */;
 
     public DonationCheckerThread(int interval, String channel, String API_Key)
     {

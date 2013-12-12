@@ -1,6 +1,10 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
+import ccm.pay2spawn.types.EntityType;
+import ccm.pay2spawn.types.ItemType;
+import ccm.pay2spawn.types.PotionEffectType;
+import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
@@ -59,15 +63,23 @@ public class Pay2Spawn
         configFolder.mkdirs();
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
-        rewardsDB = new RewardsDB(new File(configFolder, NAME + ".json"));
-        MetricsHelper.init();
+
 
         logger.info("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
+
+        TypeRegistry.register(new EntityType());
+        TypeRegistry.register(new ItemType());
+        TypeRegistry.register(new PotionEffectType());
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
+        TypeRegistry.doConfig(config.configuration);
+        config.configuration.save();
+        rewardsDB = new RewardsDB(new File(configFolder, NAME + ".json"));
+        MetricsHelper.init();
+
         if (event.getSide().isClient())
         {
             new DonationCheckerThread(config.interval, config.channel, config.API_Key).start();
