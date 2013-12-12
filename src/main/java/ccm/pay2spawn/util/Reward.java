@@ -1,5 +1,7 @@
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.P2SConfig;
+import ccm.pay2spawn.Pay2Spawn;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -36,5 +38,10 @@ public class Reward
     public Double getAmount()
     {
         return amount;
+    }
+
+    public void use(String name)
+    {
+        type.createAndSend(name, Pay2Spawn.getConfig().currency + amount, data);
     }
 }

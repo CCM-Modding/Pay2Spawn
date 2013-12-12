@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
+import java.net.URL;
 import java.util.Random;
 
 public class Helper

@@ -1,5 +1,6 @@
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.P2SPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
@@ -28,12 +29,11 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public void createAndSend(NBTTagCompound nbt, Object data)
+                public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
-                    ItemStack itemStack = (ItemStack) data;
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
-                            "amount") + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
-                    send(this, getNBTfromData(data));
+                    ItemStack itemStack = (ItemStack.loadItemStackFromNBT(data));
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
+                    send(this, data);
                 }
 
                 @Override
@@ -59,12 +59,11 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public void createAndSend(NBTTagCompound nbt, Object data)
+                public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
-                    PotionEffect effect = (PotionEffect) data;
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
-                            "amount") + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
-                    send(this, getNBTfromData(data));
+                    PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(data);
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
+                    send(this, data);
                 }
 
                 @Override
@@ -111,11 +110,10 @@ public enum EnumSpawnType
                 }
 
                 @Override
-                public void createAndSend(NBTTagCompound nbt, Object data)
+                public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + nbt.getString("donator") + " donated " + nbt.getString(
-                            "amount") + "] " + EnumChatFormatting.WHITE + data + " spawned!");
-                    send(this, getNBTfromData(data));
+                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + data.getString("name") + " spawned!");
+                    send(this, data);
                 }
 
                 @Override
@@ -137,7 +135,7 @@ public enum EnumSpawnType
 
     public abstract void spawnFromData(EntityPlayer player, NBTTagCompound data);
 
-    public abstract void createAndSend(NBTTagCompound nbt, Object data);
+    public abstract void createAndSend(String name, String amount,  NBTTagCompound data);
 
     public abstract Object makeRandomData();
 

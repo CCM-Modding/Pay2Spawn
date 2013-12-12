@@ -5,6 +5,8 @@ import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
 import com.google.gson.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 import java.util.HashMap;
@@ -75,5 +77,24 @@ public class RewardsDB
         {
             e.printStackTrace();
         }
+    }
+
+    public synchronized boolean process(String name, double amount)
+    {
+        if (!amountMap.containsKey(amount))
+        {
+            display(EnumChatFormatting.GREEN + name + " donated " + Pay2Spawn.getConfig().currency + amount + ". No reward for that amount available.");
+            return false;
+        }
+        else
+        {
+            amountMap.get(amount).use(name);
+            return true;
+        }
+    }
+
+    private void display(String msg)
+    {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
     }
 }

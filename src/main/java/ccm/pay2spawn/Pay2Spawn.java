@@ -1,7 +1,6 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
-import ccm.pay2spawn.paypal.IpnHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
@@ -10,8 +9,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -47,7 +44,9 @@ public class Pay2Spawn
         return instance.rewardsDB;
     }
 
-    public synchronized static Logger getLogger() { return instance.logger; }
+    public static Logger getLogger() { return instance.logger; }
+
+    public static P2SConfig getConfig() { return instance.config; }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -68,21 +67,15 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
-        TickRegistry.registerScheduledTickHandler(DonationsTickHandler.getInstance(), Side.CLIENT);
+        if (event.getSide().isClient())
+        {
+            new DonationCheckerThread(config.interval, config.channel, config.API_Key).start();
+        }
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
         if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
-
-        try
-        {
-            IpnHandler.init(config.port);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
     }
 }
