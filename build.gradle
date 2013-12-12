@@ -9,6 +9,9 @@ buildscript {
 
 apply plugin: "gmcp"
 
+ext.env = System.getenv()
+version = new File('version.txt').text + env.BUILD_NUMBER
+
 archivesBaseName = 'Pay2Spawn'
 minecraft {
 	minecraftVersion = "1.6.4"
