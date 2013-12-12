@@ -55,6 +55,7 @@ public class Pay2Spawn
         logger.setLevel(Level.ALL);
 
         configFolder = new File(event.getModConfigurationDirectory(), NAME);
+        //noinspection ResultOfMethodCallIgnored
         configFolder.mkdirs();
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));

@@ -2,7 +2,6 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.P2SPacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.*;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 
@@ -23,7 +21,6 @@ public enum EnumSpawnType
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
                     ItemStack itemStack = ItemStack.loadItemStackFromNBT(data);
-                    System.out.println(Archive.MODID + ": Giving " + player.getDisplayName() + " item " + itemStack); //TODO: debug line
                     EntityItem entityItem = player.dropPlayerItem(itemStack);
                     entityItem.delayBeforeCanPickup = 0;
                 }
@@ -32,7 +29,7 @@ public enum EnumSpawnType
                 public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
                     ItemStack itemStack = (ItemStack.loadItemStackFromNBT(data));
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + itemStack.getDisplayName() + " given!");
+                    doMessage(this, name, amount, itemStack.getDisplayName());
                     send(this, data);
                 }
 
@@ -47,6 +44,12 @@ public enum EnumSpawnType
                 {
                     return ((ItemStack) data).writeToNBT(new NBTTagCompound());
                 }
+
+                @Override
+                public String getDefaultMessage()
+                {
+                    return "&a[$name donated $amount]&f $spawned given!";
+                }
             },
     EFFECT
             {
@@ -54,7 +57,6 @@ public enum EnumSpawnType
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
                     PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(data);
-                    System.out.println(Archive.MODID + ": Giving " + player.getDisplayName() + " effect " + effect); //TODO: debug line
                     player.addPotionEffect(effect);
                 }
 
@@ -62,7 +64,7 @@ public enum EnumSpawnType
                 public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
                     PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(data);
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + StatCollector.translateToLocal(effect.getEffectName()) + " applied!");
+                    doMessage(this, name, amount, StatCollector.translateToLocal(effect.getEffectName()));
                     send(this, data);
                 }
 
@@ -82,13 +84,18 @@ public enum EnumSpawnType
                 {
                     return ((PotionEffect) data).writeCustomPotionEffectToNBT(new NBTTagCompound());
                 }
+
+                @Override
+                public String getDefaultMessage()
+                {
+                    return "&a[$name donated $amount]&f $spawned applied!";
+                }
             },
     ENTITY
             {
                 @Override
                 public void spawnFromData(EntityPlayer player, NBTTagCompound data)
                 {
-                    System.out.println(Archive.MODID + ": Spawning " + data.getString("name") + " near " + player.getDisplayName()); //TODO: debug line
                     double x, y, z;
 
                     y = player.posY + 1;
@@ -103,7 +110,7 @@ public enum EnumSpawnType
                         entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
                         entityliving.rotationYawHead = entityliving.rotationYaw;
                         entityliving.renderYawOffset = entityliving.rotationYaw;
-                        entityliving.onSpawnWithEgg((EntityLivingData) null);
+                        entityliving.onSpawnWithEgg(null);
                         player.getEntityWorld().spawnEntityInWorld(entity);
                         entityliving.playLivingSound();
                     }
@@ -112,7 +119,7 @@ public enum EnumSpawnType
                 @Override
                 public void createAndSend(String name, String amount, NBTTagCompound data)
                 {
-                    Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + amount + "] " + EnumChatFormatting.WHITE + data.getString("name") + " spawned!");
+                    doMessage(this, name, amount, data.getString("name"));
                     send(this, data);
                 }
 
@@ -129,20 +136,35 @@ public enum EnumSpawnType
                     dataTag.setString("name", (String) data);
                     return dataTag;
                 }
+
+                @Override
+                public String getDefaultMessage()
+                {
+                    return "&a[$name donated $amount]&f $spawned spawned!";
+                }
             };
 
-    public static final int RADIUS = 15;
+    private static void doMessage(EnumSpawnType type, String name, String amount, String spawned)
+    {
+        Helper.msg(Pay2Spawn.getConfig().messages[type.ordinal()].replace("$name", name).replace("$amount", amount).replace("$spawned", spawned));
+    }
+
+    public static final int RADIUS = 5;
 
     public abstract void spawnFromData(EntityPlayer player, NBTTagCompound data);
 
-    public abstract void createAndSend(String name, String amount,  NBTTagCompound data);
+    public abstract void createAndSend(String name, String amount, NBTTagCompound data);
 
     public abstract Object makeRandomData();
 
     public abstract NBTTagCompound getNBTfromData(Object data);
 
+    public abstract String getDefaultMessage();
+
     private static void send(EnumSpawnType type, NBTTagCompound data)
     {
         new P2SPacket(type, data).sendToServer();
     }
+
+
 }

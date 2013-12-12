@@ -1,6 +1,5 @@
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
 import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;

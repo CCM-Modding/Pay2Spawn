@@ -4,11 +4,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import net.minecraft.client.Minecraft;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.Iterator;
 
 public class DonationCheckerThread extends Thread
 {
@@ -36,7 +36,6 @@ public class DonationCheckerThread extends Thread
         {
             try
             {
-
                 String input = readUrl(URL);
                 JsonObject root = parser.parse(input).getAsJsonObject();
 
@@ -74,10 +73,10 @@ public class DonationCheckerThread extends Thread
 
     private void go(JsonArray mostRecent)
     {
-        Iterator<JsonElement> i = mostRecent.iterator();
-        while (i.hasNext())
+        if (Minecraft.getMinecraft().thePlayer == null) return;
+        for (JsonElement aMostRecent : mostRecent)
         {
-            JsonObject donation = i.next().getAsJsonObject();
+            JsonObject donation = aMostRecent.getAsJsonObject();
 
             if (lastKnownDonation == null || lastKnownDonation.equals(donation.get("transactionID").getAsString())) break;
 
@@ -86,6 +85,7 @@ public class DonationCheckerThread extends Thread
         lastKnownDonation = mostRecent.get(0).getAsJsonObject().get("transactionID").getAsString();
     }
 
+
     private String readUrl(String urlString) throws Exception
     {
         BufferedReader reader = null;
@@ -93,7 +93,7 @@ public class DonationCheckerThread extends Thread
         {
             URL url = new URL(urlString);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuffer buffer = new StringBuffer();
+            StringBuilder buffer = new StringBuilder();
             int read;
             char[] chars = new char[1024];
             while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);

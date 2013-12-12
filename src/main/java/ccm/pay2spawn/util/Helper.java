@@ -1,11 +1,11 @@
 package ccm.pay2spawn.util;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
-import java.net.URL;
 import java.util.Random;
 
 public class Helper
@@ -92,6 +92,7 @@ public class Helper
         }
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     public static void printEntityList(File file)
     {
         try
@@ -114,5 +115,24 @@ public class Helper
         {
             e.printStackTrace();
         }
+    }
+
+    public static String formatColors(String message)
+    {
+        char[] b = message.toCharArray();
+        for (int i = 0; i < b.length - 1; i++)
+        {
+            if (b[i] == '&' && "0123456789AaBbCcDdEeFfKkLlMmNnOoRr".indexOf(b[i + 1]) > -1)
+            {
+                b[i] = '\u00a7';
+                b[i + 1] = Character.toLowerCase(b[i + 1]);
+            }
+        }
+        return new String(b);
+    }
+
+    public static void msg(String message)
+    {
+        Minecraft.getMinecraft().thePlayer.addChatMessage(message);
     }
 }

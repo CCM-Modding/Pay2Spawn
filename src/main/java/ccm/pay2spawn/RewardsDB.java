@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 public class RewardsDB
 {
-    private final HashMap<String, Reward> nameMap   = new HashMap<>();
     private final HashMap<Double, Reward> amountMap = new HashMap<>();
 
     public final int[]    amountsPerType  = new int[EnumSpawnType.values().length];
@@ -36,7 +35,6 @@ public class RewardsDB
                 {
                     Reward reward = new Reward(element.getAsJsonObject());
 
-                    nameMap.put(reward.getName(), reward);
                     amountMap.put(reward.getAmount(), reward);
 
                     totalPricePerType[reward.getType().ordinal()] += reward.getAmount();
@@ -83,7 +81,7 @@ public class RewardsDB
     {
         if (!amountMap.containsKey(amount))
         {
-            display(EnumChatFormatting.GREEN + name + " donated " + Pay2Spawn.getConfig().currency + amount + ". No reward for that amount available.");
+            Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + Pay2Spawn.getConfig().currency + amount + "] " + EnumChatFormatting.WHITE);
             return false;
         }
         else
@@ -91,10 +89,5 @@ public class RewardsDB
             amountMap.get(amount).use(name);
             return true;
         }
-    }
-
-    private void display(String msg)
-    {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(msg);
     }
 }
