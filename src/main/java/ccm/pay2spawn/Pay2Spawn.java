@@ -51,6 +51,8 @@ public class Pay2Spawn
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
 
+    public static boolean   debug = false;
+
     @Mod.Metadata(MODID)
     private ModMetadata metadata;
 
@@ -101,6 +103,7 @@ public class Pay2Spawn
         TypeRegistry.register(new LightningType());
         TypeRegistry.register(new XPOrbsType());
         TypeRegistry.register(new SoundType());
+        TypeRegistry.register(new FireworksType());
     }
 
     @Mod.EventHandler

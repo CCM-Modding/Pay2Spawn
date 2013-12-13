@@ -26,9 +26,14 @@ package ccm.pay2spawn;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Arrays;
 import java.util.List;
@@ -71,8 +76,23 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
             return;
         }
+        if (args[0].equalsIgnoreCase("debug"))
+        {
+            Pay2Spawn.debug = !Pay2Spawn.debug;
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Debug now: " + Pay2Spawn.debug).setColor(EnumChatFormatting.RED));
+        }
+        if (args[0].equalsIgnoreCase("getnbt"))
+        {
+            String text = JsonNBTHelper.parseNBT(player.inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString();
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText(text));
+        }
+    }
 
-        String text = JsonNBTHelper.parseNBT(player.inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString();
-        sender.sendChatToPlayer(ChatMessageComponent.createFromText(text));
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args)
+    {
+        if (args.length == 1)
+            return getListOfStringsMatchingLastWord(args, "debug", "getnbt");
+        return null;
     }
 }

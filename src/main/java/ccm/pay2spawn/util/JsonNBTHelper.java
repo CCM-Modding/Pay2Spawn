@@ -64,17 +64,35 @@ public class JsonNBTHelper
                 return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagFloat) element).data);
             case 6:
                 return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagDouble) element).data);
-            // 7 = BYTE[]
+            case 7:
+                return parseNBT((NBTTagByteArray) element);
             case 8:
                 return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagString) element).data);
             case 9:
                 return parseNBT((NBTTagList) element);
             case 10:
                 return parseNBT((NBTTagCompound) element);
-            // 11 = INT[]
+            case 11:
+                return parseNBT((NBTTagIntArray) element);
             default:
                 return null;
         }
+    }
+
+    public static JsonPrimitive parseNBT(NBTTagIntArray nbtArray)
+    {
+        JsonArray jsonArray = new JsonArray();
+        for (int i : nbtArray.intArray)
+            jsonArray.add(new JsonPrimitive(i));
+        return new JsonPrimitive("INT[]:" + jsonArray.toString());
+    }
+
+    public static JsonPrimitive parseNBT(NBTTagByteArray nbtArray)
+    {
+        JsonArray jsonArray = new JsonArray();
+        for (int i : nbtArray.byteArray)
+            jsonArray.add(new JsonPrimitive(i));
+        return new JsonPrimitive("BYTE[]:" + jsonArray.toString());
     }
 
     public static JsonArray parseNBT(NBTTagList nbtArray)
@@ -135,12 +153,14 @@ public class JsonNBTHelper
                             return new NBTTagFloat("", Float.parseFloat(value));
                         case 6:
                             return new NBTTagDouble("", Double.parseDouble(value));
-                        // 7 = BYTE[]
+                        case 7:
+                            return parseJSONByteArray(value);
                         case 8:
                             return new NBTTagString("", value);
                         // 9 = LIST != JsonPrimitive
                         // 10 = COMPOUND != JsonPrimitive
-                        // 11 = INT[]
+                        case 11:
+                            return parseJSONIntArray(value);
                     }
                 }
             }
@@ -159,6 +179,24 @@ public class JsonNBTHelper
         if (n instanceof Double) return new NBTTagDouble("", n.doubleValue());
 
         throw new NumberFormatException(element.toString() + " is was not able to be parsed.");
+    }
+
+    public static NBTTagByteArray parseJSONByteArray(String value)
+    {
+        JsonArray in = Helper.PARSER.parse(value).getAsJsonArray();
+        byte[] out = new byte[in.size()];
+        for (int i = 0; i < in.size(); i++)
+            out[i] = in.get(i).getAsByte();
+        return new NBTTagByteArray("", out);
+    }
+
+    public static NBTTagIntArray parseJSONIntArray(String value)
+    {
+        JsonArray in = Helper.PARSER.parse(value).getAsJsonArray();
+        int[] out = new int[in.size()];
+        for (int i = 0; i < in.size(); i++)
+            out[i] = in.get(i).getAsInt();
+        return new NBTTagIntArray("", out);
     }
 
     public static NBTTagCompound parseJSON(JsonObject data)

@@ -59,7 +59,7 @@ public class DonationCheckerThread extends Thread
         {
             try
             {
-                //lastKnownDonation = ""; /*TODO: Never forget to comment this line out! */
+                if (Pay2Spawn.debug) lastKnownDonation = "";
                 String input = readUrl(URL);
                 JsonObject root = Helper.PARSER.parse(input).getAsJsonObject();
 
