@@ -44,8 +44,6 @@ public class Reward
 
     public void sendToServer(JsonObject donation)
     {
-        System.out.println(rewards.toString());
-        System.out.println(donation.toString());
         Helper.msg(Helper.formatText(message, donation));
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Archive.MODID, toBytes(Helper.formatText(rewards, donation).toString())));
     }
@@ -76,11 +74,7 @@ public class Reward
         DataInputStream stream = new DataInputStream(streambyte);
         String name = stream.readUTF();
         Double amount = stream.readDouble();
-        String data = stream.readUTF();
-
-        System.out.println(data);
-
-        JsonArray rewards = Helper.PARSER.parse(data).getAsJsonArray();
+        JsonArray rewards = Helper.PARSER.parse(stream.readUTF()).getAsJsonArray();
 
         return new Reward(name, amount, rewards);
     }

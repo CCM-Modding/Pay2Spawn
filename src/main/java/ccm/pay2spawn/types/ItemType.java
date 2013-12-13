@@ -19,7 +19,9 @@ public class ItemType extends TypeBase<ItemStack>
     @Override
     public ItemStack getExample()
     {
-        return new ItemStack(Item.appleGold);
+        ItemStack is = new ItemStack(Item.appleGold);
+        is.setItemName("$name");
+        return is;
     }
 
     @Override

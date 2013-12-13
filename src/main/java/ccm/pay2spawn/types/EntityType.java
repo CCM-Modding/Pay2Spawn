@@ -10,6 +10,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.Configuration;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+
 import static ccm.pay2spawn.util.Archive.MODID;
 
 public class EntityType extends TypeBase<String>
@@ -69,6 +73,32 @@ public class EntityType extends TypeBase<String>
             entityliving.onSpawnWithEgg(null);
             player.getEntityWorld().spawnEntityInWorld(entity);
             entityliving.playLivingSound();
+        }
+    }
+
+    @Override
+    public void printHelpList(File configFolder)
+    {
+        File file = new File(configFolder, "EntityList.txt");
+        try
+        {
+            if (file.exists()) file.delete();
+            file.createNewFile();
+            PrintWriter pw = new PrintWriter(file);
+
+            pw.println("## This is a list of all the entities you can use in the json file.");
+            pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
+            pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
+
+            for (Object key : EntityList.stringToClassMapping.keySet())
+            {
+                pw.println(key.toString());
+            }
+            pw.close();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 }

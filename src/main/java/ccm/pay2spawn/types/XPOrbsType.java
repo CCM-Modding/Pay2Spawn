@@ -37,6 +37,13 @@ public class XPOrbsType extends TypeBase<NBTTagCompound>
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         for (int i = 0; i < dataFromClient.getInteger("amoutOfOrbs"); i++)
-            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, player.posX, player.posY, player.posZ, Helper.RANDOM.nextInt(5) + 1));
+        {
+            double X = player.posX, Y = player.posY, Z = player.posZ;
+
+            X += (0.5 - Helper.RANDOM.nextDouble());
+            Z += (0.5 - Helper.RANDOM.nextDouble());
+
+            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, X, Y, Z, Helper.RANDOM.nextInt(5) + 1));
+        }
     }
 }

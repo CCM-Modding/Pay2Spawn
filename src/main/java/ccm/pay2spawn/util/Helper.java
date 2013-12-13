@@ -97,31 +97,6 @@ public class Helper
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    public static void printEntityList(File file)
-    {
-        try
-        {
-            if (file.exists()) file.delete();
-            file.createNewFile();
-            PrintWriter pw = new PrintWriter(file);
-
-            pw.println("## This is a list of all the entities you can use in the json file.");
-            pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
-            pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
-
-            for (Object key : EntityList.stringToClassMapping.keySet())
-            {
-                pw.println(key.toString());
-            }
-            pw.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     public static String formatColors(String message)
     {
         char[] b = message.toCharArray();

@@ -51,6 +51,5 @@ public class CommandP2S extends CommandBase
 
         String text = JsonNBTHelper.parseNBT(player.inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString();
         sender.sendChatToPlayer(ChatMessageComponent.createFromText(text));
-        System.out.println(text);
     }
 }

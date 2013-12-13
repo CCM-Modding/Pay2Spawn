@@ -2,7 +2,6 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.types.*;
-import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.HudHelper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
@@ -12,6 +11,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -76,6 +77,7 @@ public class Pay2Spawn
         TypeRegistry.register(new PotionEffectType());
         TypeRegistry.register(new LightningType());
         TypeRegistry.register(new XPOrbsType());
+        TypeRegistry.register(new SoundType());
     }
 
     @Mod.EventHandler
@@ -96,7 +98,13 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
+        if (config.printHelpLists && event.getSide().isClient())
+        {
+            for (TypeBase base : TypeRegistry.getAllTypes())
+            {
+                base.printHelpList(configFolder);
+            }
+        }
     }
 
     @Mod.EventHandler
