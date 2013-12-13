@@ -24,7 +24,9 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundPool;
 import net.minecraft.client.audio.SoundPoolEntry;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +39,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 public class SoundType extends TypeBase<NBTTagCompound>
 {
@@ -103,15 +106,15 @@ public class SoundType extends TypeBase<NBTTagCompound>
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
 
-            for (Object key : event.manager.soundPoolMusic.nameToSoundPoolEntriesMapping.keySet())
+            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
             {
                 pw.println(key);
             }
-            for (Object key : event.manager.soundPoolSounds.nameToSoundPoolEntriesMapping.keySet())
+            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
             {
                 pw.println(key);
             }
-            for (Object key : event.manager.soundPoolStreaming.nameToSoundPoolEntriesMapping.keySet())
+            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
             {
                 pw.println(key);
             }
