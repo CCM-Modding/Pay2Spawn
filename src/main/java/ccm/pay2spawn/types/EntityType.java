@@ -7,19 +7,15 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.common.Configuration;
 
 import static ccm.pay2spawn.util.Archive.MODID;
 
 public class EntityType extends TypeBase<String>
 {
-    private static final String NAME = "entity";
-    private static String message = "&a[$name donated $amount]&f $spawned spawned!";
-    private static int radius = 10;
+    private static final String NAME   = "entity";
+    private static       int    radius = 10;
 
     @Override
     public String getName()
@@ -28,15 +24,8 @@ public class EntityType extends TypeBase<String>
     }
 
     @Override
-    public String getMessageTemplate()
-    {
-        return message;
-    }
-
-    @Override
     public void doConfig(Configuration configuration)
     {
-        message = Helper.formatColors(configuration.get(CONFIGCAT_MESSAGE, NAME, message).getString());
         radius = configuration.get(MODID + "." + NAME, "radius", radius, "The radius in wich the entity is randomly spawed").getInt();
     }
 
@@ -67,8 +56,8 @@ public class EntityType extends TypeBase<String>
 
         y = player.posY + 1;
 
-        x = player.posX + (radius - Helper.RANDOM.nextInt(radius));
-        z = player.posZ + (radius - Helper.RANDOM.nextInt(radius));
+        x = player.posX + (radius/2 - Helper.RANDOM.nextInt(radius));
+        z = player.posZ + (radius/2 - Helper.RANDOM.nextInt(radius));
 
         Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
         if (entity != null && entity instanceof EntityLivingBase)
@@ -81,12 +70,5 @@ public class EntityType extends TypeBase<String>
             player.getEntityWorld().spawnEntityInWorld(entity);
             entityliving.playLivingSound();
         }
-    }
-
-    @Override
-    public void sendToServer(String name, String amount, NBTTagCompound dataFromDB)
-    {
-        doMessage(name, amount, dataFromDB.getString("name"));
-        send(dataFromDB);
     }
 }

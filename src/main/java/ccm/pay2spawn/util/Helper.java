@@ -1,21 +1,26 @@
 package ccm.pay2spawn.util;
 
+import argo.jdom.JsonStringNode;
+import com.google.gson.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
+import java.util.Map;
 import java.util.Random;
 
 public class Helper
 {
-    public static final Random RANDOM = new Random();
+    public static final Random     RANDOM = new Random();
+    public static final JsonParser PARSER = new JsonParser();
 
     public static String getRndEntity()
     {
         int size = EntityList.entityEggs.size();
-        int item = RANDOM.nextInt(size); // In real life, the Random object should be rather more shared than this
+        int item = RANDOM.nextInt(size);
         int i = 0;
         for (Object obj : EntityList.entityEggs.keySet())
         {
@@ -134,5 +139,40 @@ public class Helper
     public static void msg(String message)
     {
         Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+    }
+
+    public static String formatText(String format, JsonObject donation)
+    {
+        if (donation.has("twitchUsername") && donation.get("twitchUsername").isJsonPrimitive()) format = format.replace("$name", donation.get("twitchUsername").getAsString());
+        if (donation.has("amount") && donation.get("amount").isJsonPrimitive())                 format = format.replace("$amount", donation.get("amount").getAsString());
+        if (donation.has("note") && donation.get("note").isJsonPrimitive())                     format = format.replace("$note", donation.get("note").getAsString());
+        return format;
+    }
+
+    public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation)
+    {
+        if (dataToFormat.isJsonPrimitive() && dataToFormat.getAsJsonPrimitive().isString())
+        {
+            return new JsonPrimitive(Helper.formatText(dataToFormat.getAsString(), donation));
+        }
+        if (dataToFormat.isJsonArray())
+        {
+            JsonArray out = new JsonArray();
+            for (JsonElement element : dataToFormat.getAsJsonArray())
+            {
+                out.add(formatText(element, donation));
+            }
+            return out;
+        }
+        if (dataToFormat.isJsonObject())
+        {
+            JsonObject out = new JsonObject();
+            for (Map.Entry<String, JsonElement> entity : dataToFormat.getAsJsonObject().entrySet())
+            {
+                out.add(entity.getKey(), Helper.formatText(entity.getValue(), donation));
+            }
+            return out;
+        }
+        return dataToFormat;
     }
 }

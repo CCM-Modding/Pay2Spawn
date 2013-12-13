@@ -6,15 +6,13 @@ import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
 import com.google.gson.*;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 import java.util.HashMap;
 
 public class RewardsDB
 {
-    private final HashMap<Double, Reward> amountMap = new HashMap<>();
+    private final HashMap<Double, Reward> map = new HashMap<>();
 
     RewardsDB(File file)
     {
@@ -22,24 +20,12 @@ public class RewardsDB
         {
             if (file.exists())
             {
-                JsonParser parser = new JsonParser();
-                JsonArray rootArray = parser.parse(new FileReader(file)).getAsJsonArray();
+                JsonArray rootArray = Helper.PARSER.parse(new FileReader(file)).getAsJsonArray();
 
                 for (JsonElement element : rootArray)
                 {
                     Reward reward = new Reward(element.getAsJsonObject());
-
-                    amountMap.put(reward.getAmount(), reward);
-                    reward.getType().totalPrice += reward.getAmount();
-                    reward.getType().amountOfRewards++;
-
-                    if (reward.getAmount() < reward.getType().minPrice) reward.getType().minPrice = reward.getAmount();
-                    if (reward.getAmount() > reward.getType().maxPrice) reward.getType().maxPrice = reward.getAmount();
-                }
-
-                for (TypeBase type : TypeRegistry.getAllTypes())
-                {
-                    type.avgPrice = type.totalPrice / type.amountOfRewards;
+                    map.put(reward.getAmount(), reward);
                 }
             }
             else
@@ -47,17 +33,21 @@ public class RewardsDB
                 //noinspection ResultOfMethodCallIgnored
                 file.createNewFile();
                 JsonArray rootArray = new JsonArray();
+
+                JsonObject group = new JsonObject();
+                group.addProperty("name", "EXAMPLE");
+                group.addProperty("amount", 10);
+                group.addProperty("message", "&a[$name donated $$amount]");
+                JsonArray rewards = new JsonArray();
                 for (TypeBase type : TypeRegistry.getAllTypes())
                 {
                     JsonObject element = new JsonObject();
-
-                    element.addProperty("name", "DEMO_" + type.getName());
-                    element.addProperty("type", type.getName().toLowerCase());
-                    element.addProperty("amount", (double) ((int) (Helper.RANDOM.nextDouble() * 10000) / 10) / 100);
+                    element.addProperty("type", type.getName());
                     element.add("data", JsonNBTHelper.parseNBT(type.convertToNBT(type.getExample())));
-
-                    rootArray.add(element);
+                    rewards.add(element);
                 }
+                group.add("rewards", rewards);
+                rootArray.add(group);
 
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -71,16 +61,16 @@ public class RewardsDB
         }
     }
 
-    public synchronized boolean process(String name, double amount)
+    public synchronized boolean process(JsonObject donation)
     {
-        if (!amountMap.containsKey(amount))
+        if (!map.containsKey(donation.get("amount").getAsDouble()))
         {
-            Minecraft.getMinecraft().thePlayer.addChatMessage(EnumChatFormatting.GREEN + "[" + name + " donated " + Pay2Spawn.getConfig().currency + amount + "] " + EnumChatFormatting.WHITE);
+            Helper.msg(Helper.formatText(Pay2Spawn.getConfig().messageNoReward, donation));
             return false;
         }
         else
         {
-            amountMap.get(amount).use(name);
+            map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
             return true;
         }
     }

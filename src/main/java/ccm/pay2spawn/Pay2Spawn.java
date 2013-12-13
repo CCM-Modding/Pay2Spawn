@@ -1,17 +1,16 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
-import ccm.pay2spawn.types.EntityType;
-import ccm.pay2spawn.types.ItemType;
-import ccm.pay2spawn.types.PotionEffectType;
-import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.types.*;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.HudHelper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 
 import java.io.File;
@@ -52,6 +51,11 @@ public class Pay2Spawn
 
     public static P2SConfig getConfig() { return instance.config; }
 
+    public static File getFolder()
+    {
+        return instance.configFolder;
+    }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -70,6 +74,8 @@ public class Pay2Spawn
         TypeRegistry.register(new EntityType());
         TypeRegistry.register(new ItemType());
         TypeRegistry.register(new PotionEffectType());
+        TypeRegistry.register(new LightningType());
+        TypeRegistry.register(new XPOrbsType());
     }
 
     @Mod.EventHandler
@@ -83,6 +89,7 @@ public class Pay2Spawn
         if (event.getSide().isClient())
         {
             new DonationCheckerThread(config.interval, config.channel, config.API_Key).start();
+            new HudHelper();
         }
     }
 
@@ -90,5 +97,11 @@ public class Pay2Spawn
     public void postInit(FMLPostInitializationEvent event)
     {
         if (config.printEntityList) Helper.printEntityList(new File(configFolder, "EntityList.txt"));
+    }
+
+    @Mod.EventHandler
+    public void serverStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandP2S());
     }
 }

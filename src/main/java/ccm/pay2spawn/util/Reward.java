@@ -1,34 +1,35 @@
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import net.minecraft.nbt.NBTTagCompound;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
+
+import java.io.*;
 
 public class Reward
 {
-    private String         name;
-    private TypeBase       type;
-    private Double         amount;
-    private NBTTagCompound data;
+    private String    message;
+    private String    name;
+    private Double    amount;
+    private JsonArray rewards;
 
     public Reward(JsonObject json)
     {
         name = json.get("name").getAsString();
-        type = TypeRegistry.getByName(json.get("type").getAsString().toUpperCase());
         amount = json.get("amount").getAsDouble();
-        data = JsonNBTHelper.parseJSON(json.get("data").getAsJsonObject());
+        message = Helper.formatColors(json.get("message").getAsString());
+        rewards = json.getAsJsonArray("rewards");
     }
 
-    public TypeBase getType()
+    public Reward(String name, Double amount, JsonArray rewards)
     {
-        return type;
-    }
-
-    public NBTTagCompound getData()
-    {
-        return data;
+        this.name = name;
+        this.amount = amount;
+        this.rewards = rewards;
     }
 
     public String getName()
@@ -41,8 +42,55 @@ public class Reward
         return amount;
     }
 
-    public void use(String name)
+    public void sendToServer(JsonObject donation)
     {
-        type.sendToServer(name, Pay2Spawn.getConfig().currency + amount, data);
+        System.out.println(rewards.toString());
+        System.out.println(donation.toString());
+        Helper.msg(Helper.formatText(message, donation));
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Archive.MODID, toBytes(Helper.formatText(rewards, donation).toString())));
+    }
+
+    private byte[] toBytes(String formattedData)
+    {
+        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(streambyte);
+        try
+        {
+            stream.writeUTF(name);
+            stream.writeDouble(amount);
+            stream.writeUTF(formattedData);
+            stream.close();
+            streambyte.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        return streambyte.toByteArray();
+    }
+
+    public static Reward reconstruct(Packet250CustomPayload packet) throws IOException
+    {
+        ByteArrayInputStream streambyte = new ByteArrayInputStream(packet.data);
+        DataInputStream stream = new DataInputStream(streambyte);
+        String name = stream.readUTF();
+        Double amount = stream.readDouble();
+        String data = stream.readUTF();
+
+        System.out.println(data);
+
+        JsonArray rewards = Helper.PARSER.parse(data).getAsJsonArray();
+
+        return new Reward(name, amount, rewards);
+    }
+
+    public void spawnOnServer(EntityPlayer player)
+    {
+        for (JsonElement element : rewards)
+        {
+            JsonObject reward = element.getAsJsonObject();
+            TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase()).spawnServerSide(player, JsonNBTHelper.parseJSON(reward.getAsJsonObject("data")));
+        }
     }
 }

@@ -1,8 +1,5 @@
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.network.P2SPacket;
-import ccm.pay2spawn.util.Helper;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
 
 import java.util.Collection;
@@ -14,8 +11,7 @@ public class TypeRegistry
 
     public static void register(TypeBase typeBase)
     {
-        if (map.put(typeBase.getName().toLowerCase(), typeBase) != null)
-            throw new IllegalArgumentException("Duplicate type!");
+        if (map.put(typeBase.getName().toLowerCase(), typeBase) != null) throw new IllegalArgumentException("Duplicate type!");
     }
 
     public static TypeBase getByName(String name)
