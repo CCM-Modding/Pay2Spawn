@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import com.google.common.base.Throwables;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
@@ -39,6 +40,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.Map;
 
 public class SoundType extends TypeBase<NBTTagCompound>
@@ -59,7 +61,6 @@ public class SoundType extends TypeBase<NBTTagCompound>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setBoolean("ingameSound", true);
         nbt.setString("soundName", "");
         nbt.setFloat("volume", 1f);
         nbt.setFloat("pitch", 1f);
@@ -82,18 +83,11 @@ public class SoundType extends TypeBase<NBTTagCompound>
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        if (dataFromClient.getBoolean("ingameSound"))
-        {
-            player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString("soundName"), dataFromClient.getFloat("volume"), dataFromClient.getFloat("pitch"));
-        }
-        else
-        {
-            //player.getEntityWorld().playSoundAtEntity(player);
-        }
+        player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString("soundName"), dataFromClient.getFloat("volume"), dataFromClient.getFloat("pitch"));
     }
 
     @ForgeSubscribe(priority = EventPriority.LOWEST)
-    public void soundLoadEvent(SoundLoadEvent event)
+    public void soundLoadEvent(SoundLoadEvent event) throws IllegalAccessException
     {
         File file = new File(Pay2Spawn.getFolder(), "SoundsList.txt");
         try
@@ -106,15 +100,15 @@ public class SoundType extends TypeBase<NBTTagCompound>
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
 
-            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
+            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolMusic)).keySet())
             {
                 pw.println(key);
             }
-            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
+            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolSounds)).keySet())
             {
                 pw.println(key);
             }
-            for (Object key : ((Map)ReflectionHelper.getPrivateValue(SoundPool.class, event.manager.soundPoolMusic, "nameToSoundPoolEntriesMapping")).keySet())
+            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolStreaming)).keySet())
             {
                 pw.println(key);
             }
@@ -125,5 +119,22 @@ public class SoundType extends TypeBase<NBTTagCompound>
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final Field nameToSoundPoolEntriesMappingField = getHackField();
+
+    private static Field getHackField()
+    {
+        try
+        {
+            Field f = SoundPool.class.getDeclaredFields()[1];
+            f.setAccessible(true);
+            return f;
+        }
+        catch (Throwable t)
+        {
+            Throwables.propagate(t);
+        }
+        return null;
     }
 }
