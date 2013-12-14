@@ -61,7 +61,7 @@ public class SoundType extends TypeBase<NBTTagCompound>
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setString("soundName", "");
+        nbt.setString("soundName", "mob.creeper.say");
         nbt.setFloat("volume", 1f);
         nbt.setFloat("pitch", 1f);
 

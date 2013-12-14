@@ -6,8 +6,7 @@ You can fully customise this file.
 
 ## How rewards are selected:
 A reward is selected based on the amount donated.
-The name of the reward or the message in paypal DO NOTHING.
-
+The name of the reward or the message in paypal DO NOTHING.<br>
 If a donation matches no reward, a default message shows. (See .cfg file)
 
 ## File structure
@@ -52,10 +51,10 @@ If a donation matches no reward, a default message shows. (See .cfg file)
 <table>
 
 ## Variables
-If you actually read all the things up to this point, you will have seen (Vars usable).
+If you actually read all the things up to this point, you will have seen (Vars usable).<br>
 This means you can use $name, $amount and $note to represent the donators name, the amount donated and the message left in PayPal.
 
-###Example:
+### Example:
 starting from (4) in previous example.
 <table>
 <tr>
@@ -92,6 +91,35 @@ starting from (4) in previous example.
 </td>
 </tr>
 <table>
+
+## Random tag
+You can make random numbers or have it select a random value from a list.<br>
+This tag replaces any value in an NBT value.
+
+### Boolean (true or false)
+Format: $random<br>
+Works with: BYTE (which can be a boolean)
+#### Example
+    "Flicker": "BYTE:$random",
+
+### Range (random value between x and y)
+Format: $random(x,y)<br>
+Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE
+#### Example
+    "Type": "BYTE:$random(0,5)",
+
+### Values (random value from a list of values)
+Format: $random[value1, value2, value3, value4, ..., valueN]<br>
+Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING
+#### Example
+    "id": "SHORT:$random[276, 277, 278, 279]",
+
+### Random RGB (makes a list of random colors)
+Only useful with leather armour or fireworks. (As far as I know)
+Format: $randomRGB(amountOfColors)<br>
+Works with: INT[]
+#### Example
+    "Colors": "INT[]:$randomRGB(2)",
 
 ## NBT tags in JSON
 Make sure you **NEVER** remove the "BYTE:" or "STRING:" or any other 'CAPITALS:' part of a tag. This allows the json to be converted in the Minecraft NBT format automatically.

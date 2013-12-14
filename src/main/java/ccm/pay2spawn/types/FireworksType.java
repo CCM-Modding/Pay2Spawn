@@ -23,12 +23,16 @@
 
 package ccm.pay2spawn.types;
 
+import com.google.common.base.Throwables;
+import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+
+import java.lang.reflect.Field;
 
 public class FireworksType extends TypeBase<NBTTagCompound>
 {
@@ -103,7 +107,43 @@ public class FireworksType extends TypeBase<NBTTagCompound>
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX, player.posY, player.posZ, ItemStack.loadItemStackFromNBT(dataFromClient));
-        player.worldObj.spawnEntityInWorld(entityfireworkrocket);
+        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+        int i = 0;
+        NBTTagCompound nbttagcompound1 = itemStack.getTagCompound().getCompoundTag("Fireworks");
+        if (nbttagcompound1 != null) i += nbttagcompound1.getByte("Flight");
+
+        try
+        {
+            int rad = 10;
+            for (double dgr = 0; dgr < 2 * Math.PI; dgr += Math.PI/5)
+            {
+                EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX + rad * Math.cos(dgr), player.posY, player.posZ + rad * Math.sin(dgr), itemStack.copy());
+                fireworkAgeField.set(entityfireworkrocket, 1);
+                lifetimeField.set(entityfireworkrocket, 10 + 10 * i);
+                player.worldObj.spawnEntityInWorld(entityfireworkrocket);
+            }
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    private static final Field fireworkAgeField = getHackField(0);
+    private static final Field lifetimeField = getHackField(1);
+
+    private static Field getHackField(int id)
+    {
+        try
+        {
+            Field f = EntityFireworkRocket.class.getDeclaredFields()[id];
+            f.setAccessible(true);
+            return f;
+        }
+        catch (Throwable t)
+        {
+            Throwables.propagate(t);
+        }
+        return null;
     }
 }

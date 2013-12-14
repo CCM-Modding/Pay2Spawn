@@ -28,8 +28,11 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.*;
+import org.lwjgl.Sys;
 
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * This is nearly full Json (gson) to NBT converter.
@@ -138,6 +141,7 @@ public class JsonNBTHelper
                 if (string.startsWith(NBTBase.NBTTypes[id] + ":"))
                 {
                     String value = string.replace(NBTBase.NBTTypes[id] + ":", "");
+                    if (value.startsWith("$random")) value = solveRandom(id, value.replace("$random", ""));
                     switch (id)
                     {
                         // 0 = END
@@ -179,6 +183,90 @@ public class JsonNBTHelper
         if (n instanceof Double) return new NBTTagDouble("", n.doubleValue());
 
         throw new NumberFormatException(element.toString() + " is was not able to be parsed.");
+    }
+
+    final static Pattern R_RANGE  = Pattern.compile("^\\((-?\\w+),(-?\\w+)\\)$");
+    final static Pattern R_VALUES = Pattern.compile("^\\[(?:(-?\\w+), ?)+(-?\\w+)\\]$");
+    final static Pattern R_RGB    = Pattern.compile("^RGB\\((\\w+)\\)$");
+
+    private static String solveRandom(int id, String value)
+    {
+        /**
+         * Random type: Boolean
+         * Format: $random
+         * Works with: BYTE (which can be a boolean)
+         */
+        if (value.equals(""))
+        {
+            return Helper.RANDOM.nextBoolean() ? "1" : "0";
+        }
+        /**
+         * Random type: Range
+         * Format: $random(beginRange,endRange)
+         * Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE
+         */
+        Matcher mRange = R_RANGE.matcher(value);
+        if (mRange.matches())
+        {
+            switch (id)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                {
+                    int begin = Integer.parseInt(mRange.group(1));
+                    int end = Integer.parseInt(mRange.group(2));
+                    return "" + (begin + Helper.RANDOM.nextInt(end - begin));
+                }
+                case 5:
+                case 6:
+                {
+                    double begin = Double.parseDouble(mRange.group(1));
+                    double end = Double.parseDouble(mRange.group(2));
+                    return "" + (begin + (end - begin) * Helper.RANDOM.nextDouble());
+                }
+            }
+        }
+        /**
+         * Random type: Values
+         * Format: $random[value1, value2, value3, value4, ..., valueN]
+         * Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING
+         */
+        Matcher mValues = R_VALUES.matcher(value);
+        if (mValues.matches())
+        {
+            switch (id)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+
+                case 5:
+                case 6:
+
+                case 8:
+                {
+                    return mValues.group(1 + Helper.RANDOM.nextInt(mValues.groupCount()));
+                }
+            }
+        }
+        /**
+         * Random type: Colors
+         * Format: $randomRGB(amountOfColors)
+         * Works with: INT[]
+         */
+        Matcher mRGB = R_RGB.matcher(value);
+        if (mRGB.matches())
+        {
+            JsonArray colors = new JsonArray();
+            for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++)
+                colors.add(new JsonPrimitive((Helper.RANDOM.nextInt(200) << 16) + (Helper.RANDOM.nextInt(200) << 8) + Helper.RANDOM.nextInt(200)));
+
+            return colors.toString();
+        }
+        return value;
     }
 
     public static NBTTagByteArray parseJSONByteArray(String value)

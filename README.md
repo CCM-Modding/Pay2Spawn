@@ -17,10 +17,3 @@ You'll need the API key and channel name from there to enter in your config file
 
 You can customise the rewards in the .json file in the config folder.
 Use this config file to make a nice webpage so your viewers can see what they can donate for.
-
-Current todo list
------------------
-
-* Sample code that makes a nice web page pulled from the json file.
-* Entities with custom data
-* Lightning and XP orbs
