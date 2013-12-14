@@ -43,10 +43,7 @@ public class PotionEffectType extends TypeBase<PotionEffect>
     public PotionEffect getExample()
     {
         Potion potion = null;
-        while (potion == null)
-        {
-            potion = Potion.potionTypes[Helper.RANDOM.nextInt(Potion.potionTypes.length)];
-        }
+        while (potion == null) potion = Potion.potionTypes[Helper.RANDOM.nextInt(Potion.potionTypes.length)];
         return new PotionEffect(potion.getId(), (int) (Helper.RANDOM.nextDouble() * 1000));
     }
 

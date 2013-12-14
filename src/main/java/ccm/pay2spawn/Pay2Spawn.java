@@ -25,7 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.types.*;
-import ccm.pay2spawn.util.HudHelper;
+import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
@@ -34,8 +34,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import net.minecraftforge.client.event.sound.SoundLoadEvent;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -51,7 +49,7 @@ public class Pay2Spawn
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
 
-    public static boolean   debug = false;
+    public static boolean debug = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata metadata;
@@ -104,6 +102,7 @@ public class Pay2Spawn
         TypeRegistry.register(new XPOrbsType());
         TypeRegistry.register(new SoundType());
         TypeRegistry.register(new FireworksType());
+        TypeRegistry.register(new CustomEntityType());
     }
 
     @Mod.EventHandler
@@ -117,7 +116,7 @@ public class Pay2Spawn
         if (event.getSide().isClient())
         {
             new DonationCheckerThread(config.interval, config.channel, config.API_Key).start();
-            new HudHelper();
+            new EventHandler();
         }
     }
 

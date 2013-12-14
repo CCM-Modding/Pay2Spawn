@@ -23,19 +23,19 @@
 
 package ccm.pay2spawn.util;
 
-import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
-public class HudHelper
+public class EventHandler
 {
-    final static ArrayList<String> left  = new ArrayList<>();
-    final static ArrayList<String> right = new ArrayList<>();
-
-    public HudHelper()
+    public EventHandler()
     {
         try
         {
@@ -46,6 +46,23 @@ public class HudHelper
             e.printStackTrace(); //TODO: debug and test w/o Forge
         }
     }
+
+    public static HashSet<String> entitySet = new HashSet<>();
+
+    @ForgeSubscribe
+    public void event(EntityInteractEvent event)
+    {
+        if (entitySet.contains(event.entityPlayer.getDisplayName()))
+        {
+            entitySet.remove(event.entityPlayer.getDisplayName());
+            NBTTagCompound tag = new NBTTagCompound();
+            event.target.writeToNBT(tag);
+            event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText(JsonNBTHelper.parseNBT(tag).toString()));
+        }
+    }
+
+    final static ArrayList<String> left  = new ArrayList<>();
+    final static ArrayList<String> right = new ArrayList<>();
 
     @ForgeSubscribe
     public void hudEvent(RenderGameOverlayEvent.Text event)

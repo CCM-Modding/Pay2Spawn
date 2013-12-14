@@ -25,17 +25,12 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
 import com.google.common.base.Throwables;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
-import net.minecraft.client.audio.SoundPoolEntry;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.EventPriority;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,8 +81,8 @@ public class SoundType extends TypeBase<NBTTagCompound>
         player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString("soundName"), dataFromClient.getFloat("volume"), dataFromClient.getFloat("pitch"));
     }
 
-    @ForgeSubscribe(priority = EventPriority.LOWEST)
-    public void soundLoadEvent(SoundLoadEvent event) throws IllegalAccessException
+    @Override
+    public void doConfig(Configuration config)
     {
         File file = new File(Pay2Spawn.getFolder(), "SoundsList.txt");
         try
@@ -100,24 +95,19 @@ public class SoundType extends TypeBase<NBTTagCompound>
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
 
-            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolMusic)).keySet())
-            {
-                pw.println(key);
-            }
-            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolSounds)).keySet())
-            {
-                pw.println(key);
-            }
-            for (Object key : ((Map)nameToSoundPoolEntriesMappingField.get(event.manager.soundPoolStreaming)).keySet())
-            {
-                pw.println(key);
-            }
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolMusic)).keySet()) pw.println(key);
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet()) pw.println(key);
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolStreaming)).keySet()) pw.println(key);
 
             pw.close();
         }
         catch (IOException e)
         {
             throw new RuntimeException(e);
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
         }
     }
 

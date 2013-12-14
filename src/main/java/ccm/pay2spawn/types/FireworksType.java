@@ -24,7 +24,6 @@
 package ccm.pay2spawn.types;
 
 import com.google.common.base.Throwables;
-import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -67,29 +66,34 @@ public class FireworksType extends TypeBase<NBTTagCompound>
         explosion.setByte("Trail", (byte) 0);
         explosion.setIntArray("Colors", new int[] {14188952, 8073150});
         explosions.appendTag(explosion);
-//        explosion = new NBTTagCompound();
-//        explosion.setByte("Type", (byte) 2);
-//        explosion.setByte("Flicker", (byte) 0);
-//        explosion.setByte("Trail", (byte) 1);
-//        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-//        explosions.appendTag(explosion);
-//        explosion = new NBTTagCompound();
-//        explosion.setByte("Type", (byte) 3);
-//        explosion.setByte("Flicker", (byte) 1);
-//        explosion.setByte("Trail", (byte) 1);
-//        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-//        explosions.appendTag(explosion);
-//        explosion = new NBTTagCompound();
-//        explosion.setByte("Type", (byte) 4);
-//        explosion.setByte("Flicker", (byte) 1);
-//        explosion.setByte("Trail", (byte) 1);
-//        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-//        explosions.appendTag(explosion);
+        //        explosion = new NBTTagCompound();
+        //        explosion.setByte("Type", (byte) 2);
+        //        explosion.setByte("Flicker", (byte) 0);
+        //        explosion.setByte("Trail", (byte) 1);
+        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
+        //        explosions.appendTag(explosion);
+        //        explosion = new NBTTagCompound();
+        //        explosion.setByte("Type", (byte) 3);
+        //        explosion.setByte("Flicker", (byte) 1);
+        //        explosion.setByte("Trail", (byte) 1);
+        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
+        //        explosions.appendTag(explosion);
+        //        explosion = new NBTTagCompound();
+        //        explosion.setByte("Type", (byte) 4);
+        //        explosion.setByte("Flicker", (byte) 1);
+        //        explosion.setByte("Trail", (byte) 1);
+        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
+        //        explosions.appendTag(explosion);
         fireworks.setTag("Explosions", explosions);
         tag.setCompoundTag("Fireworks", fireworks);
         out.setTagCompound(tag);
 
-        return out.writeToNBT(new NBTTagCompound());
+        tag = out.writeToNBT(new NBTTagCompound());
+
+        tag.setInteger("RADIUS", 10);
+        tag.setInteger("AMOUNT", 10);
+
+        return tag;
     }
 
     @Override
@@ -114,8 +118,8 @@ public class FireworksType extends TypeBase<NBTTagCompound>
 
         try
         {
-            int rad = 10;
-            for (double dgr = 0; dgr < 2 * Math.PI; dgr += Math.PI/5)
+            int rad = dataFromClient.getInteger("RADIUS");
+            for (double dgr = 0; dgr < 2 * Math.PI; dgr += (2 * Math.PI / dataFromClient.getInteger("AMOUNT")))
             {
                 EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX + rad * Math.cos(dgr), player.posY, player.posZ + rad * Math.sin(dgr), itemStack.copy());
                 fireworkAgeField.set(entityfireworkrocket, 1);
@@ -130,7 +134,7 @@ public class FireworksType extends TypeBase<NBTTagCompound>
     }
 
     private static final Field fireworkAgeField = getHackField(0);
-    private static final Field lifetimeField = getHackField(1);
+    private static final Field lifetimeField    = getHackField(1);
 
     private static Field getHackField(int id)
     {

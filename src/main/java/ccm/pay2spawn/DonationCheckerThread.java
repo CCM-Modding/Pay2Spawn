@@ -23,8 +23,8 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
-import ccm.pay2spawn.util.HudHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -98,16 +98,16 @@ public class DonationCheckerThread extends Thread
 
     private void doFileAndHud(JsonObject root)
     {
-        HudHelper.reset();
+        EventHandler.reset();
         if (Pay2Spawn.getConfig().hud.top != 0)
         {
             String header = Pay2Spawn.getConfig().hud.top_header.trim();
-            if (!Strings.isNullOrEmpty(header)) HudHelper.add(Pay2Spawn.getConfig().hud.top, header);
+            if (!Strings.isNullOrEmpty(header)) EventHandler.add(Pay2Spawn.getConfig().hud.top, header);
 
             for (int i = 0; i < Pay2Spawn.getConfig().hud.top_amount; i++)
             {
                 JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
-                HudHelper.add(Pay2Spawn.getConfig().hud.top, Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation));
+                EventHandler.add(Pay2Spawn.getConfig().hud.top, Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation));
             }
         }
         if (Pay2Spawn.getConfig().file.top != 0)
@@ -123,7 +123,7 @@ public class DonationCheckerThread extends Thread
 
                 for (int i = 0; i < Pay2Spawn.getConfig().file.top_amount; i++)
                 {
-                    if (i  == Pay2Spawn.getConfig().file.top_amount-1) end = "";
+                    if (i == Pay2Spawn.getConfig().file.top_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                     pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation) + end);
                 }
@@ -138,12 +138,12 @@ public class DonationCheckerThread extends Thread
         if (Pay2Spawn.getConfig().hud.recent != 0)
         {
             String header = Pay2Spawn.getConfig().hud.recent_header.trim();
-            if (!Strings.isNullOrEmpty(header)) HudHelper.add(Pay2Spawn.getConfig().hud.recent, header);
+            if (!Strings.isNullOrEmpty(header)) EventHandler.add(Pay2Spawn.getConfig().hud.recent, header);
 
             for (int i = 0; i < Pay2Spawn.getConfig().hud.recent_amount; i++)
             {
                 JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
-                HudHelper.add(Pay2Spawn.getConfig().hud.recent, Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation));
+                EventHandler.add(Pay2Spawn.getConfig().hud.recent, Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation));
             }
         }
         if (Pay2Spawn.getConfig().file.recent != 0)
@@ -159,7 +159,7 @@ public class DonationCheckerThread extends Thread
 
                 for (int i = 0; i < Pay2Spawn.getConfig().file.recent_amount; i++)
                 {
-                    if (i  == Pay2Spawn.getConfig().file.recent_amount-1) end = "";
+                    if (i == Pay2Spawn.getConfig().file.recent_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                     pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation) + end);
                 }

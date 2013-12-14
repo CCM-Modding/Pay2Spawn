@@ -23,15 +23,13 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -76,23 +74,28 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
             return;
         }
-        if (args[0].equalsIgnoreCase("debug"))
+        if (args[0].equalsIgnoreCase("debug") && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName()))
         {
             Pay2Spawn.debug = !Pay2Spawn.debug;
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Debug now: " + Pay2Spawn.debug).setColor(EnumChatFormatting.RED));
         }
-        if (args[0].equalsIgnoreCase("getnbt"))
+        if (args[0].equalsIgnoreCase("getnbtofitem"))
         {
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("The nbt of the item you are holding:"));
             String text = JsonNBTHelper.parseNBT(player.inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString();
             sender.sendChatToPlayer(ChatMessageComponent.createFromText(text));
+        }
+        if (args[0].equalsIgnoreCase("getnbtofentity"))
+        {
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("You will get the nbt of the next entity you right click."));
+            EventHandler.entitySet.add(player.getDisplayName());
         }
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1)
-            return getListOfStringsMatchingLastWord(args, "debug", "getnbt");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity");
         return null;
     }
 }

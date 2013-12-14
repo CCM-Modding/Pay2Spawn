@@ -27,21 +27,16 @@ import ccm.pay2spawn.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.Configuration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-
 import static ccm.pay2spawn.util.Archive.MODID;
 
-public class EntityType extends TypeBase<NBTTagCompound>
+public class CustomEntityType extends TypeBase<NBTTagCompound>
 {
-    private static final String NAME   = "entity";
+    private static final String NAME   = "customeentity";
     private static       int    radius = 10;
 
     @Override
@@ -60,9 +55,10 @@ public class EntityType extends TypeBase<NBTTagCompound>
     public NBTTagCompound getExample()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("name", Helper.getRndEntity());
-        tag.setBoolean("argo", true);
-
+        Entity entity = EntityList.createEntityByName("Wolf", null);
+        entity.writeToNBT(tag);
+        entity.writeToNBTOptional(tag);
+        tag.setBoolean("agro", true);
         return tag;
     }
 
@@ -88,40 +84,16 @@ public class EntityType extends TypeBase<NBTTagCompound>
         x = player.posX + (radius / 2 - Helper.RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - Helper.RANDOM.nextInt(radius));
 
-        Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
+        EntityLiving entity = (EntityLiving) EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
+        entity.readEntityFromNBT(dataFromClient);
 
-        if (entity != null && entity instanceof EntityLivingBase)
-        {
-            EntityLiving entityliving = (EntityLiving) entity;
-            entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
-            entityliving.rotationYawHead = entityliving.rotationYaw;
-            entityliving.renderYawOffset = entityliving.rotationYaw;
-            entityliving.onSpawnWithEgg(null);
-            player.getEntityWorld().spawnEntityInWorld(entity);
-            entityliving.playLivingSound();
-        }
-    }
+        if (dataFromClient.getBoolean("agro")) entity.setAttackTarget(player);
 
-    @Override
-    public void printHelpList(File configFolder)
-    {
-        File file = new File(configFolder, "EntityList.txt");
-        try
-        {
-            if (file.exists()) file.delete();
-            file.createNewFile();
-            PrintWriter pw = new PrintWriter(file);
-
-            pw.println("## This is a list of all the entities you can use in the json file.");
-            pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
-            pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
-
-            for (Object key : EntityList.stringToClassMapping.keySet()) pw.println(key.toString());
-            pw.close();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
+        entity.rotationYawHead = entity.rotationYaw;
+        entity.renderYawOffset = entity.rotationYaw;
+        entity.onSpawnWithEgg(null);
+        player.getEntityWorld().spawnEntityInWorld(entity);
+        entity.playLivingSound();
     }
 }

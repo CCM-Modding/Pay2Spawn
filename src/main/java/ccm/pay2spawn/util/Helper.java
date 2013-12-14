@@ -23,10 +23,8 @@
 
 package ccm.pay2spawn.util;
 
-import argo.jdom.JsonStringNode;
 import com.google.gson.*;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
@@ -142,8 +140,8 @@ public class Helper
     public static String formatText(String format, JsonObject donation)
     {
         if (donation.has("twitchUsername") && donation.get("twitchUsername").isJsonPrimitive()) format = format.replace("$name", donation.get("twitchUsername").getAsString());
-        if (donation.has("amount") && donation.get("amount").isJsonPrimitive())                 format = format.replace("$amount", donation.get("amount").getAsString());
-        if (donation.has("note") && donation.get("note").isJsonPrimitive())                     format = format.replace("$note", donation.get("note").getAsString());
+        if (donation.has("amount") && donation.get("amount").isJsonPrimitive()) format = format.replace("$amount", donation.get("amount").getAsString());
+        if (donation.has("note") && donation.get("note").isJsonPrimitive()) format = format.replace("$note", donation.get("note").getAsString());
         return format;
     }
 

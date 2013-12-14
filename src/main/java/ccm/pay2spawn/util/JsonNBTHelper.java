@@ -28,7 +28,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.*;
-import org.lwjgl.Sys;
 
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -85,26 +84,21 @@ public class JsonNBTHelper
     public static JsonPrimitive parseNBT(NBTTagIntArray nbtArray)
     {
         JsonArray jsonArray = new JsonArray();
-        for (int i : nbtArray.intArray)
-            jsonArray.add(new JsonPrimitive(i));
+        for (int i : nbtArray.intArray) jsonArray.add(new JsonPrimitive(i));
         return new JsonPrimitive("INT[]:" + jsonArray.toString());
     }
 
     public static JsonPrimitive parseNBT(NBTTagByteArray nbtArray)
     {
         JsonArray jsonArray = new JsonArray();
-        for (int i : nbtArray.byteArray)
-            jsonArray.add(new JsonPrimitive(i));
+        for (int i : nbtArray.byteArray) jsonArray.add(new JsonPrimitive(i));
         return new JsonPrimitive("BYTE[]:" + jsonArray.toString());
     }
 
     public static JsonArray parseNBT(NBTTagList nbtArray)
     {
         JsonArray jsonArray = new JsonArray();
-        for (int i = 0; i < nbtArray.tagCount(); i++)
-        {
-            jsonArray.add(parseNBT(nbtArray.tagAt(i)));
-        }
+        for (int i = 0; i < nbtArray.tagCount(); i++) jsonArray.add(parseNBT(nbtArray.tagAt(i)));
         return jsonArray;
     }
 
@@ -236,21 +230,7 @@ public class JsonNBTHelper
         Matcher mValues = R_VALUES.matcher(value);
         if (mValues.matches())
         {
-            switch (id)
-            {
-                case 1:
-                case 2:
-                case 3:
-                case 4:
-
-                case 5:
-                case 6:
-
-                case 8:
-                {
-                    return mValues.group(1 + Helper.RANDOM.nextInt(mValues.groupCount()));
-                }
-            }
+            return mValues.group(1 + Helper.RANDOM.nextInt(mValues.groupCount()));
         }
         /**
          * Random type: Colors
@@ -261,9 +241,7 @@ public class JsonNBTHelper
         if (mRGB.matches())
         {
             JsonArray colors = new JsonArray();
-            for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++)
-                colors.add(new JsonPrimitive((Helper.RANDOM.nextInt(200) << 16) + (Helper.RANDOM.nextInt(200) << 8) + Helper.RANDOM.nextInt(200)));
-
+            for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((Helper.RANDOM.nextInt(200) << 16) + (Helper.RANDOM.nextInt(200) << 8) + Helper.RANDOM.nextInt(200)));
             return colors.toString();
         }
         return value;
@@ -273,8 +251,7 @@ public class JsonNBTHelper
     {
         JsonArray in = Helper.PARSER.parse(value).getAsJsonArray();
         byte[] out = new byte[in.size()];
-        for (int i = 0; i < in.size(); i++)
-            out[i] = in.get(i).getAsByte();
+        for (int i = 0; i < in.size(); i++) out[i] = in.get(i).getAsByte();
         return new NBTTagByteArray("", out);
     }
 
@@ -282,8 +259,7 @@ public class JsonNBTHelper
     {
         JsonArray in = Helper.PARSER.parse(value).getAsJsonArray();
         int[] out = new int[in.size()];
-        for (int i = 0; i < in.size(); i++)
-            out[i] = in.get(i).getAsInt();
+        for (int i = 0; i < in.size(); i++) out[i] = in.get(i).getAsInt();
         return new NBTTagIntArray("", out);
     }
 

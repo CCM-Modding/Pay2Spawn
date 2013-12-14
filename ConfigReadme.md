@@ -3,6 +3,7 @@ These is an explanation of a simple json database file.
 You can fully customise this file.
 
 [Pro tip: Use this for all your json needs.](http://jsoneditoronline.org/)
+Also handy: [A Java compatible colour picker.](http://dries007.net/ColorPicker/)
 
 ## How rewards are selected:
 A reward is selected based on the amount donated.
