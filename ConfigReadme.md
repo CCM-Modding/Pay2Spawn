@@ -115,14 +115,40 @@ Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING
     "id": "SHORT:$random[276, 277, 278, 279]",
 
 ### Random RGB (makes a list of random colors)
-Only useful with leather armour or fireworks. (As far as I know)
+Only useful with leather armour or fireworks. (As far as I know)<br>
 Format: $randomRGB(amountOfColors)<br>
 Works with: INT[]
 #### Example
     "Colors": "INT[]:$randomRGB(2)",
+    
+### Example for random fireworks
+This example spawns random fireworks. The flight hight, type of firework, the colour and all the possible attributes are random.
+<code>
+    {<br>
+      "type": "fireworks",<br>
+      "data": {<br>
+        "id": "SHORT:401",<br>
+        "Damage": "SHORT:0",<br>
+        "Count": "BYTE:1",<br>
+        "tag": {<br>
+          "Fireworks": {<br>
+            "Flight": "BYTE:$random(0,1)",<br>
+            "Explosions": [<br>
+              {<br>
+                "Type": "BYTE:$random(0,5)",<br>
+                "Flicker": "BYTE:$random",<br>
+                "Colors": "INT[]:$randomRGB(2)",<br>
+                "Trail": "BYTE:$random"<br>
+              }<br>
+            ]<br>
+          }<br>
+        }<br>
+      }<br>
+    }<br>
+</code>
 
 ## NBT tags in JSON
-Make sure you **NEVER** remove the "BYTE:" or "STRING:" or any other 'CAPITALS:' part of a tag. This allows the json to be converted in the Minecraft NBT format automatically.
+Make sure you **NEVER** remove the "BYTE:" or "STRING:" or any other 'CAPITALS:' part of a tag. This allows the json to be converted in NBT automatically.
 As you can see in your default config (specifically the fireworks one) the data tags can become quite complex. 
 
 [My advice: Don't do this manually.](http://jsoneditoronline.org/)
