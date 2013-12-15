@@ -93,7 +93,7 @@ public class CommandP2S extends CommandBase
         if (args[0].equalsIgnoreCase("reload"))
         {
             Pay2Spawn.reloadDB();
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Reloaded."));
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
         }
     }
 
