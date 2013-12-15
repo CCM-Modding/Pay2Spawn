@@ -24,10 +24,8 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.util.Helper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
@@ -61,7 +59,7 @@ public class EntityType extends TypeBase<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setString("name", Helper.getRndEntity());
-        tag.setBoolean("argo", true);
+        tag.setBoolean("agro", true);
 
         return tag;
     }
@@ -88,18 +86,16 @@ public class EntityType extends TypeBase<NBTTagCompound>
         x = player.posX + (radius / 2 - Helper.RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - Helper.RANDOM.nextInt(radius));
 
-        Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
+        EntityLiving entityliving = (EntityLiving) EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
 
-        if (entity != null && entity instanceof EntityLivingBase)
-        {
-            EntityLiving entityliving = (EntityLiving) entity;
-            entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
-            entityliving.rotationYawHead = entityliving.rotationYaw;
-            entityliving.renderYawOffset = entityliving.rotationYaw;
-            entityliving.onSpawnWithEgg(null);
-            player.getEntityWorld().spawnEntityInWorld(entity);
-            entityliving.playLivingSound();
-        }
+        if (dataFromClient.getBoolean("agro")) entityliving.setAttackTarget(player);
+
+        entityliving.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
+        entityliving.rotationYawHead = entityliving.rotationYaw;
+        entityliving.renderYawOffset = entityliving.rotationYaw;
+        entityliving.onSpawnWithEgg(null);
+        player.getEntityWorld().spawnEntityInWorld(entityliving);
+        entityliving.playLivingSound();
     }
 
     @Override

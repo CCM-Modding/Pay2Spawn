@@ -106,8 +106,15 @@ public class Reward
     {
         for (JsonElement element : rewards)
         {
-            JsonObject reward = element.getAsJsonObject();
-            TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase()).spawnServerSide(player, JsonNBTHelper.parseJSON(reward.getAsJsonObject("data")));
+            try
+            {
+                JsonObject reward = element.getAsJsonObject();
+                TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase()).spawnServerSide(player, JsonNBTHelper.parseJSON(reward.getAsJsonObject("data")));
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

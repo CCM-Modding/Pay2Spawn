@@ -52,11 +52,13 @@ public class EventHandler
     @ForgeSubscribe
     public void event(EntityInteractEvent event)
     {
+        if (event.entityPlayer.worldObj.isRemote) return;
         if (entitySet.contains(event.entityPlayer.getDisplayName()))
         {
             entitySet.remove(event.entityPlayer.getDisplayName());
             NBTTagCompound tag = new NBTTagCompound();
             event.target.writeToNBT(tag);
+            event.target.writeMountToNBT(tag);
             event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText(JsonNBTHelper.parseNBT(tag).toString()));
         }
     }

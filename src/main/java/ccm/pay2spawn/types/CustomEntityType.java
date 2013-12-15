@@ -56,8 +56,7 @@ public class CustomEntityType extends TypeBase<NBTTagCompound>
     {
         NBTTagCompound tag = new NBTTagCompound();
         Entity entity = EntityList.createEntityByName("Wolf", null);
-        entity.writeToNBT(tag);
-        entity.writeToNBTOptional(tag);
+        entity.writeMountToNBT(tag);
         tag.setBoolean("agro", true);
         return tag;
     }
