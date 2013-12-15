@@ -26,10 +26,8 @@ package ccm.pay2spawn.types;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.Configuration;
 
 import static ccm.pay2spawn.util.Archive.MODID;
@@ -83,16 +81,27 @@ public class CustomEntityType extends TypeBase<NBTTagCompound>
         x = player.posX + (radius / 2 - Helper.RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - Helper.RANDOM.nextInt(radius));
 
-        EntityLiving entity = (EntityLiving) EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        entity.readEntityFromNBT(dataFromClient);
+        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
 
-        if (dataFromClient.getBoolean("agro")) entity.setAttackTarget(player);
+        if (entity != null)
+        {
+            entity.setPosition(x, y, z);
+            player.worldObj.spawnEntityInWorld(entity);
 
-        entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
-        entity.rotationYawHead = entity.rotationYaw;
-        entity.renderYawOffset = entity.rotationYaw;
-        entity.onSpawnWithEgg(null);
-        player.getEntityWorld().spawnEntityInWorld(entity);
-        entity.playLivingSound();
+            Entity entity1 = entity;
+            for (NBTTagCompound tag = dataFromClient; tag.hasKey("Riding"); tag = tag.getCompoundTag("Riding"))
+            {
+                Entity entity2 = EntityList.createEntityFromNBT(tag.getCompoundTag("Riding"), player.getEntityWorld());
+
+                if (entity2 != null)
+                {
+                    entity2.setPosition(x, y, z);
+                    player.worldObj.spawnEntityInWorld(entity2);
+                    entity1.mountEntity(entity2);
+                }
+
+                entity1 = entity2;
+            }
+        }
     }
 }

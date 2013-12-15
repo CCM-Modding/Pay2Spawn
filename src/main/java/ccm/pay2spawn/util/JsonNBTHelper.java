@@ -244,6 +244,8 @@ public class JsonNBTHelper
             for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((Helper.RANDOM.nextInt(200) << 16) + (Helper.RANDOM.nextInt(200) << 8) + Helper.RANDOM.nextInt(200)));
             return colors.toString();
         }
+
+        if (value.equalsIgnoreCase("Entity")) return Helper.getRndEntity();
         return value;
     }
 

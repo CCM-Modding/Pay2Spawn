@@ -36,11 +36,10 @@ public class P2SConfig
 
     Configuration configuration;
 
-    public String  messageNoReward = "&a[$name donated $$amount]";
-    public boolean printHelpLists  = true;
-    public int     interval        = 10;
-    public String  API_Key         = "";
-    public String  channel         = "";
+    public boolean printHelpLists = true;
+    public int     interval       = 10;
+    public String  API_Key        = "";
+    public String  channel        = "";
     public HudSettings  hud;
     public FileSettings file;
 
@@ -54,7 +53,6 @@ public class P2SConfig
         interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
         channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
         API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();
-        messageNoReward = Helper.formatColors(configuration.get(MODID, "NoRewardMessage", messageNoReward, "Gets used when the amount donated doesn't match anything.").getString());
 
         this.hud = new HudSettings();
         this.file = new FileSettings();

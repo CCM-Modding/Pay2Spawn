@@ -137,4 +137,9 @@ public class Pay2Spawn
     {
         event.registerServerCommand(new CommandP2S());
     }
+
+    public static void reloadDB()
+    {
+        instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
+    }
 }

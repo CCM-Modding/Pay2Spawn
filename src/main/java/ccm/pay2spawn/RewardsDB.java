@@ -59,13 +59,14 @@ public class RewardsDB
 
                 JsonObject group = new JsonObject();
                 group.addProperty("name", "EXAMPLE");
-                group.addProperty("amount", 10);
+                group.addProperty("amount", 0);
                 group.addProperty("message", "&a[$name donated $$amount]");
                 JsonArray rewards = new JsonArray();
                 for (TypeBase type : TypeRegistry.getAllTypes())
                 {
                     JsonObject element = new JsonObject();
                     element.addProperty("type", type.getName());
+                    //noinspection unchecked
                     element.add("data", JsonNBTHelper.parseNBT(type.convertToNBT(type.getExample())));
                     rewards.add(element);
                 }
@@ -84,17 +85,15 @@ public class RewardsDB
         }
     }
 
-    public synchronized boolean process(JsonObject donation)
+    public synchronized void process(JsonObject donation)
     {
         if (!map.containsKey(donation.get("amount").getAsDouble()))
         {
-            Helper.msg(Helper.formatText(Pay2Spawn.getConfig().messageNoReward, donation));
-            return false;
+            if (map.containsKey(0d)) map.get(0d).sendToServer(donation);
         }
         else
         {
             map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
-            return true;
         }
     }
 }

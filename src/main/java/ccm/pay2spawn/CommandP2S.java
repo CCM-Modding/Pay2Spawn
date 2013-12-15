@@ -90,12 +90,17 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("You will get the nbt of the next entity you right click."));
             EventHandler.entitySet.add(player.getDisplayName());
         }
+        if (args[0].equalsIgnoreCase("reload"))
+        {
+            Pay2Spawn.reloadDB();
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Reloaded."));
+        }
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload");
         return null;
     }
 }

@@ -24,11 +24,11 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.util.Helper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
@@ -58,8 +58,16 @@ public class EntityType extends TypeBase<NBTTagCompound>
     public NBTTagCompound getExample()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("name", Helper.getRndEntity());
+        tag.setString("name", "$randomEntity");
         tag.setBoolean("agro", true);
+        tag.setString("CustomName", "$name");
+
+        NBTTagCompound tag2 = new NBTTagCompound();
+        tag2.setString("name", "$randomEntity");
+        tag2.setBoolean("agro", true);
+        tag2.setString("CustomName", "$name");
+
+        tag.setCompoundTag("Riding", tag2);
 
         return tag;
     }
@@ -86,16 +94,36 @@ public class EntityType extends TypeBase<NBTTagCompound>
         x = player.posX + (radius / 2 - Helper.RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - Helper.RANDOM.nextInt(radius));
 
-        EntityLiving entityliving = (EntityLiving) EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
+        Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
 
-        if (dataFromClient.getBoolean("agro")) entityliving.setAttackTarget(player);
+        if (entity != null)
+        {
+            if (dataFromClient.getBoolean("agro") && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
+            if (dataFromClient.hasKey("CustomName") && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString("CustomName"));
+            if (dataFromClient.getCompoundTag("Riding").getBoolean("random") && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
 
-        entityliving.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(player.getEntityWorld().rand.nextFloat() * 360.0F), 0.0F);
-        entityliving.rotationYawHead = entityliving.rotationYaw;
-        entityliving.renderYawOffset = entityliving.rotationYaw;
-        entityliving.onSpawnWithEgg(null);
-        player.getEntityWorld().spawnEntityInWorld(entityliving);
-        entityliving.playLivingSound();
+            entity.setPosition(x, y, z);
+            player.getEntityWorld().spawnEntityInWorld(entity);
+
+            Entity entity1 = entity;
+            for (NBTTagCompound tag = dataFromClient; tag.hasKey("Riding"); tag = tag.getCompoundTag("Riding"))
+            {
+                Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag("Riding").getString("name"), player.getEntityWorld());
+
+                if (entity2 != null)
+                {
+                    if (tag.getCompoundTag("Riding").getBoolean("agro") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
+                    if (tag.getCompoundTag("Riding").hasKey("CustomName") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag("Riding").getString("CustomName"));
+                    if (tag.getCompoundTag("Riding").getBoolean("random") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
+
+                    entity2.setPosition(x, y, z);
+                    player.worldObj.spawnEntityInWorld(entity2);
+                    entity1.mountEntity(entity2);
+                }
+
+                entity1 = entity2;
+            }
+        }
     }
 
     @Override
