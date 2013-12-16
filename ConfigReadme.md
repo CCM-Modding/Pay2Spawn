@@ -121,6 +121,20 @@ Format: $randomRGB(amountOfColors)<br>
 Works with: INT[]
 #### Example
     "Colors": "INT[]:$randomRGB(2)",
+
+### Random Entity
+Only useful with the simple entity really, it gives you a random entity name.<br>
+Format: $randomEntity<br>
+Works with: STRING
+#### Example
+    "name": "STRING:$randomEntity",
+
+### Random Sound
+Only useful with the sounds, you can pick which collection of sounds it needs to pick from<br>
+Format: $randomSound(x) where x is all, music, sounds and streaming. You can also use $randomSound or $randomSound() to pick from all.<br>
+Works with: STRING
+#### Example
+    "soundName": "STRING:$randomSound(music)",
     
 ### Example for random fireworks
 This example spawns random fireworks. The flight hight, type of firework, the colour and all the possible attributes are random.
