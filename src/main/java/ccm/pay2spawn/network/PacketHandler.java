@@ -30,6 +30,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
+import static ccm.pay2spawn.util.Constants.CHANNEL_HANDSHAKE;
+import static ccm.pay2spawn.util.Constants.CHANNEL_REWARD;
+
+/**
+ * Packet handler for both sides.
+ *
+ * @author Dries007
+ */
 public class PacketHandler implements IPacketHandler
 {
     @Override
@@ -37,7 +45,8 @@ public class PacketHandler implements IPacketHandler
     {
         try
         {
-            Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
+            if (packet.channel.equals(CHANNEL_HANDSHAKE)) HandshakePacket.handel(packet, player);
+            if (packet.channel.equals(CHANNEL_REWARD)) Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
         }
         catch (Exception e)
         {

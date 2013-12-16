@@ -36,6 +36,13 @@ import net.minecraft.util.EnumChatFormatting;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Useful command when dealing with setting up the JSON file
+ * Can get an entities/items JSONified NBT
+ * Can reload the JSON file
+ *
+ * @author Dries007
+ */
 public class CommandP2S extends CommandBase
 {
     static final String HELP = "Use command to capture custom things.";
@@ -88,7 +95,7 @@ public class CommandP2S extends CommandBase
         if (args[0].equalsIgnoreCase("getnbtofentity"))
         {
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("You will get the nbt of the next entity you right click."));
-            EventHandler.entitySet.add(player.getDisplayName());
+            EventHandler.entitySet.add(player.getEntityName());
         }
         if (args[0].equalsIgnoreCase("reload"))
         {

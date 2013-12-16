@@ -29,25 +29,50 @@ import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 
-public abstract class TypeBase<T>
+/**
+ * Base class for reward types
+ *
+ * @author Dries007
+ */
+public abstract class TypeBase
 {
+    /**
+     * Used in JSON file
+     *
+     * @return the name in lover case only please.
+     */
     public abstract String getName();
 
-    public abstract T getExample();
+    /**
+     * May or may not be random
+     *
+     * @return an example, NBT so it can be stored in the JSON
+     */
+    public abstract NBTTagCompound getExample();
 
-    public abstract NBTTagCompound convertToNBT(T thing);
-
-    public abstract T convertFromNBT(NBTTagCompound nbt);
-
+    /**
+     * Spawn the reward, only called server side.
+     *
+     * @param player         The player the reward comes from
+     * @param dataFromClient the nbt from the JSON file, fully usable
+     */
     public abstract void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient);
 
+    /**
+     * Extra method for custom configuration
+     * Called pre-preInit
+     *
+     * @param configuration The configuration you should use
+     */
     public void doConfig(Configuration configuration)
-    {
+    {}
 
-    }
-
+    /**
+     * Use to print out useful files (aka entity and sound lists or help files)
+     * Called post-preInit
+     *
+     * @param configFolder Make a file in here
+     */
     public void printHelpList(File configFolder)
-    {
-
-    }
+    {}
 }

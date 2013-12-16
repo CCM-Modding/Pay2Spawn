@@ -28,10 +28,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class ItemType extends TypeBase<ItemStack>
+/**
+ * Spawn an itemstack
+ * Can handle all custom NBT data
+ *
+ * @author Dries007
+ */
+public class ItemType extends TypeBase
 {
-    private static final String NAME    = "item";
-    private static       String message = "&a[$name donated $amount]&f $spawned given!";
+    private static final String NAME = "item";
 
     @Override
     public String getName()
@@ -40,28 +45,16 @@ public class ItemType extends TypeBase<ItemStack>
     }
 
     @Override
-    public ItemStack getExample()
+    public NBTTagCompound getExample()
     {
         ItemStack is = new ItemStack(Item.appleGold);
         is.setItemName("$name");
-        return is;
-    }
-
-    @Override
-    public NBTTagCompound convertToNBT(ItemStack thing)
-    {
-        return thing.writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public ItemStack convertFromNBT(NBTTagCompound nbt)
-    {
-        return ItemStack.loadItemStackFromNBT(nbt);
+        return is.writeToNBT(new NBTTagCompound());
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        player.dropPlayerItem(convertFromNBT(dataFromClient)).delayBeforeCanPickup = 0;
+        player.dropPlayerItem(ItemStack.loadItemStackFromNBT(dataFromClient)).delayBeforeCanPickup = 0;
     }
 }

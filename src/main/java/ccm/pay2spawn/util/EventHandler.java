@@ -33,6 +33,12 @@ import net.minecraftforge.event.entity.player.EntityInteractEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Handler for all forge events.
+ * TODO: Make sure to check for FML only mode, inform the user if so
+ *
+ * @author Dries007
+ */
 public class EventHandler
 {
     public EventHandler()
@@ -43,19 +49,20 @@ public class EventHandler
         }
         catch (Exception e)
         {
-            e.printStackTrace(); //TODO: debug and test w/o Forge
+            e.printStackTrace();
         }
     }
 
+    // Right click tracker for entity NBT data
     public static HashSet<String> entitySet = new HashSet<>();
 
     @ForgeSubscribe
     public void event(EntityInteractEvent event)
     {
         if (event.entityPlayer.worldObj.isRemote) return;
-        if (entitySet.contains(event.entityPlayer.getDisplayName()))
+        if (entitySet.contains(event.entityPlayer.getEntityName()))
         {
-            entitySet.remove(event.entityPlayer.getDisplayName());
+            entitySet.remove(event.entityPlayer.getEntityName());
             NBTTagCompound tag = new NBTTagCompound();
             event.target.writeToNBT(tag);
             event.target.writeMountToNBT(tag);
@@ -63,6 +70,7 @@ public class EventHandler
         }
     }
 
+    // HUD messages
     final static ArrayList<String> left  = new ArrayList<>();
     final static ArrayList<String> right = new ArrayList<>();
 

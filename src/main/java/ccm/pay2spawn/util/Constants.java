@@ -21,41 +21,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+package ccm.pay2spawn.util;
 
 /**
- * Applies potion effect
+ * ModID and P2S
  *
  * @author Dries007
  */
-public class PotionEffectType extends TypeBase
+public class Constants
 {
-    private static final String NAME = "potioneffect";
+    public static final String NAME  = "Pay2Spawn";
+    public static final String MODID = "P2S";
 
-    @Override
-    public String getName()
-    {
-        return NAME;
-    }
-
-    @Override
-    public NBTTagCompound getExample()
-    {
-        Potion potion = null;
-        while (potion == null) potion = Potion.potionTypes[RANDOM.nextInt(Potion.potionTypes.length)];
-        return new PotionEffect(potion.getId(), (int) (RANDOM.nextDouble() * 1000)).writeCustomPotionEffectToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
-    }
+    public static final String CHANNEL_HANDSHAKE = MODID + "_hs";
+    public static final String CHANNEL_REWARD    = MODID + "_r";
 }

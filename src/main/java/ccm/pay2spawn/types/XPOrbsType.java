@@ -23,12 +23,18 @@
 
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.util.Helper;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class XPOrbsType extends TypeBase<NBTTagCompound>
+import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+
+/**
+ * Spawns an amount of XP orbs with random values (1 to 5)
+ *
+ * @author Dries007
+ */
+public class XPOrbsType extends TypeBase
 {
     @Override
     public String getName()
@@ -45,28 +51,16 @@ public class XPOrbsType extends TypeBase<NBTTagCompound>
     }
 
     @Override
-    public NBTTagCompound convertToNBT(NBTTagCompound thing)
-    {
-        return thing;
-    }
-
-    @Override
-    public NBTTagCompound convertFromNBT(NBTTagCompound nbt)
-    {
-        return nbt;
-    }
-
-    @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         for (int i = 0; i < dataFromClient.getInteger("amoutOfOrbs"); i++)
         {
             double X = player.posX, Y = player.posY, Z = player.posZ;
 
-            X += (0.5 - Helper.RANDOM.nextDouble());
-            Z += (0.5 - Helper.RANDOM.nextDouble());
+            X += (0.5 - RANDOM.nextDouble());
+            Z += (0.5 - RANDOM.nextDouble());
 
-            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, X, Y, Z, Helper.RANDOM.nextInt(5) + 1));
+            player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, X, Y, Z, RANDOM.nextInt(5) + 1));
         }
     }
 }

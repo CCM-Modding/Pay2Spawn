@@ -21,41 +21,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
+package ccm.pay2spawn.random;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 
 /**
- * Applies potion effect
+ * Produces a random color array
+ * Expected syntax: $randomRGB(x)
+ * Format: An int array with x amount of random colors
+ * Works with: INT[]
  *
  * @author Dries007
  */
-public class PotionEffectType extends TypeBase
+public class RndColors implements IRandomResolver
 {
-    private static final String NAME = "potioneffect";
+    private final static Pattern PATTERN = Pattern.compile("^\\$randomRGB\\((\\w+)\\)$");
 
     @Override
-    public String getName()
+    public String solverRandom(int type, String value)
     {
-        return NAME;
+        JsonArray colors = new JsonArray();
+        Matcher mRGB = PATTERN.matcher(value);
+        for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((RANDOM.nextInt(200) << 16) + (RANDOM.nextInt(200) << 8) + RANDOM.nextInt(200)));
+        return colors.toString();
     }
 
     @Override
-    public NBTTagCompound getExample()
+    public boolean matches(int type, String value)
     {
-        Potion potion = null;
-        while (potion == null) potion = Potion.potionTypes[RANDOM.nextInt(Potion.potionTypes.length)];
-        return new PotionEffect(potion.getId(), (int) (RANDOM.nextDouble() * 1000)).writeCustomPotionEffectToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
+        return type == 11 && PATTERN.matcher(value).matches();
     }
 }

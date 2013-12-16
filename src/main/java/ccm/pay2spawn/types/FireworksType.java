@@ -33,7 +33,7 @@ import net.minecraft.nbt.NBTTagList;
 
 import java.lang.reflect.Field;
 
-public class FireworksType extends TypeBase<NBTTagCompound>
+public class FireworksType extends TypeBase
 {
     @Override
     public String getName()
@@ -94,18 +94,6 @@ public class FireworksType extends TypeBase<NBTTagCompound>
         tag.setInteger("AMOUNT", 10);
 
         return tag;
-    }
-
-    @Override
-    public NBTTagCompound convertToNBT(NBTTagCompound thing)
-    {
-        return thing;
-    }
-
-    @Override
-    public NBTTagCompound convertFromNBT(NBTTagCompound nbt)
-    {
-        return nbt;
     }
 
     @Override

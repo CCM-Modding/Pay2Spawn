@@ -21,41 +21,40 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+package ccm.pay2spawn.random;
 
 /**
- * Applies potion effect
+ * Part of API.
+ * Register your implementation!
+ * <br>
+ * Expected javadoc:
+ * <br>
+ * [Short explanation + example if needed]
+ * Expected syntax: [$random for example]
+ * Outcome: [outcome]
+ * Works with: [All nbt types this will accept, enforce in #matches.]
  *
  * @author Dries007
+ * @see ccm.pay2spawn.random.RndBoolean RndBoolean for an example
+ * @see RandomRegistry#addRandomResolver(IRandomResolver) RandomRegistry.addRandomResolver to register.
  */
-public class PotionEffectType extends TypeBase
+public interface IRandomResolver
 {
-    private static final String NAME = "potioneffect";
+    /**
+     * Gets called when #matches returns true
+     *
+     * @param type  NBT type
+     * @param value The random tag
+     * @return the randomised value
+     */
+    public String solverRandom(int type, String value);
 
-    @Override
-    public String getName()
-    {
-        return NAME;
-    }
-
-    @Override
-    public NBTTagCompound getExample()
-    {
-        Potion potion = null;
-        while (potion == null) potion = Potion.potionTypes[RANDOM.nextInt(Potion.potionTypes.length)];
-        return new PotionEffect(potion.getId(), (int) (RANDOM.nextDouble() * 1000)).writeCustomPotionEffectToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
-    }
+    /**
+     * Only return true when you can handle the type and the value matches your (and only your) pattern.
+     *
+     * @param type  NBT type
+     * @param value The random tag
+     * @return true to handle this string
+     */
+    public boolean matches(int type, String value);
 }

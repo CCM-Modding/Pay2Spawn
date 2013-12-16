@@ -21,10 +21,33 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.util;
+package ccm.pay2spawn.random;
 
-public class Archive
+import java.util.regex.Pattern;
+
+import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+
+/**
+ * Makes a boolean random
+ * Expected syntax: $random
+ * Outcome: 0 or 1
+ * Works with: BYTE
+ *
+ * @author Dries007
+ */
+public class RndBoolean implements IRandomResolver
 {
-    public static final String NAME  = "Pay2Spawn";
-    public static final String MODID = "P2S";
+    private static final Pattern PATTERN = Pattern.compile("^\\$random$");
+
+    @Override
+    public String solverRandom(int type, String value)
+    {
+        return RANDOM.nextBoolean() ? "1" : "0";
+    }
+
+    @Override
+    public boolean matches(int type, String value)
+    {
+        return type == 1 && PATTERN.matcher(value).matches();
+    }
 }

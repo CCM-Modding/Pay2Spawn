@@ -28,12 +28,17 @@ import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 
-import static ccm.pay2spawn.util.Archive.MODID;
-import static ccm.pay2spawn.util.Archive.NAME;
+import static ccm.pay2spawn.util.Constants.MODID;
+import static ccm.pay2spawn.util.Constants.NAME;
 
+/**
+ * Uses subclasses to make file cleaner
+ *
+ * @author Dries007
+ * @see ccm.pay2spawn.Pay2Spawn#getConfig()
+ */
 public class P2SConfig
 {
-
     Configuration configuration;
 
     public boolean printHelpLists = true;

@@ -30,20 +30,27 @@ import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
-import net.minecraftforge.common.MinecraftForge;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.Map;
 
-public class SoundType extends TypeBase<NBTTagCompound>
+/**
+ * Play a sound based on name
+ * Can change pitch and volume relative to 1
+ * Also supplies data to sound randomizer
+ *
+ * @author Dries007
+ */
+public class SoundType extends TypeBase
 {
-    public SoundType()
-    {
-        MinecraftForge.EVENT_BUS.register(this);
-    }
+    public static final HashSet<String> music     = new HashSet<>();
+    public static final HashSet<String> sounds    = new HashSet<>();
+    public static final HashSet<String> streaming = new HashSet<>();
+    public static final HashSet<String> all       = new HashSet<>();
 
     @Override
     public String getName()
@@ -60,18 +67,6 @@ public class SoundType extends TypeBase<NBTTagCompound>
         nbt.setFloat("volume", 1f);
         nbt.setFloat("pitch", 1f);
 
-        return nbt;
-    }
-
-    @Override
-    public NBTTagCompound convertToNBT(NBTTagCompound thing)
-    {
-        return thing;
-    }
-
-    @Override
-    public NBTTagCompound convertFromNBT(NBTTagCompound nbt)
-    {
         return nbt;
     }
 
@@ -94,10 +89,27 @@ public class SoundType extends TypeBase<NBTTagCompound>
             pw.println("## This is a list of all the sounds you can use in the json file.");
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
-
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolMusic)).keySet()) pw.println(key);
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet()) pw.println(key);
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolStreaming)).keySet()) pw.println(key);
+            pw.println("# Music: ");
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolMusic)).keySet())
+            {
+                all.add(key.toString());
+                music.add(key.toString());
+                pw.println(key);
+            }
+            pw.println("# Sounds: ");
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet())
+            {
+                all.add(key.toString());
+                sounds.add(key.toString());
+                pw.println(key);
+            }
+            pw.println("# Streaming: ");
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolStreaming)).keySet())
+            {
+                all.add(key.toString());
+                streaming.add(key.toString());
+                pw.println(key);
+            }
 
             pw.close();
         }
@@ -111,6 +123,9 @@ public class SoundType extends TypeBase<NBTTagCompound>
         }
     }
 
+    /**
+     * Them cheaty ways...
+     */
     private static final Field nameToSoundPoolEntriesMappingField = getHackField();
 
     private static Field getHackField()

@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -68,7 +69,7 @@ public class Reward
     public void sendToServer(JsonObject donation)
     {
         Helper.msg(Helper.formatText(message, donation));
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Archive.MODID, toBytes(Helper.formatText(rewards, donation).toString())));
+        if (HandshakePacket.doesServerHaveMod()) PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.MODID, toBytes(Helper.formatText(rewards, donation).toString())));
     }
 
     private byte[] toBytes(String formattedData)
@@ -97,7 +98,7 @@ public class Reward
         DataInputStream stream = new DataInputStream(streambyte);
         String name = stream.readUTF();
         Double amount = stream.readDouble();
-        JsonArray rewards = Helper.PARSER.parse(stream.readUTF()).getAsJsonArray();
+        JsonArray rewards = JsonNBTHelper.PARSER.parse(stream.readUTF()).getAsJsonArray();
 
         return new Reward(name, amount, rewards);
     }

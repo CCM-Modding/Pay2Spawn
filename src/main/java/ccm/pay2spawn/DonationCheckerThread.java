@@ -25,6 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -34,6 +35,11 @@ import net.minecraft.client.Minecraft;
 import java.io.*;
 import java.net.URL;
 
+/**
+ * The thread that does the actual checking with nightdevs donationtracker
+ *
+ * @author Dries007
+ */
 public class DonationCheckerThread extends Thread
 {
     final int    interval;
@@ -61,7 +67,7 @@ public class DonationCheckerThread extends Thread
             {
                 if (Pay2Spawn.debug) lastKnownDonation = "";
                 String input = readUrl(URL);
-                JsonObject root = Helper.PARSER.parse(input).getAsJsonObject();
+                JsonObject root = JsonNBTHelper.PARSER.parse(input).getAsJsonObject();
 
                 if (root.get("status").getAsString().equals("success"))
                 {

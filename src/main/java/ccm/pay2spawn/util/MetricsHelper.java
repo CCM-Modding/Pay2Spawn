@@ -28,6 +28,11 @@ import org.mcstats.Metrics;
 
 import java.io.IOException;
 
+/**
+ * Collect all of the data!
+ *
+ * @author Dries007
+ */
 public class MetricsHelper
 {
     private static Metrics metrics;
@@ -37,7 +42,7 @@ public class MetricsHelper
         if (metrics != null) return;
         try
         {
-            metrics = new Metrics(Archive.NAME, Pay2Spawn.getVersion());
+            metrics = new Metrics(Constants.NAME, Pay2Spawn.getVersion());
             metrics.start();
         }
         catch (IOException e)

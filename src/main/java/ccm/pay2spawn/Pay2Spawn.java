@@ -24,7 +24,10 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.PacketHandler;
-import ccm.pay2spawn.types.*;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.types.TypeBase;
+import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.util.ConnectionHandler;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
@@ -39,11 +42,15 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static ccm.pay2spawn.util.Archive.MODID;
-import static ccm.pay2spawn.util.Archive.NAME;
+import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * The main mod class
+ *
+ * @author Dries007
+ */
 @Mod(modid = MODID, name = NAME)
-@NetworkMod(clientSideRequired = false, serverSideRequired = true, packetHandler = PacketHandler.class, channels = {MODID})
+@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD}, connectionHandler = ConnectionHandler.class)
 public class Pay2Spawn
 {
     @Mod.Instance(MODID)
@@ -92,17 +99,10 @@ public class Pay2Spawn
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
 
-
         logger.info("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
 
-        TypeRegistry.register(new EntityType());
-        TypeRegistry.register(new ItemType());
-        TypeRegistry.register(new PotionEffectType());
-        TypeRegistry.register(new LightningType());
-        TypeRegistry.register(new XPOrbsType());
-        TypeRegistry.register(new SoundType());
-        TypeRegistry.register(new FireworksType());
-        TypeRegistry.register(new CustomEntityType());
+        TypeRegistry.preInit();
+        RandomRegistry.preInit();
     }
 
     @Mod.EventHandler

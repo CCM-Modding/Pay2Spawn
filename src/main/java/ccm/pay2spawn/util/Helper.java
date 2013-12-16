@@ -23,34 +23,32 @@
 
 package ccm.pay2spawn.util;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
 import java.util.Map;
-import java.util.Random;
 
+/**
+ * Static helper functions with no other home
+ *
+ * @author Dries007
+ */
 public class Helper
 {
-    public static final Random     RANDOM = new Random();
-    public static final JsonParser PARSER = new JsonParser();
-
-    public static String getRndEntity()
-    {
-        int size = EntityList.entityEggs.size();
-        int item = RANDOM.nextInt(size);
-        int i = 0;
-        for (Object obj : EntityList.entityEggs.keySet())
-        {
-            if (i == item) return EntityList.getStringFromID((Integer) obj);
-            i = i + 1;
-        }
-        return "";
-    }
-
+    /**
+     * NBT to byte[]
+     * Use for packets
+     *
+     * @param nbtTagCompound the NBTTagCompound
+     * @return the bye array
+     */
     public static byte[] nbtToByteArray(NBTTagCompound nbtTagCompound)
     {
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
@@ -69,6 +67,13 @@ public class Helper
         return streambyte.toByteArray();
     }
 
+    /**
+     * byte[] to NBT
+     * Use for packets
+     *
+     * @param data the byte arry
+     * @return the NBTTagCompound
+     */
     public static NBTTagCompound byteArrayToNBT(byte[] data)
     {
         NBTTagCompound nbtTagCompound;
@@ -88,6 +93,13 @@ public class Helper
         return nbtTagCompound;
     }
 
+    /**
+     * Used above, compresses
+     *
+     * @param nbtTagCompound the NBTTagCompound
+     * @param dataOutput     the output
+     * @throws IOException
+     */
     public static void writeNBTTagCompound(NBTTagCompound nbtTagCompound, DataOutput dataOutput) throws IOException
     {
         if (nbtTagCompound == null)
@@ -102,6 +114,13 @@ public class Helper
         }
     }
 
+    /**
+     * Used above, decompresses
+     *
+     * @param dataInput the input
+     * @return The NBTTagCompound
+     * @throws IOException
+     */
     public static NBTTagCompound readNBTTagCompound(DataInput dataInput) throws IOException
     {
         short short1 = dataInput.readShort();
@@ -118,6 +137,12 @@ public class Helper
         }
     }
 
+    /**
+     * Convert & into § if the next char is a chat formatter char
+     *
+     * @param message the message to be converted
+     * @return the converted message
+     */
     public static String formatColors(String message)
     {
         char[] b = message.toCharArray();
@@ -132,11 +157,23 @@ public class Helper
         return new String(b);
     }
 
+    /**
+     * Print a message client side
+     *
+     * @param message the message to be displayed
+     */
     public static void msg(String message)
     {
-        Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) Minecraft.getMinecraft().thePlayer.addChatMessage(message);
     }
 
+    /**
+     * Fill in variables from a donation
+     *
+     * @param format   text that needs var replacing
+     * @param donation the donation data
+     * @return the fully var-replaced string
+     */
     public static String formatText(String format, JsonObject donation)
     {
         if (donation.has("twitchUsername") && donation.get("twitchUsername").isJsonPrimitive()) format = format.replace("$name", donation.get("twitchUsername").getAsString());
@@ -145,6 +182,13 @@ public class Helper
         return format;
     }
 
+    /**
+     * Fill in variables from a donation
+     *
+     * @param dataToFormat data to be formatted
+     * @param donation     the donation data
+     * @return the fully var-replaced JsonElement
+     */
     public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation)
     {
         if (dataToFormat.isJsonPrimitive() && dataToFormat.getAsJsonPrimitive().isString())

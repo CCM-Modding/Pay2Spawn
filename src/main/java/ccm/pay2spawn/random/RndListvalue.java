@@ -21,41 +21,35 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
+package ccm.pay2spawn.random;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 
 /**
- * Applies potion effect
+ * Picks 1 value from a list
+ * Expected syntax: $random[value1, value2, value3, value4, ..., valueN]
+ * Outcome: 1 of the values
+ * Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING
  *
  * @author Dries007
  */
-public class PotionEffectType extends TypeBase
+public class RndListValue implements IRandomResolver
 {
-    private static final String NAME = "potioneffect";
+    private final static Pattern PATTERN = Pattern.compile("^\\$random\\[(?:(-?\\w+), ?)+(-?\\w+)\\]$");
 
     @Override
-    public String getName()
+    public String solverRandom(int type, String value)
     {
-        return NAME;
+        Matcher matcher = PATTERN.matcher(value);
+        return matcher.group(1 + RANDOM.nextInt(matcher.groupCount()));
     }
 
     @Override
-    public NBTTagCompound getExample()
+    public boolean matches(int type, String value)
     {
-        Potion potion = null;
-        while (potion == null) potion = Potion.potionTypes[RANDOM.nextInt(Potion.potionTypes.length)];
-        return new PotionEffect(potion.getId(), (int) (RANDOM.nextDouble() * 1000)).writeCustomPotionEffectToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
+        return type != 7 && type != 11 && PATTERN.matcher(value).matches();
     }
 }

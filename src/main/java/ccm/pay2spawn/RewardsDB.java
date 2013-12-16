@@ -23,9 +23,9 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
 import com.google.gson.*;
@@ -33,6 +33,12 @@ import com.google.gson.*;
 import java.io.*;
 import java.util.HashMap;
 
+/**
+ * The rewards database
+ *
+ * @author Dries007
+ * @see Pay2Spawn#getRewardsDB()
+ */
 public class RewardsDB
 {
     private final HashMap<Double, Reward> map = new HashMap<>();
@@ -43,7 +49,7 @@ public class RewardsDB
         {
             if (file.exists())
             {
-                JsonArray rootArray = Helper.PARSER.parse(new FileReader(file)).getAsJsonArray();
+                JsonArray rootArray = JsonNBTHelper.PARSER.parse(new FileReader(file)).getAsJsonArray();
 
                 for (JsonElement element : rootArray)
                 {
@@ -67,7 +73,7 @@ public class RewardsDB
                     JsonObject element = new JsonObject();
                     element.addProperty("type", type.getName());
                     //noinspection unchecked
-                    element.add("data", JsonNBTHelper.parseNBT(type.convertToNBT(type.getExample())));
+                    element.add("data", JsonNBTHelper.parseNBT(type.getExample()));
                     rewards.add(element);
                 }
                 group.add("rewards", rewards);
@@ -87,13 +93,10 @@ public class RewardsDB
 
     public synchronized void process(JsonObject donation)
     {
-        if (!map.containsKey(donation.get("amount").getAsDouble()))
+        if (HandshakePacket.doesServerHaveMod())
         {
-            if (map.containsKey(0d)) map.get(0d).sendToServer(donation);
-        }
-        else
-        {
-            map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
+            if (!map.containsKey(donation.get("amount").getAsDouble()) && map.containsKey(0d)) map.get(0d).sendToServer(donation);
+            else map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
         }
     }
 }

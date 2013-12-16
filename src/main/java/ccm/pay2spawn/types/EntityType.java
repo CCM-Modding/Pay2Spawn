@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -35,9 +34,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static ccm.pay2spawn.util.Archive.MODID;
+import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.Constants.MODID;
 
-public class EntityType extends TypeBase<NBTTagCompound>
+/**
+ * A simple entity spawner, can handle:
+ * - agroing mobs
+ * - custom name tags
+ * - entities riding entities to infinity
+ *
+ * @author Dries007
+ */
+public class EntityType extends TypeBase
 {
     private static final String NAME   = "entity";
     private static       int    radius = 10;
@@ -73,26 +81,14 @@ public class EntityType extends TypeBase<NBTTagCompound>
     }
 
     @Override
-    public NBTTagCompound convertToNBT(NBTTagCompound thing)
-    {
-        return thing;
-    }
-
-    @Override
-    public NBTTagCompound convertFromNBT(NBTTagCompound nbt)
-    {
-        return nbt;
-    }
-
-    @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         double x, y, z;
 
         y = player.posY + 1;
 
-        x = player.posX + (radius / 2 - Helper.RANDOM.nextInt(radius));
-        z = player.posZ + (radius / 2 - Helper.RANDOM.nextInt(radius));
+        x = player.posX + (radius / 2 - RANDOM.nextInt(radius));
+        z = player.posZ + (radius / 2 - RANDOM.nextInt(radius));
 
         Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
 
