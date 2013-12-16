@@ -55,18 +55,14 @@ public class Pay2Spawn
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-
-    public static boolean debug = false;
+    public static boolean   debug = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata metadata;
-
-    private RewardsDB rewardsDB;
-
-    private P2SConfig config;
-
-    private File   configFolder;
-    private Logger logger;
+    private RewardsDB   rewardsDB;
+    private P2SConfig   config;
+    private File        configFolder;
+    private Logger      logger;
 
     public static String getVersion()
     {

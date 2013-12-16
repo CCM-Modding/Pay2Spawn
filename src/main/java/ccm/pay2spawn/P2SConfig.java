@@ -42,6 +42,7 @@ public class P2SConfig
     Configuration configuration;
 
     public boolean printHelpLists = true;
+    public double  min_donation   = 1;
     public int     interval       = 10;
     public String  API_Key        = "";
     public String  channel        = "";
@@ -58,6 +59,7 @@ public class P2SConfig
         interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
         channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
         API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();
+        min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
 
         this.hud = new HudSettings();
         this.file = new FileSettings();

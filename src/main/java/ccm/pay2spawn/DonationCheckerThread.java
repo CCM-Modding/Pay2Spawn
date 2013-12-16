@@ -113,6 +113,7 @@ public class DonationCheckerThread extends Thread
             for (int i = 0; i < Pay2Spawn.getConfig().hud.top_amount; i++)
             {
                 JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
+                if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
                 EventHandler.add(Pay2Spawn.getConfig().hud.top, Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation));
             }
         }
@@ -131,6 +132,7 @@ public class DonationCheckerThread extends Thread
                 {
                     if (i == Pay2Spawn.getConfig().file.top_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
+                    if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
                     pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation) + end);
                 }
                 pw.close();
@@ -149,6 +151,7 @@ public class DonationCheckerThread extends Thread
             for (int i = 0; i < Pay2Spawn.getConfig().hud.recent_amount; i++)
             {
                 JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
+                if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
                 EventHandler.add(Pay2Spawn.getConfig().hud.recent, Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation));
             }
         }
@@ -167,6 +170,7 @@ public class DonationCheckerThread extends Thread
                 {
                     if (i == Pay2Spawn.getConfig().file.recent_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
+                    if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
                     pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation) + end);
                 }
                 pw.close();
@@ -186,7 +190,7 @@ public class DonationCheckerThread extends Thread
             JsonObject donation = aMostRecent.getAsJsonObject();
 
             if (lastKnownDonation == null || lastKnownDonation.equals(donation.get("transactionID").getAsString())) break;
-
+            if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
             Pay2Spawn.getRewardsDB().process(donation);
         }
         lastKnownDonation = mostRecent.get(0).getAsJsonObject().get("transactionID").getAsString();
