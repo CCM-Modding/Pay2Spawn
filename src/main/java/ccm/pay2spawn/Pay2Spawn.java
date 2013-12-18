@@ -55,7 +55,7 @@ public class Pay2Spawn
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static boolean   debug = false;
+    public static boolean debug = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata metadata;

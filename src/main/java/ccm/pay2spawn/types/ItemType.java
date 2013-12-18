@@ -23,6 +23,8 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -55,6 +57,14 @@ public class ItemType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        player.dropPlayerItem(ItemStack.loadItemStackFromNBT(dataFromClient)).delayBeforeCanPickup = 0;
+        try
+        {
+            ItemStack is = ItemStack.loadItemStackFromNBT(dataFromClient);
+            player.dropPlayerItem(is).delayBeforeCanPickup = 0;
+        }
+        catch (Exception e)
+        {
+            Pay2Spawn.getLogger().warning("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
+        }
     }
 }

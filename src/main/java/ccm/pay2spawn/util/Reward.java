@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.gson.JsonArray;
@@ -69,7 +70,7 @@ public class Reward
     public void sendToServer(JsonObject donation)
     {
         Helper.msg(Helper.formatText(message, donation));
-        if (HandshakePacket.doesServerHaveMod()) PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.MODID, toBytes(Helper.formatText(rewards, donation).toString())));
+        if (HandshakePacket.doesServerHaveMod()) PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
     }
 
     private byte[] toBytes(String formattedData)
@@ -114,6 +115,7 @@ public class Reward
             }
             catch (Exception e)
             {
+                Pay2Spawn.getLogger().warning("Error spawning a reward on the server.");
                 e.printStackTrace();
             }
         }

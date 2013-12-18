@@ -191,7 +191,15 @@ public class DonationCheckerThread extends Thread
 
             if (lastKnownDonation == null || lastKnownDonation.equals(donation.get("transactionID").getAsString())) break;
             if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-            Pay2Spawn.getRewardsDB().process(donation);
+            try
+            {
+                Pay2Spawn.getRewardsDB().process(donation);
+            }
+            catch (Exception e)
+            {
+                Pay2Spawn.getLogger().warning("Error processing a donation.");
+                e.printStackTrace();
+            }
         }
         lastKnownDonation = mostRecent.get(0).getAsJsonObject().get("transactionID").getAsString();
     }

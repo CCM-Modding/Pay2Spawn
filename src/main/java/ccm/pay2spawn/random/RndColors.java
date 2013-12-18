@@ -48,6 +48,7 @@ public class RndColors implements IRandomResolver
     {
         JsonArray colors = new JsonArray();
         Matcher mRGB = PATTERN.matcher(value);
+        mRGB.find();
         for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((RANDOM.nextInt(200) << 16) + (RANDOM.nextInt(200) << 8) + RANDOM.nextInt(200)));
         return colors.toString();
     }

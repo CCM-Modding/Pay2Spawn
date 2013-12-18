@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn;
 
-import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -93,10 +92,7 @@ public class RewardsDB
 
     public synchronized void process(JsonObject donation)
     {
-        if (HandshakePacket.doesServerHaveMod())
-        {
-            if (!map.containsKey(donation.get("amount").getAsDouble()) && map.containsKey(0d)) map.get(0d).sendToServer(donation);
-            else map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
-        }
+        if (!map.containsKey(donation.get("amount").getAsDouble()) && map.containsKey(0d)) map.get(0d).sendToServer(donation);
+        else if (map.containsKey(donation.get("amount").getAsDouble())) map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
     }
 }

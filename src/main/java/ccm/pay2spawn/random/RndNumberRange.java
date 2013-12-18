@@ -44,6 +44,7 @@ public class RndNumberRange implements IRandomResolver
     public String solverRandom(int type, String value)
     {
         Matcher matcher = PATTERN.matcher(value);
+        matcher.find();
         switch (type)
         {
             case 1:

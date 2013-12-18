@@ -44,6 +44,7 @@ public class RndListValue implements IRandomResolver
     public String solverRandom(int type, String value)
     {
         Matcher matcher = PATTERN.matcher(value);
+        matcher.find();
         return matcher.group(1 + RANDOM.nextInt(matcher.groupCount()));
     }
 
