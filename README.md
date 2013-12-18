@@ -26,4 +26,4 @@ Use this config file to make a nice webpage so your viewers can see what they ca
 The idea & proper credit
 ------------------------
 
-**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**
+[**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**](http://overload.playat.ch/mods/donationsummon/)
