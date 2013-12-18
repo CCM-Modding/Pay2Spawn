@@ -22,3 +22,8 @@ You'll need the API key and channel name from there to enter in your config file
 
 You can customise the rewards in the .json file in the config folder.<br>
 Use this config file to make a nice webpage so your viewers can see what they can donate for.
+
+The idea & proper credit
+------------------------
+
+**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**
