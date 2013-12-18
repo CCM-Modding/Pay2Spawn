@@ -103,5 +103,6 @@ public class TypeRegistry
         TypeRegistry.register(new SoundType());
         TypeRegistry.register(new FireworksType());
         TypeRegistry.register(new CustomEntityType());
+        TypeRegistry.register(new RandomItemType());
     }
 }

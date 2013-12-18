@@ -35,6 +35,7 @@ package ccm.pay2spawn.random;
  * Works with: [All nbt types this will accept, enforce in #matches.]
  *
  * @author Dries007
+ * @see net.minecraft.nbt.NBTBase#NBTTypes
  * @see ccm.pay2spawn.random.RndBoolean RndBoolean for an example
  * @see RandomRegistry#addRandomResolver(IRandomResolver) RandomRegistry.addRandomResolver to register.
  */

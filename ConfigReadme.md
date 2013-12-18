@@ -97,6 +97,24 @@ starting from (4) in previous example.
 You can make random numbers or have it select a random value from a list.<br>
 This tag replaces any value in an NBT value.
 
+### Random Item
+This is not a normal random tag! Its a type.<br>
+All the tags in data will be applie to the itemstack after a random one is picked.<br>
+This way you can still add names to items and so on.
+#### Full example:
+<code>
+    {<br>
+        "type": "randomItem",<br>
+        "data": {<br>
+            "tag": {<br>
+              "display": {<br>
+                "Name": "STRING:$name"<br>
+              }<br>
+            }<br>
+        }<br>
+    }<br>
+</code>
+
 ### Boolean (true or false)
 Format: $random<br>
 Works with: BYTE (which can be a boolean)
@@ -135,7 +153,7 @@ Format: $randomSound(x) where x is all, music, sounds and streaming. You can als
 Works with: STRING
 #### Example
     "soundName": "STRING:$randomSound(music)",
-    
+
 ### Example for random fireworks
 This example spawns random fireworks. The flight hight, type of firework, the colour and all the possible attributes are random.
 <code>
