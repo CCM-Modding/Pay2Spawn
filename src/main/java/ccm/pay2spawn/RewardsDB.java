@@ -92,7 +92,14 @@ public class RewardsDB
 
     public synchronized void process(JsonObject donation)
     {
-        if (!map.containsKey(donation.get("amount").getAsDouble()) && map.containsKey(0d)) map.get(0d).sendToServer(donation);
-        else if (map.containsKey(donation.get("amount").getAsDouble())) map.get(donation.get("amount").getAsDouble()).sendToServer(donation);
+        double highestmatch = 0d;
+        double amount = donation.get("amount").getAsDouble();
+        if (map.containsKey(amount)) map.get(amount).sendToServer(donation);
+        else
+        {
+            for (double key : map.keySet()) if (key < amount && highestmatch < key) highestmatch = key;
+
+            if (map.containsKey(highestmatch)) map.get(highestmatch).sendToServer(donation);
+        }
     }
 }
