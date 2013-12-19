@@ -206,4 +206,35 @@ public class JsonNBTHelper
         for (JsonElement element : data) list.appendTag(parseJSON(element));
         return list;
     }
+
+    public static JsonObject cloneJSON(JsonObject toClone)
+    {
+        JsonObject object = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : toClone.entrySet()) object.add(entry.getKey(), cloneJSON(entry.getValue()));
+        return object;
+    }
+
+    public static JsonElement cloneJSON(JsonElement toClone)
+    {
+        if (toClone.isJsonNull()) return JsonNull.INSTANCE;
+        if (toClone.isJsonArray()) return cloneJSON(toClone.getAsJsonArray());
+        if (toClone.isJsonObject()) return cloneJSON(toClone.getAsJsonObject());
+        if (toClone.isJsonPrimitive()) return cloneJSON(toClone.getAsJsonPrimitive());
+        return null;
+    }
+
+    public static JsonPrimitive cloneJSON(JsonPrimitive toClone)
+    {
+        if (toClone.isBoolean()) return new JsonPrimitive(toClone.getAsBoolean());
+        if (toClone.isNumber()) return new JsonPrimitive(toClone.getAsNumber());
+        if (toClone.isString()) return new JsonPrimitive(toClone.getAsString());
+        return null;
+    }
+
+    public static JsonArray cloneJSON(JsonArray toClone)
+    {
+        JsonArray array = new JsonArray();
+        for (JsonElement element : toClone) array.add(cloneJSON(element));
+        return array;
+    }
 }

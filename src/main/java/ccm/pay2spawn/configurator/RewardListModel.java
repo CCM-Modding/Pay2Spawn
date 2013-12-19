@@ -21,37 +21,30 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.network;
+package ccm.pay2spawn.configurator;
 
-import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.util.Reward;
-import cpw.mods.fml.common.network.IPacketHandler;
-import cpw.mods.fml.common.network.Player;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.packet.Packet250CustomPayload;
+import com.google.gson.JsonArray;
 
-import static ccm.pay2spawn.util.Constants.*;
+import javax.swing.*;
 
-/**
- * Packet handler for both sides.
- *
- * @author Dries007
- */
-public class PacketHandler implements IPacketHandler
+public class RewardListModel extends AbstractListModel<String>
 {
-    @Override
-    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
+    JsonArray rewards;
+
+    public RewardListModel(JsonArray rewards)
     {
-        try
-        {
-            if (packet.channel.equals(CHANNEL_HANDSHAKE)) HandshakePacket.handel(packet, player);
-            if (packet.channel.equals(CHANNEL_REWARD)) Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
-            if (packet.channel.equals(CHANNEL_CONFIGURATOR)) ConfiguratorManager.handelPacket(packet, player);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+        this.rewards = rewards == null ? new JsonArray() : rewards;
+    }
+
+    @Override
+    public int getSize()
+    {
+        return rewards.size();
+    }
+
+    @Override
+    public String getElementAt(int index)
+    {
+        return rewards.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
     }
 }

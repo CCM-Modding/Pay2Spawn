@@ -21,37 +21,39 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.network;
+package ccm.pay2spawn.configurator;
 
-import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.util.Reward;
-import cpw.mods.fml.common.network.IPacketHandler;
+import ccm.pay2spawn.Pay2Spawn;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.CHANNEL_CONFIGURATOR;
 
-/**
- * Packet handler for both sides.
- *
- * @author Dries007
- */
-public class PacketHandler implements IPacketHandler
+public class ConfiguratorManager
 {
-    @Override
-    public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
+    private static String MESSAGE_INIT = "init";
+
+    public static void handleCommand(EntityPlayer player)
     {
-        try
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_INIT.getBytes()), (Player) player);
+    }
+
+    public static void handelPacket(Packet250CustomPayload packet, Player player)
+    {
+        String message = new String(packet.data);
+        if (message.equals(MESSAGE_INIT) && FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
-            if (packet.channel.equals(CHANNEL_HANDSHAKE)) HandshakePacket.handel(packet, player);
-            if (packet.channel.equals(CHANNEL_REWARD)) Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
-            if (packet.channel.equals(CHANNEL_CONFIGURATOR)) ConfiguratorManager.handelPacket(packet, player);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+            try
+            {
+                Configurator.init(Pay2Spawn.getDBFile());
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 }

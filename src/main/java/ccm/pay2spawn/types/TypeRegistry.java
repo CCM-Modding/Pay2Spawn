@@ -25,6 +25,7 @@ package ccm.pay2spawn.types;
 
 import net.minecraftforge.common.Configuration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -57,6 +58,11 @@ public class TypeRegistry
     public static TypeBase getByName(String name)
     {
         return map.get(name.toLowerCase());
+    }
+
+    public static ArrayList<String> getNames()
+    {
+        return new ArrayList<>(map.keySet());
     }
 
     /**

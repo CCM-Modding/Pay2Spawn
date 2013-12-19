@@ -33,6 +33,7 @@ public class Constants
     public static final String NAME  = "Pay2Spawn";
     public static final String MODID = "P2S";
 
-    public static final String CHANNEL_HANDSHAKE = MODID + "_hs";
-    public static final String CHANNEL_REWARD    = MODID + "_r";
+    public static final String CHANNEL_HANDSHAKE    = MODID + "_hs";
+    public static final String CHANNEL_REWARD       = MODID + "_r";
+    public static final String CHANNEL_CONFIGURATOR = MODID + "_c";
 }

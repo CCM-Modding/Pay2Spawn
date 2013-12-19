@@ -50,7 +50,7 @@ import static ccm.pay2spawn.util.Constants.*;
  * @author Dries007
  */
 @Mod(modid = MODID, name = NAME)
-@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD}, connectionHandler = ConnectionHandler.class)
+@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_CONFIGURATOR}, connectionHandler = ConnectionHandler.class)
 public class Pay2Spawn
 {
     @Mod.Instance(MODID)
@@ -83,6 +83,8 @@ public class Pay2Spawn
         return instance.configFolder;
     }
 
+    public static File getDBFile() { return new File(instance.configFolder, NAME + ".json"); }
+
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
@@ -106,7 +108,7 @@ public class Pay2Spawn
     {
         TypeRegistry.doConfig(config.configuration);
         config.configuration.save();
-        rewardsDB = new RewardsDB(new File(configFolder, NAME + ".json"));
+        rewardsDB = new RewardsDB(getDBFile());
         MetricsHelper.init();
 
         if (event.getSide().isClient())

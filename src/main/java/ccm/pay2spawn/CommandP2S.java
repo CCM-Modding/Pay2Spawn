@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.command.CommandBase;
@@ -102,12 +103,16 @@ public class CommandP2S extends CommandBase
             Pay2Spawn.reloadDB();
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
         }
+        if (args[0].equalsIgnoreCase("configure"))
+        {
+            ConfiguratorManager.handleCommand(player);
+        }
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload", "configure");
         return null;
     }
 }
