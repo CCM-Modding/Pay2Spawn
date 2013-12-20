@@ -9,6 +9,11 @@ The reward is based on the donation amount.<br>
 Forge required, mod needed server side.<br>
 If you encounter issues with other mods, please make a bugreport!
 
+Configuration
+-------------
+*Untill the ingame configurator is 100% done, you can edit the json manually (see ConfigReadme.md).<br>*
+The configurator can't edit type data yet, but please test all the other functions!
+
 Issues & bugreports
 -------------------
 **Make sure you post the JSON file and the error log.**<br>
