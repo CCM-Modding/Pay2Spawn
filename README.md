@@ -34,7 +34,7 @@ BETA Downloads
 You can use the beta on 1 condition. You report bugs!
 [Link!](http://dries007.net:8080/job/Pay2Spawn/)
 
--The idea & proper credit
--------------------------
+The idea & proper credit
+------------------------
  
--[**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**](http://overload.playat.ch/mods/donationsummon/)
+[**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**](http://overload.playat.ch/mods/donationsummon/)
