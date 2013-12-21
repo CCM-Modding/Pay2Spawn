@@ -30,6 +30,8 @@ import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashSet;
 
@@ -47,6 +49,12 @@ public class HandshakePacket
 
     private static final String HANDSHAKE_SERVER_TO_CLIENT = "HsS2C";
     private static final String HANDSHAKE_CLIENT_TO_SERVER = "HsC2S";
+    private static final String HANDSHAKE_DEBUG = "debug";
+
+    public static void sendDebugToPlayer(Player player)
+    {
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_DEBUG.getBytes()), player);
+    }
 
     public static void sendHandshakeToPlayer(Player player)
     {
@@ -72,6 +80,11 @@ public class HandshakePacket
             playersWithHandshake.add(((EntityPlayer) player).getEntityName());
             if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
         }
+        else if (message.equals(HANDSHAKE_DEBUG))
+        {
+            Pay2Spawn.debug = !Pay2Spawn.debug;
+            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("Debug now: " + Pay2Spawn.debug).setColor(EnumChatFormatting.RED));
+        }
         else
         {
             Pay2Spawn.getLogger().severe("Invalid handshake received. Assuming no connection.");
@@ -90,6 +103,7 @@ public class HandshakePacket
 
     public static void resetServerStatus()
     {
+        Pay2Spawn.debug = false;
         serverHasMod = false;
     }
 }

@@ -24,8 +24,10 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
+import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -82,10 +84,10 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
             return;
         }
-        if (args[0].equalsIgnoreCase("debug") && MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName()))
+        if (args[0].equalsIgnoreCase("debug"))
         {
-            Pay2Spawn.debug = !Pay2Spawn.debug;
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Debug now: " + Pay2Spawn.debug).setColor(EnumChatFormatting.RED));
+            if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName())) HandshakePacket.sendDebugToPlayer((Player) player);
+            else sender.sendChatToPlayer(ChatMessageComponent.createFromText("You have to be OP to enable debug mode.").setColor(EnumChatFormatting.RED));
         }
         if (args[0].equalsIgnoreCase("getnbtofitem"))
         {
