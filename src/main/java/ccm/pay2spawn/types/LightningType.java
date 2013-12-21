@@ -23,11 +23,17 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.types.guis.LightningTypeGui;
+import com.google.gson.JsonObject;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.HashMap;
+
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.JsonNBTHelper.INT;
 
 /**
  * Strikes the world within 1 block of the player
@@ -39,6 +45,15 @@ import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
  */
 public class LightningType extends TypeBase
 {
+    public static final String SPREAD_KEY = "spread";
+
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+
+    static
+    {
+        typeMap.put(SPREAD_KEY, NBTBase.NBTTypes[INT]);
+    }
+
     @Override
     public String getName()
     {
@@ -48,7 +63,9 @@ public class LightningType extends TypeBase
     @Override
     public NBTTagCompound getExample()
     {
-        return new NBTTagCompound();
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger(SPREAD_KEY, 2);
+        return nbt;
     }
 
     @Override
@@ -56,9 +73,17 @@ public class LightningType extends TypeBase
     {
         double X = player.posX, Y = player.posY, Z = player.posZ;
 
-        X += (0.5 - RANDOM.nextDouble());
-        Z += (0.5 - RANDOM.nextDouble());
+        double spread = dataFromClient.getInteger(SPREAD_KEY) / 2;
+
+        X += (spread - (RANDOM.nextDouble() * spread));
+        Z += (spread - (RANDOM.nextDouble() * spread));
 
         player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), X, Y, Z));
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new LightningTypeGui(rewardID, getName(), data, typeMap);
     }
 }

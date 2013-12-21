@@ -26,6 +26,7 @@ package ccm.pay2spawn.types;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import com.google.gson.JsonObject;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -76,6 +77,12 @@ public class RandomItemType extends TypeBase
         {
             Pay2Spawn.getLogger().warning("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+
     }
 
     public ItemStack pickRandomItemStack()

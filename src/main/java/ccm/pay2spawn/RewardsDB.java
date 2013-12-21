@@ -27,7 +27,9 @@ import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.HashMap;
@@ -79,8 +81,7 @@ public class RewardsDB
                 rootArray.add(group);
 
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                bw.write(gson.toJson(rootArray));
+                bw.write(JsonNBTHelper.GSON.toJson(rootArray));
                 bw.close();
             }
         }

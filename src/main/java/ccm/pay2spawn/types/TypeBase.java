@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
@@ -75,4 +76,7 @@ public abstract class TypeBase
      */
     public void printHelpList(File configFolder)
     {}
+
+    public abstract void openNewGui(int rewardID, JsonObject data);
+
 }

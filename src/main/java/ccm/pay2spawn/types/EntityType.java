@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -143,5 +144,11 @@ public class EntityType extends TypeBase
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+
     }
 }

@@ -41,11 +41,10 @@ public class P2SConfig
 {
     Configuration configuration;
 
-    public boolean printHelpLists = true;
-    public double  min_donation   = 1;
-    public int     interval       = 10;
-    public String  API_Key        = "";
-    public String  channel        = "";
+    public double min_donation = 1;
+    public int    interval     = 10;
+    public String API_Key      = "";
+    public String channel      = "";
     public HudSettings  hud;
     public FileSettings file;
 
@@ -55,7 +54,6 @@ public class P2SConfig
 
         configuration.addCustomCategoryComment(MODID, "All config settings for " + NAME + "\nDon't forget the other files in this folder!\nFor all message type things (all text basically) use & for color codes!");
 
-        printHelpLists = configuration.get(MODID, "printHelpLists", printHelpLists, "Make helpfull list files").getBoolean(true);
         interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
         channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
         API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();

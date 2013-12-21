@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,6 +54,12 @@ public class CustomEntityType extends TypeBase
     public void doConfig(Configuration configuration)
     {
         radius = configuration.get(MODID + "." + NAME, "radius", radius, "The radius in wich the entity is randomly spawed").getInt();
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+
     }
 
     @Override

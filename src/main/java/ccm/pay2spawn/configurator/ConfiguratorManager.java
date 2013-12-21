@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn.configurator;
 
-import ccm.pay2spawn.Pay2Spawn;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -48,7 +47,7 @@ public class ConfiguratorManager
         {
             try
             {
-                Configurator.init(Pay2Spawn.getDBFile());
+                Configurator.show();
             }
             catch (Exception e)
             {

@@ -38,7 +38,6 @@ import java.util.regex.Pattern;
 public class RndSound implements IRandomResolver
 {
     private final static Pattern PATTERN_ALL       = Pattern.compile("^\\$randomSound(\\(all\\))?$");
-    private final static Pattern PATTERN_MUSIC     = Pattern.compile("^\\$randomSound\\(music\\)$");
     private final static Pattern PATTERN_SOUNDS    = Pattern.compile("^\\$randomSound\\(sounds\\)$");
     private final static Pattern PATTERN_STREAMING = Pattern.compile("^\\$randomSound\\(streaming\\)$");
 
@@ -46,7 +45,6 @@ public class RndSound implements IRandomResolver
     public String solverRandom(int type, String value)
     {
         if (PATTERN_ALL.matcher(value).matches()) return RandomRegistry.getRandomFromSet(SoundType.all);
-        if (PATTERN_MUSIC.matcher(value).matches()) return RandomRegistry.getRandomFromSet(SoundType.music);
         if (PATTERN_SOUNDS.matcher(value).matches()) return RandomRegistry.getRandomFromSet(SoundType.sounds);
         if (PATTERN_STREAMING.matcher(value).matches()) return RandomRegistry.getRandomFromSet(SoundType.streaming);
 
@@ -56,6 +54,6 @@ public class RndSound implements IRandomResolver
     @Override
     public boolean matches(int type, String value)
     {
-        return type == 8 && (PATTERN_ALL.matcher(value).matches() || PATTERN_MUSIC.matcher(value).matches() || PATTERN_SOUNDS.matcher(value).matches() || PATTERN_STREAMING.matcher(value).matches());
+        return type == 8 && (PATTERN_ALL.matcher(value).matches() || PATTERN_SOUNDS.matcher(value).matches() || PATTERN_STREAMING.matcher(value).matches());
     }
 }

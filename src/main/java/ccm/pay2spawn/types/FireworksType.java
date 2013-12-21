@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import com.google.common.base.Throwables;
+import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -119,6 +120,12 @@ public class FireworksType extends TypeBase
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+
     }
 
     private static final Field fireworkAgeField = getHackField(0);

@@ -38,7 +38,7 @@
                   <component id="396e4" class="javax.swing.JTable" binding="mainTable">
                     <constraints/>
                     <properties>
-                      <autoCreateRowSorter value="true"/>
+                      <autoCreateRowSorter value="false"/>
                       <autoResizeMode value="2"/>
                     </properties>
                     <clientProperties>

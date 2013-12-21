@@ -23,12 +23,24 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.types.guis.PotionEffectTypeGui;
+import com.google.common.collect.HashBiMap;
+import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.JsonNBTHelper.BYTE;
+import static ccm.pay2spawn.util.JsonNBTHelper.INT;
 
 /**
  * Applies potion effect
@@ -37,12 +49,24 @@ import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
  */
 public class PotionEffectType extends TypeBase
 {
-    private static final String NAME = "potioneffect";
+    public static final String ID_KEY        = "Id";
+    public static final String AMPLIFIER_KEY = "Amplifier";
+    public static final String DURATION_KEY  = "Duration";
+
+    public static final HashBiMap<String, Integer> nicePotionNamesMap = HashBiMap.create();
+    public static final HashMap<String, String>    typeMap            = new HashMap<>();
+
+    static
+    {
+        typeMap.put(ID_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(AMPLIFIER_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(DURATION_KEY, NBTBase.NBTTypes[INT]);
+    }
 
     @Override
     public String getName()
     {
-        return NAME;
+        return "potioneffect";
     }
 
     @Override
@@ -54,8 +78,45 @@ public class PotionEffectType extends TypeBase
     }
 
     @Override
+    public void printHelpList(File configFolder)
+    {
+        File file = new File(Pay2Spawn.getFolder(), "Potion.txt");
+        try
+        {
+            if (file.exists()) file.delete();
+            file.createNewFile();
+            PrintWriter pw = new PrintWriter(file);
+
+            pw.println("# Potion list file");
+            pw.println("# Format:");
+            pw.println("# ID: name");
+
+            for (Potion potion : Potion.potionTypes)
+            {
+                if (potion != null)
+                {
+                    nicePotionNamesMap.put(potion.getId() + ": " + potion.getName(), potion.getId());
+                    pw.println(potion.getId() + ": " + potion.getName());
+                }
+            }
+
+            pw.close();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new PotionEffectTypeGui(rewardID, getName(), data, typeMap);
     }
 }

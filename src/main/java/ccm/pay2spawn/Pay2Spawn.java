@@ -50,7 +50,8 @@ import static ccm.pay2spawn.util.Constants.*;
  * @author Dries007
  */
 @Mod(modid = MODID, name = NAME)
-@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_CONFIGURATOR}, connectionHandler = ConnectionHandler.class)
+@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class,
+        channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_CONFIGURATOR, CHANNEL_TEST})
 public class Pay2Spawn
 {
     @Mod.Instance(MODID)
@@ -121,7 +122,7 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (config.printHelpLists && event.getSide().isClient())
+        if (event.getSide().isClient())
         {
             for (TypeBase base : TypeRegistry.getAllTypes())
             {

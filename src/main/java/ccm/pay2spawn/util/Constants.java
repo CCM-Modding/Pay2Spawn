@@ -36,4 +36,5 @@ public class Constants
     public static final String CHANNEL_HANDSHAKE    = MODID + "_hs";
     public static final String CHANNEL_REWARD       = MODID + "_r";
     public static final String CHANNEL_CONFIGURATOR = MODID + "_c";
+    public static final String CHANNEL_TEST         = MODID + "_t";
 }

@@ -24,19 +24,27 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.types.guis.SoundTypeGui;
 import com.google.common.base.Throwables;
+import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemRecord;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+
+import static ccm.pay2spawn.util.JsonNBTHelper.FLOAT;
+import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 /**
  * Play a sound based on name
@@ -47,10 +55,21 @@ import java.util.Map;
  */
 public class SoundType extends TypeBase
 {
-    public static final HashSet<String> music     = new HashSet<>();
-    public static final HashSet<String> sounds    = new HashSet<>();
-    public static final HashSet<String> streaming = new HashSet<>();
-    public static final HashSet<String> all       = new HashSet<>();
+    public static final String SOUNDNAME_KEY = "soundName";
+    public static final String VOLUME_KEY    = "volume";
+    public static final String PITCH_KEY     = "pitch";
+
+    public static final HashSet<String>         sounds    = new HashSet<>();
+    public static final HashSet<String>         streaming = new HashSet<>();
+    public static final HashSet<String>         all       = new HashSet<>();
+    public static final HashMap<String, String> typeMap   = new HashMap<>();
+
+    static
+    {
+        typeMap.put(SOUNDNAME_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(VOLUME_KEY, NBTBase.NBTTypes[FLOAT]);
+        typeMap.put(PITCH_KEY, NBTBase.NBTTypes[FLOAT]);
+    }
 
     @Override
     public String getName()
@@ -63,9 +82,9 @@ public class SoundType extends TypeBase
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setString("soundName", "mob.creeper.say");
-        nbt.setFloat("volume", 1f);
-        nbt.setFloat("pitch", 1f);
+        nbt.setString(SOUNDNAME_KEY, RandomRegistry.getRandomFromSet(sounds));
+        nbt.setFloat(VOLUME_KEY, 1f);
+        nbt.setFloat(PITCH_KEY, 1f);
 
         return nbt;
     }
@@ -73,11 +92,14 @@ public class SoundType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString("soundName"), dataFromClient.getFloat("volume"), dataFromClient.getFloat("pitch"));
+        if (sounds.contains(dataFromClient.getString(SOUNDNAME_KEY)))
+            player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
+        if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY)))
+            player.getEntityWorld().playAuxSFXAtEntity(null, 1005, (int) player.posX, (int) player.posY - 1, (int) player.posZ, ItemRecord.getRecord(dataFromClient.getString(SOUNDNAME_KEY)).itemID);
     }
 
     @Override
-    public void doConfig(Configuration config)
+    public void printHelpList(File configFolder)
     {
         File file = new File(Pay2Spawn.getFolder(), "SoundsList.txt");
         try
@@ -89,13 +111,6 @@ public class SoundType extends TypeBase
             pw.println("## This is a list of all the sounds you can use in the json file.");
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
-            pw.println("# Music: ");
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolMusic)).keySet())
-            {
-                all.add(key.toString());
-                music.add(key.toString());
-                pw.println(key);
-            }
             pw.println("# Sounds: ");
             for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet())
             {
@@ -121,6 +136,12 @@ public class SoundType extends TypeBase
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new SoundTypeGui(rewardID, getName(), data, typeMap);
     }
 
     /**

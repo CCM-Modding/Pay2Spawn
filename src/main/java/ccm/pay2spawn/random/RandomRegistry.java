@@ -77,6 +77,7 @@ public class RandomRegistry
         addRandomResolver(new RndEntity());
         addRandomResolver(new RndListValue());
         addRandomResolver(new RndNumberRange());
+        addRandomResolver(new RndSound());
     }
 
     /**

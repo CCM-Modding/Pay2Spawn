@@ -23,19 +23,28 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.types.guis.XPOrbsGui;
+import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.HashMap;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 
-/**
- * Spawns an amount of XP orbs with random values (1 to 5)
- *
- * @author Dries007
- */
 public class XPOrbsType extends TypeBase
 {
+    public static final String AMOUNTOFORBS_KEY = "amoutOfOrbs";
+
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+
+    static
+    {
+        typeMap.put(AMOUNTOFORBS_KEY, NBTBase.NBTTypes[3]);
+    }
+
     @Override
     public String getName()
     {
@@ -46,14 +55,14 @@ public class XPOrbsType extends TypeBase
     public NBTTagCompound getExample()
     {
         NBTTagCompound out = new NBTTagCompound();
-        out.setInteger("amoutOfOrbs", 100);
+        out.setInteger(AMOUNTOFORBS_KEY, 100);
         return out;
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        for (int i = 0; i < dataFromClient.getInteger("amoutOfOrbs"); i++)
+        for (int i = 0; i < dataFromClient.getInteger(AMOUNTOFORBS_KEY); i++)
         {
             double X = player.posX, Y = player.posY, Z = player.posZ;
 
@@ -62,5 +71,11 @@ public class XPOrbsType extends TypeBase
 
             player.worldObj.spawnEntityInWorld(new EntityXPOrb(player.worldObj, X, Y, Z, RANDOM.nextInt(5) + 1));
         }
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new XPOrbsGui(rewardID, getName(), data, typeMap);
     }
 }

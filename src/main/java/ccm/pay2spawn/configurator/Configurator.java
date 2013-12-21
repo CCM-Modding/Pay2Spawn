@@ -25,6 +25,7 @@ package ccm.pay2spawn.configurator;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.types.guis.HelperGuiBase;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Joiner;
@@ -33,10 +34,7 @@ import com.google.gson.*;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -46,78 +44,80 @@ public class Configurator
     public static final Joiner   joiner       = Joiner.on(", ").skipNulls();
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "rewards"};
     public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Types of rewards"};
-    private final File srcFile;
+    public static Configurator instance;
+    public        JFrame       frame;
 
-    private JsonArray   rootArray;
-    private JPanel      panel1;
-    private JTabbedPane tabbedPane1;
-    private JTable      mainTable;
-    private JTextField  nameField;
-    private JTextField  amountField;
-    private JTextField  messageField;
-    private JButton     saveOverOldGroupButton;
-    private JButton     helpMeWithRandomizationButton;
-    private JButton     clearButton;
-    private JList       typeList;
-    private JList       rewards;
-    private JButton     saveAsNewGroupButton;
-    private JButton     removeGroupButton;
-    private JLabel      nameLabel;
-    private JLabel      amountLabel;
-    private JsonObject  currentlyEditingData;
-    private int         currentlyEditingID;
-    private JsonArray   rewardData;
+    private HashSet<HelperGuiBase> openEditors = new HashSet<>();
 
-    private Configurator(File file) throws FileNotFoundException
+    private JsonArray     rootArray;
+    private JPanel        panel1;
+    private JTabbedPane   tabbedPane1;
+    private JTable        mainTable;
+    private JTextField    nameField;
+    private JTextField    amountField;
+    private JTextField    messageField;
+    private JButton       saveOverOldGroupButton;
+    private JButton       helpMeWithRandomizationButton;
+    private JButton       clearButton;
+    private JList<String> typeList;
+    private JList<String> rewards;
+    private JButton       saveAsNewGroupButton;
+    private JButton       removeGroupButton;
+    private JLabel        nameLabel;
+    private JLabel        amountLabel;
+    private JsonObject    currentlyEditingData;
+    private int           currentlyEditingID;
+    private JsonArray     rewardData;
+
+    private Configurator()
     {
         $$$setupUI$$$();
-        this.srcFile = file;
-        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(srcFile)).getAsJsonArray();
+    }
 
-        JFrame frame = new JFrame("Configurator");
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-        frame.setSize(750, 600);
+    public void callback(int rewardID, String type, JsonObject newData)
+    {
+        if (rewardID == -1)
+        {
+            JsonObject object = new JsonObject();
+            object.addProperty("type", type);
+            object.add("data", newData);
+            rewardData.add(object);
+            rewards.updateUI();
+        }
+        else
+        {
+            rewardData.get(rewardID).getAsJsonObject().add("data", newData);
+            rewards.updateUI();
+        }
 
-        frame.pack();
-        frame.setVisible(true);
+        System.out.println(rewardData.get(rewardID).toString());
+    }
 
-        mainTable.setModel(new AbstractTableModel()
+    private void setupListeners()
+    {
+        typeList.addMouseListener(new MouseAdapter()
         {
             @Override
-            public int getRowCount()
+            public void mouseClicked(MouseEvent e)
             {
-                return rootArray.size();
-            }
-
-            @Override
-            public int getColumnCount()
-            {
-                return COLUMN_NAMES.length;
-            }
-
-            @Override
-            public Object getValueAt(int rowIndex, int columnIndex)
-            {
-                if (!rootArray.get(rowIndex).getAsJsonObject().has(COLUMN_KEYS[columnIndex])) return "";
-                switch (columnIndex)
+                if (e.getClickCount() == 2)
                 {
-                    default:
-                        return rootArray.get(rowIndex).getAsJsonObject().get(COLUMN_KEYS[columnIndex]).getAsString();
-                    case 3:
-                        HashSet<String> types = new HashSet<>();
-                        for (JsonElement element : rootArray.get(rowIndex).getAsJsonObject().getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
-                        return joiner.join(types);
+                    TypeRegistry.getByName(typeList.getSelectedValue()).openNewGui(-1, new JsonObject());
                 }
             }
-
+        });
+        rewards.addMouseListener(new MouseAdapter()
+        {
             @Override
-            public String getColumnName(int column)
+            public void mouseClicked(MouseEvent e)
             {
-                return COLUMN_NAMES[column];
+                if (e.getClickCount() == 2)
+                {
+                    int id = rewards.getSelectedIndex();
+                    TypeRegistry.getByName(rewards.getSelectedValue()).openNewGui(id, rewardData.get(id).getAsJsonObject().getAsJsonObject("data"));
+                }
             }
         });
-        ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
         helpMeWithRandomizationButton.addActionListener(new ActionListener()
         {
             @Override
@@ -126,34 +126,21 @@ public class Configurator
                 //TODO make and open help GUI
             }
         });
-
-        typeList.setModel(new AbstractListModel()
-        {
-            final ArrayList<String> names = TypeRegistry.getNames();
-
-            @Override
-            public int getSize()
-            {
-                return names.size();
-            }
-
-            @Override
-            public Object getElementAt(int index)
-            {
-                return names.get(index);
-            }
-        });
-
         mainTable.addMouseListener(new MouseAdapter()
         {
+            @Override
             public void mouseClicked(MouseEvent e)
             {
                 if (e.getClickCount() == 2)
                 {
-                    JTable target = (JTable) e.getSource();
-                    currentlyEditingID = target.getSelectedRow();
+                    for (HelperGuiBase gui : openEditors) gui.close();
+                    openEditors.clear();
+
+                    currentlyEditingID = mainTable.getSelectedRow();
                     currentlyEditingData = rootArray.get(currentlyEditingID).getAsJsonObject();
-                    rewardData = JsonNBTHelper.cloneJSON(currentlyEditingData.getAsJsonArray("rewards"));
+                    if (currentlyEditingData.has("rewards")) rewardData = JsonNBTHelper.cloneJSON(currentlyEditingData.getAsJsonArray("rewards")).getAsJsonArray();
+                    else rewardData = new JsonArray();
+                    rewards.updateUI();
                     rewards.clearSelection();
                     typeList.clearSelection();
                     saveOverOldGroupButton.setEnabled(true);
@@ -163,11 +150,9 @@ public class Configurator
                     nameField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[0]).getAsString());
                     amountField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[1]).getAsString());
                     messageField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[2]).getAsString());
-                    rewards.setModel(new RewardListModel(rewardData));
                 }
             }
         });
-
         clearButton.addActionListener(new ActionListener()
         {
             @Override
@@ -176,7 +161,6 @@ public class Configurator
                 clear();
             }
         });
-
         saveOverOldGroupButton.addActionListener(new ActionListener()
         {
             @Override
@@ -212,19 +196,118 @@ public class Configurator
                 }
             }
         });
-
         removeGroupButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 JsonArray newRoot = new JsonArray();
-                for (int i = 0; i < rootArray.size(); i++)
-                { if (i != currentlyEditingID) newRoot.add(rootArray.get(i)); }
+                for (int i = 0; i < rootArray.size(); i++) if (i != currentlyEditingID) newRoot.add(rootArray.get(i));
+
+                for (HelperGuiBase gui : openEditors) gui.close();
+                openEditors.clear();
 
                 rootArray = newRoot;
                 clear();
                 tabbedPane1.setSelectedIndex(0);
+                saveMainJsonToFile();
+            }
+        });
+        rewards.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyTyped(KeyEvent e)
+            {
+                if (KeyEvent.VK_DELETE == e.getKeyChar())
+                {
+                    int toRemove = rewards.getSelectedIndex();
+                    JsonArray newRewardData = new JsonArray();
+                    for (int i = 0; i < rewardData.size(); i++) if (i != toRemove) newRewardData.add(rewardData.get(i));
+                    rewardData = newRewardData;
+
+                    for (HelperGuiBase gui : openEditors)
+                    {
+                        if (gui.rewardID == toRemove)
+                        {
+                            gui.close();
+                            openEditors.remove(gui);
+                        }
+                    }
+
+                    rewards.clearSelection();
+                    rewards.updateUI();
+                }
+            }
+        });
+    }
+
+    private void setupModels()
+    {
+        mainTable.setModel(new AbstractTableModel()
+        {
+            @Override
+            public int getRowCount()
+            {
+                return rootArray.size();
+            }
+
+            @Override
+            public int getColumnCount()
+            {
+                return COLUMN_NAMES.length;
+            }
+
+            @Override
+            public Object getValueAt(int rowIndex, int columnIndex)
+            {
+                if (!rootArray.get(rowIndex).getAsJsonObject().has(COLUMN_KEYS[columnIndex])) return "";
+                switch (columnIndex)
+                {
+                    default:
+                        return rootArray.get(rowIndex).getAsJsonObject().get(COLUMN_KEYS[columnIndex]).getAsString();
+                    case 3:
+                        HashSet<String> types = new HashSet<>();
+                        for (JsonElement element : rootArray.get(rowIndex).getAsJsonObject().getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
+                        return joiner.join(types);
+                }
+            }
+
+            @Override
+            public String getColumnName(int column)
+            {
+                return COLUMN_NAMES[column];
+            }
+        });
+
+        typeList.setModel(new AbstractListModel<String>()
+        {
+            final ArrayList<String> names = TypeRegistry.getNames();
+
+            @Override
+            public int getSize()
+            {
+                return names.size();
+            }
+
+            @Override
+            public String getElementAt(int index)
+            {
+                return names.get(index);
+            }
+        });
+
+        rewards.setModel(new AbstractListModel<String>()
+        {
+            @Override
+            public int getSize()
+            {
+                return rewardData == null ? 0 : rewardData.size();
+            }
+
+            @Override
+            public String getElementAt(int index)
+            {
+                return rewardData.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
             }
         });
     }
@@ -233,7 +316,7 @@ public class Configurator
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(srcFile));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getDBFile()));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             bw.write(gson.toJson(rootArray));
             bw.close();
@@ -284,6 +367,7 @@ public class Configurator
         currentlyEditingID = -1;
         currentlyEditingData = new JsonObject();
         rewardData = new JsonArray();
+        rewards.updateUI();
         rewards.clearSelection();
         typeList.clearSelection();
         saveOverOldGroupButton.setEnabled(false);
@@ -292,16 +376,45 @@ public class Configurator
         nameField.setText("");
         amountField.setText("");
         messageField.setText("");
-        rewards.updateUI();
         mainTable.updateUI();
 
         nameLabel.setForeground(Color.black);
         amountLabel.setForeground(Color.black);
+
+        for (HelperGuiBase helperGuiBase : openEditors) helperGuiBase.close();
     }
 
-    public static void init(File dbFile) throws FileNotFoundException
+    public static void show() throws FileNotFoundException
     {
-        new Configurator(dbFile);
+        if (instance == null) instance = new Configurator();
+
+        instance.init();
+    }
+
+    private void init() throws FileNotFoundException
+    {
+        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
+
+        if (frame == null)
+        {
+            frame = new JFrame("Configurator");
+            frame.setContentPane(panel1);
+            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            frame.setSize(750, 600);
+            frame.pack();
+            setupModels();
+            setupListeners();
+        }
+        frame.setVisible(true);
+        tabbedPane1.setSelectedIndex(0);
+
+        clear();
+        ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
+    }
+
+    public void attachGui(HelperGuiBase helper)
+    {
+        openEditors.add(helper);
     }
 
     /**
@@ -329,7 +442,7 @@ public class Configurator
         final JScrollPane scrollPane1 = new JScrollPane();
         panel2.add(scrollPane1, BorderLayout.CENTER);
         mainTable = new JTable();
-        mainTable.setAutoCreateRowSorter(true);
+        mainTable.setAutoCreateRowSorter(false);
         mainTable.setAutoResizeMode(2);
         mainTable.putClientProperty("html.disable", Boolean.TRUE);
         scrollPane1.setViewportView(mainTable);
