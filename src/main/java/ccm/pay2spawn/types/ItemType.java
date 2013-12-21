@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
@@ -72,6 +73,6 @@ public class ItemType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-
+        new ItemTypeGui(rewardID, getName(), data, null);
     }
 }
