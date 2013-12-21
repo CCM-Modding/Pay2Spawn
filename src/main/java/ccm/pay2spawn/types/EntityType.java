@@ -62,7 +62,7 @@ public class EntityType extends TypeBase
     public static final String RIDING_KEY     = "Riding";
     public static final String RANDOM_KEY     = "random";
 
-    public static final HashSet<String>         NAMES  = new HashSet<>();
+    public static final HashSet<String>         NAMES   = new HashSet<>();
     public static final HashMap<String, String> typeMap = new HashMap<>();
 
     private static int radius = 10;

@@ -112,7 +112,8 @@ public class RewardsDB
         if (map.containsKey(amount)) map.get(amount).sendToServer(donation);
         else
         {
-            for (double key : map.keySet()) if (key < amount && highestmatch < key) highestmatch = key;
+            for (double key : map.keySet())
+                if (key < amount && highestmatch < key) highestmatch = key;
 
             if (map.containsKey(highestmatch)) map.get(highestmatch).sendToServer(donation);
         }

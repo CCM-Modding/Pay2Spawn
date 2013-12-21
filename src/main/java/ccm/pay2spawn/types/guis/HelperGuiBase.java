@@ -23,9 +23,7 @@
 
 package ccm.pay2spawn.types.guis;
 
-import ccm.pay2spawn.configurator.Configurator;
 import com.google.gson.JsonObject;
-import net.minecraft.nbt.NBTBase;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +35,7 @@ public abstract class HelperGuiBase
     public final int                     rewardID;
     public final HashMap<String, String> typeMap;
     public       JsonObject              data;
-    public      JDialog                  dialog;
+    public       JDialog                 dialog;
 
     public HelperGuiBase(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
     {

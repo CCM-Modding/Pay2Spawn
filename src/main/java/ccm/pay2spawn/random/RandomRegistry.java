@@ -25,7 +25,6 @@ package ccm.pay2spawn.random;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 
 /**
@@ -60,10 +59,7 @@ public class RandomRegistry
     {
         for (IRandomResolver resolver : RANDOM_RESOLVERS.values())
         {
-            if (resolver.matches(type, value))
-            {
-                return resolver.solverRandom(type, value);
-            }
+            if (resolver.matches(type, value)) return resolver.solverRandom(type, value);
         }
         return value;
     }

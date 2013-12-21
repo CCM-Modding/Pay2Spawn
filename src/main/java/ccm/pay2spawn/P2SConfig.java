@@ -42,10 +42,10 @@ public class P2SConfig
     Configuration configuration;
 
     public boolean forceServerconfig = true;
-    public double min_donation = 1;
-    public int    interval     = 10;
-    public String API_Key      = "";
-    public String channel      = "";
+    public double  min_donation      = 1;
+    public int     interval          = 10;
+    public String  API_Key           = "";
+    public String  channel           = "";
     public HudSettings  hud;
     public FileSettings file;
 

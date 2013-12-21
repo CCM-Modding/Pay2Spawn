@@ -28,7 +28,6 @@ import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.EnumChatFormatting;
 

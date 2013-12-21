@@ -103,7 +103,6 @@ public class PotionEffectTypeGui extends HelperGuiBase
                 TestPacket.sendToServer(name, data);
             }
         });
-
         saveButton.addActionListener(new ActionListener()
         {
             @Override

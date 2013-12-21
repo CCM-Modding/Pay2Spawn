@@ -25,6 +25,7 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.types.guis.RandomItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.creativetab.CreativeTabs;
@@ -35,9 +36,22 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 public class RandomItemType extends TypeBase
 {
+    public static final String                  NAME_KEY    = "Name";
+    public static final String                  DISPLAY_KEY = "display";
+    public static final String                  TAG_KEY     = "tag";
+    public static final HashMap<String, String> typeMap     = new HashMap<>();
+
+    static
+    {
+        typeMap.put(NAME_KEY, NBTBase.NBTTypes[STRING]);
+    }
+
     @Override
     public String getName()
     {
@@ -82,7 +96,7 @@ public class RandomItemType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-
+        new RandomItemTypeGui(rewardID, getName(), data, typeMap);
     }
 
     public ItemStack pickRandomItemStack()

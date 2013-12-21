@@ -35,10 +35,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.client.event.sound.SoundSetupEvent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +46,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static ccm.pay2spawn.util.JsonNBTHelper.*;
+import static ccm.pay2spawn.util.JsonNBTHelper.FLOAT;
 import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 /**

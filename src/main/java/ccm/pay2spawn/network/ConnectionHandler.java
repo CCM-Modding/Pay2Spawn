@@ -24,7 +24,6 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.IConnectionHandler;

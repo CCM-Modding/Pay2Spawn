@@ -24,7 +24,6 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -49,7 +48,7 @@ public class HandshakePacket
 
     private static final String HANDSHAKE_SERVER_TO_CLIENT = "HsS2C";
     private static final String HANDSHAKE_CLIENT_TO_SERVER = "HsC2S";
-    private static final String HANDSHAKE_DEBUG = "debug";
+    private static final String HANDSHAKE_DEBUG            = "debug";
 
     public static void sendDebugToPlayer(Player player)
     {

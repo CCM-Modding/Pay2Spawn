@@ -24,11 +24,11 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.ConfigSyncPacket;
+import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;

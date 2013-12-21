@@ -38,13 +38,13 @@ import static ccm.pay2spawn.types.LightningType.SPREAD_KEY;
 
 public class LightningTypeGui extends HelperGuiBase
 {
-    public        JScrollPane scrollPane;
-    public        JPanel      panel1;
-    public        JTextPane   jsonPane;
-    public        JButton     parseFromJsonButton;
-    public        JButton     saveButton;
-    public        JButton     updateJsonButton;
-    public        JButton     testButton;
+    public JScrollPane scrollPane;
+    public JPanel      panel1;
+    public JTextPane   jsonPane;
+    public JButton     parseFromJsonButton;
+    public JButton     saveButton;
+    public JButton     updateJsonButton;
+    public JButton     testButton;
 
     public JTextField spreadTextField;
 
@@ -67,7 +67,6 @@ public class LightningTypeGui extends HelperGuiBase
                 TestPacket.sendToServer(name, data);
             }
         });
-
         saveButton.addActionListener(new ActionListener()
         {
             @Override

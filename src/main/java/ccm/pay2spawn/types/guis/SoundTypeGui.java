@@ -79,7 +79,6 @@ public class SoundTypeGui extends HelperGuiBase
                 TestPacket.sendToServer(name, data);
             }
         });
-
         saveButton.addActionListener(new ActionListener()
         {
             @Override

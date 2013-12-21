@@ -27,12 +27,9 @@ import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.random.RndEntity;
-import ccm.pay2spawn.random.RndSound;
 import ccm.pay2spawn.types.EntityType;
-import ccm.pay2spawn.types.SoundType;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.EntityList;
 
 import javax.swing.*;
 import java.awt.*;
@@ -63,8 +60,8 @@ public class EntityTypeGui extends HelperGuiBase
     public JButton           addMobThisEntityButton;
     public JRadioButton      randomlyRandomizeMobRadioButton;
     public EntityTypeGui     superGui;
-    public EntityTypeGui     instance = this;
-    public EntityTypeGui     clientGui;
+    public EntityTypeGui instance = this;
+    public EntityTypeGui clientGui;
 
     public EntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -72,7 +69,8 @@ public class EntityTypeGui extends HelperGuiBase
 
         makeAndOpen();
 
-        Set<String> set = new HashSet<>(EntityType.NAMES);
+        Set<String> set = new HashSet<>();
+        set.addAll(EntityType.NAMES);
         set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
     }
@@ -94,7 +92,6 @@ public class EntityTypeGui extends HelperGuiBase
     {
         data.add(RIDING_KEY, superData);
         updateJson();
-        clientGui = null;
     }
 
     public void setupListeners()

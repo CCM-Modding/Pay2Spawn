@@ -32,6 +32,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.XPOrbsType.AMOUNTOFORBS_KEY;
@@ -67,7 +69,6 @@ public class XPOrbsGui extends HelperGuiBase
                 TestPacket.sendToServer(name, data);
             }
         });
-
         saveButton.addActionListener(new ActionListener()
         {
             @Override
@@ -102,6 +103,14 @@ public class XPOrbsGui extends HelperGuiBase
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
+            }
+        });
+        jsonPane.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyTyped(KeyEvent e)
+            {
+                readJson();
             }
         });
     }

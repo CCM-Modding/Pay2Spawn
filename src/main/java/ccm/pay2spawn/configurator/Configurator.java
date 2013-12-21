@@ -25,7 +25,6 @@ package ccm.pay2spawn.configurator;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.types.guis.HelperGuiBase;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Joiner;
@@ -247,8 +246,10 @@ public class Configurator
                     default:
                         return rootArray.get(rowIndex).getAsJsonObject().get(COLUMN_KEYS[columnIndex]).getAsString();
                     case 3:
+                        JsonObject jsonObject = rootArray.get(rowIndex).getAsJsonObject();
+                        if (jsonObject.has(COLUMN_KEYS[columnIndex])) return "";
                         HashSet<String> types = new HashSet<>();
-                        for (JsonElement element : rootArray.get(rowIndex).getAsJsonObject().getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
+                        for (JsonElement element : jsonObject.getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
                         return joiner.join(types);
                 }
             }
