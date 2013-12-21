@@ -23,20 +23,26 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.types.guis.EntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 import static ccm.pay2spawn.util.Constants.MODID;
+import static ccm.pay2spawn.util.JsonNBTHelper.BYTE;
+import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 /**
  * A simple entity spawner, can handle:
@@ -48,8 +54,26 @@ import static ccm.pay2spawn.util.Constants.MODID;
  */
 public class EntityType extends TypeBase
 {
-    private static final String NAME   = "entity";
-    private static       int    radius = 10;
+    private static final String NAME = "entity";
+
+    public static final String ENTITYNAME_KEY = "name";
+    public static final String AGRO_KEY       = "agro";
+    public static final String CUSTOMNAME_KEY = "CustomName";
+    public static final String RIDING_KEY     = "Riding";
+    public static final String RANDOM_KEY     = "random";
+
+    public static final HashSet<String>         NAMES  = new HashSet<>();
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+
+    private static int radius = 10;
+
+    static
+    {
+        typeMap.put(ENTITYNAME_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(AGRO_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(CUSTOMNAME_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
+    }
 
     @Override
     public String getName()
@@ -67,18 +91,25 @@ public class EntityType extends TypeBase
     public NBTTagCompound getExample()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setString("name", "$randomEntity");
-        tag.setBoolean("agro", true);
-        tag.setString("CustomName", "$name");
+        tag.setString(ENTITYNAME_KEY, "$randomEntity");
+        tag.setBoolean(AGRO_KEY, true);
+        tag.setBoolean(RANDOM_KEY, true);
+        tag.setString(CUSTOMNAME_KEY, "$name");
 
         NBTTagCompound tag2 = new NBTTagCompound();
-        tag2.setString("name", "$randomEntity");
-        tag2.setBoolean("agro", true);
-        tag2.setString("CustomName", "$name");
+        tag2.setString(ENTITYNAME_KEY, "$randomEntity");
+        tag2.setBoolean(AGRO_KEY, true);
+        tag2.setString(CUSTOMNAME_KEY, "$name");
 
-        tag.setCompoundTag("Riding", tag2);
+        tag.setCompoundTag(RIDING_KEY, tag2);
 
         return tag;
+    }
+
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new EntityTypeGui(rewardID, getName(), data, typeMap);
     }
 
     @Override
@@ -91,27 +122,27 @@ public class EntityType extends TypeBase
         x = player.posX + (radius / 2 - RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - RANDOM.nextInt(radius));
 
-        Entity entity = EntityList.createEntityByName(dataFromClient.getString("name"), player.getEntityWorld());
+        Entity entity = EntityList.createEntityByName(dataFromClient.getString(ENTITYNAME_KEY), player.getEntityWorld());
 
         if (entity != null)
         {
-            if (dataFromClient.getBoolean("agro") && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
-            if (dataFromClient.hasKey("CustomName") && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString("CustomName"));
-            if (dataFromClient.getCompoundTag("Riding").getBoolean("random") && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
+            if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
+            if (dataFromClient.hasKey(CUSTOMNAME_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString(CUSTOMNAME_KEY));
+            if (dataFromClient.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
 
             entity.setPosition(x, y, z);
             player.getEntityWorld().spawnEntityInWorld(entity);
 
             Entity entity1 = entity;
-            for (NBTTagCompound tag = dataFromClient; tag.hasKey("Riding"); tag = tag.getCompoundTag("Riding"))
+            for (NBTTagCompound tag = dataFromClient; tag.hasKey(RIDING_KEY); tag = tag.getCompoundTag(RIDING_KEY))
             {
-                Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag("Riding").getString("name"), player.getEntityWorld());
+                Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag(RIDING_KEY).getString(ENTITYNAME_KEY), player.getEntityWorld());
 
                 if (entity2 != null)
                 {
-                    if (tag.getCompoundTag("Riding").getBoolean("agro") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
-                    if (tag.getCompoundTag("Riding").hasKey("CustomName") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag("Riding").getString("CustomName"));
-                    if (tag.getCompoundTag("Riding").getBoolean("random") && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
+                    if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
+                    if (tag.getCompoundTag(RIDING_KEY).hasKey(CUSTOMNAME_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag(RIDING_KEY).getString(CUSTOMNAME_KEY));
+                    if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
 
                     entity2.setPosition(x, y, z);
                     player.worldObj.spawnEntityInWorld(entity2);
@@ -137,18 +168,16 @@ public class EntityType extends TypeBase
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
 
-            for (Object key : EntityList.stringToClassMapping.keySet()) pw.println(key.toString());
+            for (Object key : EntityList.stringToClassMapping.keySet())
+            {
+                NAMES.add(key.toString());
+                pw.println(key.toString());
+            }
             pw.close();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void openNewGui(int rewardID, JsonObject data)
-    {
-
     }
 }

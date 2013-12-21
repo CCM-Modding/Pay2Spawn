@@ -21,9 +21,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.util;
+package ccm.pay2spawn.network;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.util.Constants;
+import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.network.INetworkManager;
@@ -71,6 +74,7 @@ public class ConnectionHandler implements IConnectionHandler
     @Override
     public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login)
     {
+        Pay2Spawn.reloadDB();
         HandshakePacket.resetServerStatus();
         new Timer().schedule(new TimerTask()
         {

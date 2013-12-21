@@ -33,6 +33,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.JsonNBTHelper.*;
 
 public class XPOrbsType extends TypeBase
 {
@@ -42,7 +43,7 @@ public class XPOrbsType extends TypeBase
 
     static
     {
-        typeMap.put(AMOUNTOFORBS_KEY, NBTBase.NBTTypes[3]);
+        typeMap.put(AMOUNTOFORBS_KEY, NBTBase.NBTTypes[STRING]);
     }
 
     @Override

@@ -25,6 +25,8 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.random.RndSound;
 import ccm.pay2spawn.types.SoundType;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
@@ -34,6 +36,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 import static ccm.pay2spawn.types.SoundType.*;
 
@@ -55,19 +59,15 @@ public class SoundTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        frame = new JFrame(name);
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 600));
-        frame.pack();
-        frame.setVisible(true);
+        makeAndOpen();
 
-        setupListeners();
-        readJson();
-
-        soundNameComboBox.setModel(new DefaultComboBoxModel<>(SoundType.all.toArray(new String[SoundType.all.size()])));
+        Set<String> set = new HashSet<>();
+        set.addAll(SoundType.all);
+        set.add(RandomRegistry.getInstanceFromClass(RndSound.class).getIdentifier());
+        soundNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
     }
 
+    @Override
     public void setupListeners()
     {
         testButton.addActionListener(new ActionListener()
@@ -87,7 +87,7 @@ public class SoundTypeGui extends HelperGuiBase
             {
                 updateJson();
                 Configurator.instance.callback(rewardID, name, data);
-                frame.dispose();
+                dialog.dispose();
             }
         });
         parseFromJsonButton.addActionListener(new ActionListener()
@@ -116,6 +116,12 @@ public class SoundTypeGui extends HelperGuiBase
                 updateJson();
             }
         });
+    }
+
+    @Override
+    public JPanel getPanel()
+    {
+        return panel1;
     }
 
     @Override

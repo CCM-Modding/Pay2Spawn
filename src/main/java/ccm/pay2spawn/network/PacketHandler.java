@@ -49,6 +49,7 @@ public class PacketHandler implements IPacketHandler
             if (packet.channel.equals(CHANNEL_REWARD)) Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
             if (packet.channel.equals(CHANNEL_CONFIGURATOR)) ConfiguratorManager.handelPacket(packet, player);
             if (packet.channel.equals(CHANNEL_TEST)) TestPacket.reconstruct(packet, player);
+            if (packet.channel.equals(CHANNEL_SYNC)) ConfigSyncPacket.reconstruct(packet);
         }
         catch (Exception e)
         {

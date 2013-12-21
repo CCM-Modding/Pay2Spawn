@@ -21,39 +21,29 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.random;
+package ccm.pay2spawn.network;
 
-import net.minecraft.entity.EntityList;
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.util.Constants;
+import ccm.pay2spawn.util.Helper;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.EnumChatFormatting;
 
-import java.util.regex.Pattern;
-
-/**
- * Picks a random entity name (see EntityList.txt)
- * Expected syntax: $randomEntity
- * Outcome: The name (id) of 1 random entity
- * Works with: STRING
- *
- * @author Dries007
- */
-public class RndEntity implements IRandomResolver
+public class ConfigSyncPacket
 {
-    private static final Pattern PATTERN = Pattern.compile("^\\$randomEntity$");
+    public static byte[] serverConfig;
 
-    @Override
-    public String getIdentifier()
+    public static void sendToPlayer(Player player)
     {
-        return "$randomEntity";
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL_SYNC, serverConfig), player);
     }
 
-    @Override
-    public String solverRandom(int type, String value)
+    public static void reconstruct(Packet250CustomPayload packet)
     {
-        return EntityList.getStringFromID((Integer) RandomRegistry.getRandomFromSet(EntityList.entityEggs.keySet()));
-    }
-
-    @Override
-    public boolean matches(int type, String value)
-    {
-        return type == 8 && PATTERN.matcher(value).matches();
+        Pay2Spawn.reloadDBFromServer(new String(packet.data));
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Using config specified by the server.");
     }
 }

@@ -42,6 +42,11 @@ package ccm.pay2spawn.random;
 public interface IRandomResolver
 {
     /**
+     * @return a string that matches this random type when used with String.startsWith
+     */
+    public String getIdentifier();
+
+    /**
      * Gets called when #matches returns true
      *
      * @param type  NBT type

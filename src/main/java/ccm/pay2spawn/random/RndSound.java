@@ -42,6 +42,12 @@ public class RndSound implements IRandomResolver
     private final static Pattern PATTERN_STREAMING = Pattern.compile("^\\$randomSound\\(streaming\\)$");
 
     @Override
+    public String getIdentifier()
+    {
+        return "$randomSound";
+    }
+
+    @Override
     public String solverRandom(int type, String value)
     {
         if (PATTERN_ALL.matcher(value).matches()) return RandomRegistry.getRandomFromSet(SoundType.all);

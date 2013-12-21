@@ -48,6 +48,14 @@ public class XPOrbsGui extends HelperGuiBase
 
     private JTextField amountField;
 
+    public XPOrbsGui(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
+    {
+        super(rewardID, name, inputData, typeMap);
+
+        makeAndOpen();
+    }
+
+    @Override
     public void setupListeners()
     {
         testButton.addActionListener(new ActionListener()
@@ -67,7 +75,7 @@ public class XPOrbsGui extends HelperGuiBase
             {
                 updateJson();
                 Configurator.instance.callback(rewardID, name, data);
-                frame.dispose();
+                dialog.dispose();
             }
         });
         parseFromJsonButton.addActionListener(new ActionListener()
@@ -98,20 +106,10 @@ public class XPOrbsGui extends HelperGuiBase
         });
     }
 
-    public XPOrbsGui(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
+    @Override
+    public JPanel getPanel()
     {
-        super(rewardID, name, inputData, typeMap);
-
-        frame = new JFrame(name);
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 600));
-        frame.pack();
-        frame.setVisible(true);
-
-        setupListeners();
-        readJson();
-
+        return panel1;
     }
 
     public void readJson()

@@ -28,12 +28,17 @@ import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.SoundTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.client.event.sound.SoundSetupEvent;
+import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeSubscribe;
 
 import java.io.File;
 import java.io.IOException;
@@ -43,7 +48,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static ccm.pay2spawn.util.JsonNBTHelper.FLOAT;
+import static ccm.pay2spawn.util.JsonNBTHelper.*;
 import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 /**
@@ -63,12 +68,19 @@ public class SoundType extends TypeBase
     public static final HashSet<String>         streaming = new HashSet<>();
     public static final HashSet<String>         all       = new HashSet<>();
     public static final HashMap<String, String> typeMap   = new HashMap<>();
+    private static Field nameToSoundPoolEntriesMappingField;
 
     static
     {
         typeMap.put(SOUNDNAME_KEY, NBTBase.NBTTypes[STRING]);
         typeMap.put(VOLUME_KEY, NBTBase.NBTTypes[FLOAT]);
         typeMap.put(PITCH_KEY, NBTBase.NBTTypes[FLOAT]);
+
+        if (FMLCommonHandler.instance().getSide().isClient()) nameToSoundPoolEntriesMappingField = getHackField();
+    }
+
+    {
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     @Override
@@ -99,6 +111,30 @@ public class SoundType extends TypeBase
     }
 
     @Override
+    public void doConfig(Configuration configuration)
+    {
+        if (!FMLCommonHandler.instance().getEffectiveSide().isClient()) return;
+        try
+        {
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet())
+            {
+                all.add(key.toString());
+                sounds.add(key.toString());
+            }
+
+            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolStreaming)).keySet())
+            {
+                all.add(key.toString());
+                streaming.add(key.toString());
+            }
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void printHelpList(File configFolder)
     {
         File file = new File(Pay2Spawn.getFolder(), "SoundsList.txt");
@@ -112,27 +148,13 @@ public class SoundType extends TypeBase
             pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
             pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
             pw.println("# Sounds: ");
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolSounds)).keySet())
-            {
-                all.add(key.toString());
-                sounds.add(key.toString());
-                pw.println(key);
-            }
+            for (String s : sounds) pw.println(s);
             pw.println("# Streaming: ");
-            for (Object key : ((Map) nameToSoundPoolEntriesMappingField.get(Minecraft.getMinecraft().sndManager.soundPoolStreaming)).keySet())
-            {
-                all.add(key.toString());
-                streaming.add(key.toString());
-                pw.println(key);
-            }
+            for (String s : streaming) pw.println(s);
 
             pw.close();
         }
         catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        catch (IllegalAccessException e)
         {
             e.printStackTrace();
         }
@@ -147,8 +169,6 @@ public class SoundType extends TypeBase
     /**
      * Them cheaty ways...
      */
-    private static final Field nameToSoundPoolEntriesMappingField = getHackField();
-
     private static Field getHackField()
     {
         try

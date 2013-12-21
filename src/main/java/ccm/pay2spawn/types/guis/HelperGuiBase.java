@@ -25,30 +25,49 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import com.google.gson.JsonObject;
+import net.minecraft.nbt.NBTBase;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 
 public abstract class HelperGuiBase
 {
-    public       JFrame                  frame;
     public final String                  name;
     public final int                     rewardID;
     public final HashMap<String, String> typeMap;
     public       JsonObject              data;
+    public      JDialog                  dialog;
 
     public HelperGuiBase(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
     {
-        Configurator.instance.attachGui(this);
         this.rewardID = rewardID;
         this.name = name;
         this.typeMap = typeMap;
         this.data = inputData;
     }
 
+    public void makeAndOpen()
+    {
+        setupListeners();
+        readJson();
+
+        dialog = new JDialog();
+        dialog.setContentPane(getPanel());
+        dialog.setModal(true);
+        dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setTitle("Editing: " + name);
+        dialog.setPreferredSize(new Dimension(600, 750));
+        dialog.setSize(400, 750);
+        dialog.pack();
+        dialog.setVisible(true);
+    }
+
     public abstract void readJson();
 
     public abstract void updateJson();
+
+    public abstract void setupListeners();
 
     public String readValue(String key, JsonObject jsonObject)
     {
@@ -64,6 +83,8 @@ public abstract class HelperGuiBase
 
     public void close()
     {
-        frame.dispose();
+        dialog.dispose();
     }
+
+    public abstract JPanel getPanel();
 }

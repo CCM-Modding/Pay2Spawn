@@ -38,13 +38,13 @@ import static ccm.pay2spawn.types.LightningType.SPREAD_KEY;
 
 public class LightningTypeGui extends HelperGuiBase
 {
-    public JScrollPane scrollPane;
-    public JPanel      panel1;
-    public JTextPane   jsonPane;
-    public JButton     parseFromJsonButton;
-    public JButton     saveButton;
-    public JButton     updateJsonButton;
-    public JButton     testButton;
+    public        JScrollPane scrollPane;
+    public        JPanel      panel1;
+    public        JTextPane   jsonPane;
+    public        JButton     parseFromJsonButton;
+    public        JButton     saveButton;
+    public        JButton     updateJsonButton;
+    public        JButton     testButton;
 
     public JTextField spreadTextField;
 
@@ -52,17 +52,10 @@ public class LightningTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        frame = new JFrame(name);
-        frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setPreferredSize(new Dimension(400, 600));
-        frame.pack();
-        frame.setVisible(true);
-
-        setupListeners();
-        readJson();
+        makeAndOpen();
     }
 
+    @Override
     public void setupListeners()
     {
         testButton.addActionListener(new ActionListener()
@@ -82,7 +75,7 @@ public class LightningTypeGui extends HelperGuiBase
             {
                 updateJson();
                 Configurator.instance.callback(rewardID, name, data);
-                frame.dispose();
+                dialog.dispose();
             }
         });
         parseFromJsonButton.addActionListener(new ActionListener()
@@ -111,6 +104,12 @@ public class LightningTypeGui extends HelperGuiBase
                 updateJson();
             }
         });
+    }
+
+    @Override
+    public JPanel getPanel()
+    {
+        return panel1;
     }
 
     @Override

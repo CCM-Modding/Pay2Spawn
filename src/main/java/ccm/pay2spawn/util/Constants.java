@@ -37,4 +37,7 @@ public class Constants
     public static final String CHANNEL_REWARD       = MODID + "_r";
     public static final String CHANNEL_CONFIGURATOR = MODID + "_c";
     public static final String CHANNEL_TEST         = MODID + "_t";
+    public static final String CHANNEL_SYNC         = MODID + "_sync";
+
+    public static final String[] CHANNELS = {CHANNEL_CONFIGURATOR, CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_SYNC};
 }

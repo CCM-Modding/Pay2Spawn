@@ -24,6 +24,7 @@
 package ccm.pay2spawn.random;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Random;
 
@@ -35,8 +36,8 @@ import java.util.Random;
  */
 public class RandomRegistry
 {
-    public static final  Random                   RANDOM           = new Random();
-    private static final HashSet<IRandomResolver> RANDOM_RESOLVERS = new HashSet<>();
+    public static final  Random                                                     RANDOM           = new Random();
+    private static final HashMap<Class<? extends IRandomResolver>, IRandomResolver> RANDOM_RESOLVERS = new HashMap<>();
 
     /**
      * Register your IRandomResolver here
@@ -45,7 +46,7 @@ public class RandomRegistry
      */
     public static void addRandomResolver(IRandomResolver resolver)
     {
-        RANDOM_RESOLVERS.add(resolver);
+        RANDOM_RESOLVERS.put(resolver.getClass(), resolver);
     }
 
     /**
@@ -57,7 +58,7 @@ public class RandomRegistry
      */
     public static String solveRandom(int type, String value)
     {
-        for (IRandomResolver resolver : RANDOM_RESOLVERS)
+        for (IRandomResolver resolver : RANDOM_RESOLVERS.values())
         {
             if (resolver.matches(type, value))
             {
@@ -89,6 +90,7 @@ public class RandomRegistry
      */
     public static <T> T getRandomFromSet(Collection<T> collection)
     {
+        if (collection.isEmpty()) return null;
         int item = RANDOM.nextInt(collection.size());
         int i = 0;
         for (T obj : collection)
@@ -97,5 +99,10 @@ public class RandomRegistry
             i = i + 1;
         }
         return null;
+    }
+
+    public static IRandomResolver getInstanceFromClass(Class<? extends IRandomResolver> aClass)
+    {
+        return RANDOM_RESOLVERS.get(aClass);
     }
 }

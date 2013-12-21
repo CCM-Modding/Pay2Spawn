@@ -41,7 +41,13 @@ import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
  */
 public class RndColors implements IRandomResolver
 {
-    private final static Pattern PATTERN = Pattern.compile("^\\$randomRGB\\((\\w+)\\)$");
+    private static final Pattern PATTERN = Pattern.compile("^\\$randomRGB\\((\\w+)\\)$");
+
+    @Override
+    public String getIdentifier()
+    {
+        return "$randomRGB";
+    }
 
     @Override
     public String solverRandom(int type, String value)

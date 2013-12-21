@@ -43,9 +43,23 @@ import java.util.HashMap;
 public class RewardsDB
 {
     private final HashMap<Double, Reward> map = new HashMap<>();
+    public boolean editable;
+
+    RewardsDB(String input)
+    {
+        editable = false;
+        JsonArray rootArray = JsonNBTHelper.PARSER.parse(input).getAsJsonArray();
+
+        for (JsonElement element : rootArray)
+        {
+            Reward reward = new Reward(element.getAsJsonObject());
+            map.put(reward.getAmount(), reward);
+        }
+    }
 
     RewardsDB(File file)
     {
+        editable = true;
         try
         {
             if (file.exists())

@@ -25,20 +25,29 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.random.RndEntity;
+import ccm.pay2spawn.random.RndSound;
+import ccm.pay2spawn.types.EntityType;
+import ccm.pay2spawn.types.SoundType;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
+import net.minecraft.entity.EntityList;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
-import static ccm.pay2spawn.types.PotionEffectType.*;
+import static ccm.pay2spawn.types.EntityType.*;
 
-public class PotionEffectTypeGui extends HelperGuiBase
+public class EntityTypeGui extends HelperGuiBase
 {
-    public JTextField        amplifierTextField;
+    public JComboBox<String> entityNameComboBox;
+    public JTextField        customNameTextField;
     public JScrollPane       scrollPane;
     public JTextPane         jsonPane;
     public JButton           parseFromJsonButton;
@@ -46,52 +55,48 @@ public class PotionEffectTypeGui extends HelperGuiBase
     public JButton           updateJsonButton;
     public JButton           testButton;
     public JPanel            panel1;
-    public JTextField        durationTextField;
-    public JComboBox<String> potionEffectComboBox;
+    public JRadioButton      notAgroRadioButton;
+    public JRadioButton      agroRadioButton;
+    public JRadioButton      randomAgroRadioButton;
+    public JRadioButton      randomizeMobRadioButton;
+    public JRadioButton      donTRandomizeMobRadioButton;
+    public JButton           addMobThisEntityButton;
+    public JRadioButton      randomlyRandomizeMobRadioButton;
+    public EntityTypeGui     superGui;
+    public EntityTypeGui     instance = this;
+    public EntityTypeGui     clientGui;
 
-    public PotionEffectTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
+    public EntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
 
         makeAndOpen();
 
-        potionEffectComboBox.setModel(new DefaultComboBoxModel<>(nicePotionNamesMap.keySet().toArray(new String[nicePotionNamesMap.keySet().size()])));
+        Set<String> set = new HashSet<>(EntityType.NAMES);
+        set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
     }
 
-    @Override
-    public void readJson()
+    public EntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap, EntityTypeGui superGui)
     {
-        String id = readValue(ID_KEY, data);
-        try
-        {
-            int i = Integer.parseInt(id);
-            if (nicePotionNamesMap.inverse().containsKey(i)) id = nicePotionNamesMap.inverse().get(i);
-        }
-        catch (NumberFormatException e)
-        {
-            e.printStackTrace();
-        }
-        potionEffectComboBox.setSelectedItem(id);
-        amplifierTextField.setText(readValue(AMPLIFIER_KEY, data));
-        durationTextField.setText(readValue(DURATION_KEY, data));
+        super(rewardID, name, inputData, typeMap);
+        this.superGui = superGui;
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        makeAndOpen();
+
+        Set<String> set = new HashSet<>();
+        set.addAll(EntityType.NAMES);
+        set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
     }
 
-    @Override
-    public void updateJson()
+    private void callback(JsonObject superData)
     {
-        String id = potionEffectComboBox.getSelectedItem().toString();
-        if (nicePotionNamesMap.containsKey(id)) id = "" + nicePotionNamesMap.get(id);
-
-        storeValue(ID_KEY, data, id);
-        storeValue(AMPLIFIER_KEY, data, amplifierTextField.getText());
-        storeValue(DURATION_KEY, data, durationTextField.getText());
-
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        data.add(RIDING_KEY, superData);
+        updateJson();
+        clientGui = null;
     }
 
-    @Override
     public void setupListeners()
     {
         testButton.addActionListener(new ActionListener()
@@ -103,14 +108,15 @@ public class PotionEffectTypeGui extends HelperGuiBase
                 TestPacket.sendToServer(name, data);
             }
         });
-
         saveButton.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
-                Configurator.instance.callback(rewardID, name, data);
+                if (superGui == null) Configurator.instance.callback(rewardID, name, data);
+                else superGui.callback(data);
+                if (clientGui != null) clientGui.close();
                 dialog.dispose();
             }
         });
@@ -140,12 +146,61 @@ public class PotionEffectTypeGui extends HelperGuiBase
                 updateJson();
             }
         });
+        addMobThisEntityButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                JsonObject object;
+                if (data.has(RIDING_KEY)) object = data.getAsJsonObject(RIDING_KEY);
+                else object = new JsonObject();
+                clientGui = new EntityTypeGui(rewardID, name, object, typeMap, instance);
+            }
+        });
+    }
+
+    @Override
+    public void close()
+    {
+        if (clientGui != null) clientGui.close();
+        super.close();
     }
 
     @Override
     public JPanel getPanel()
     {
         return panel1;
+    }
+
+    @Override
+    public void readJson()
+    {
+        entityNameComboBox.setSelectedItem(readValue(ENTITYNAME_KEY, data));
+        customNameTextField.setText(readValue(CUSTOMNAME_KEY, data));
+
+        String agro = readValue(AGRO_KEY, data);
+        notAgroRadioButton.setSelected(agro.equals("0") || agro.equals(""));
+        agroRadioButton.setSelected(agro.equals("1"));
+        randomAgroRadioButton.setSelected(agro.startsWith("$random"));
+
+        String random = readValue(RANDOM_KEY, data);
+        donTRandomizeMobRadioButton.setSelected(random.equals("0") || random.equals(""));
+        randomizeMobRadioButton.setSelected(random.equals("1"));
+        randomlyRandomizeMobRadioButton.setSelected(random.startsWith("$random"));
+
+        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+    }
+
+    @Override
+    public void updateJson()
+    {
+        storeValue(ENTITYNAME_KEY, data, entityNameComboBox.getSelectedItem());
+        storeValue(CUSTOMNAME_KEY, data, customNameTextField.getText());
+
+        storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? "$random" : agroRadioButton.isSelected() ? "1" : "0");
+        storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? "$random" : randomizeMobRadioButton.isSelected() ? "1" : "0");
+
+        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
     }
 
     {
@@ -185,71 +240,96 @@ public class PotionEffectTypeGui extends HelperGuiBase
         final JLabel label2 = new JLabel();
         label2.setText("Type:");
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
+        gbc.gridx = 4;
         gbc.gridy = 0;
         panel2.add(label2, gbc);
         final JLabel label3 = new JLabel();
-        label3.setText("Amplifier:");
+        label3.setText("EntityName:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label3, gbc);
         final JLabel label4 = new JLabel();
-        label4.setText("BYTE");
+        label4.setText("STRING");
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 2;
+        gbc.gridx = 4;
+        gbc.gridy = 1;
         panel2.add(label4, gbc);
-        amplifierTextField = new JTextField();
+        entityNameComboBox = new JComboBox();
+        entityNameComboBox.setEditable(true);
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
+        gbc.gridwidth = 3;
         gbc.weightx = 1.0;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel2.add(amplifierTextField, gbc);
-        durationTextField = new JTextField();
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel2.add(durationTextField, gbc);
+        gbc.fill = GridBagConstraints.BOTH;
+        panel2.add(entityNameComboBox, gbc);
         final JLabel label5 = new JLabel();
-        label5.setText("Duration (ticks):");
+        label5.setText("CustomName:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label5, gbc);
+        customNameTextField = new JTextField();
+        customNameTextField.setToolTipText("Relative to 1.0");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(customNameTextField, gbc);
         final JLabel label6 = new JLabel();
-        label6.setText("INT");
+        label6.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 4;
+        panel2.add(label6, gbc);
+        notAgroRadioButton = new JRadioButton();
+        notAgroRadioButton.setText("Not agro");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(notAgroRadioButton, gbc);
+        agroRadioButton = new JRadioButton();
+        agroRadioButton.setText("Agro");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(agroRadioButton, gbc);
+        randomAgroRadioButton = new JRadioButton();
+        randomAgroRadioButton.setText("Random agro");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(randomAgroRadioButton, gbc);
+        randomlyRandomizeMobRadioButton = new JRadioButton();
+        randomlyRandomizeMobRadioButton.setText("Randomly randomize mob");
+        randomlyRandomizeMobRadioButton.setToolTipText("Useless option if you ask me -_-");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(randomlyRandomizeMobRadioButton, gbc);
+        randomizeMobRadioButton = new JRadioButton();
+        randomizeMobRadioButton.setText("Randomize mob");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 3;
-        panel2.add(label6, gbc);
-        final JLabel label7 = new JLabel();
-        label7.setText("Potion effect:");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.anchor = GridBagConstraints.EAST;
-        panel2.add(label7, gbc);
-        final JLabel label8 = new JLabel();
-        label8.setText("BYTE");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
-        panel2.add(label8, gbc);
-        potionEffectComboBox = new JComboBox();
-        potionEffectComboBox.setEditable(true);
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(randomizeMobRadioButton, gbc);
+        donTRandomizeMobRadioButton = new JRadioButton();
+        donTRandomizeMobRadioButton.setText("Don't randomize mob");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel2.add(potionEffectComboBox, gbc);
+        panel2.add(donTRandomizeMobRadioButton, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -259,17 +339,17 @@ public class PotionEffectTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label9 = new JLabel();
-        label9.setText("Json:");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label9, gbc);
-        scrollPane = new JScrollPane();
+        final JLabel label7 = new JLabel();
+        label7.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(label7, gbc);
+        scrollPane = new JScrollPane();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -278,6 +358,13 @@ public class PotionEffectTypeGui extends HelperGuiBase
         jsonPane.setEnabled(true);
         jsonPane.setText("");
         scrollPane.setViewportView(jsonPane);
+        addMobThisEntityButton = new JButton();
+        addMobThisEntityButton.setText("Edit/add the mob this entity rides on");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel3.add(addMobThisEntityButton, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -318,9 +405,17 @@ public class PotionEffectTypeGui extends HelperGuiBase
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel4.add(testButton, gbc);
-        label3.setLabelFor(amplifierTextField);
-        label5.setLabelFor(durationTextField);
-        label7.setLabelFor(potionEffectComboBox);
+        label3.setLabelFor(entityNameComboBox);
+        label5.setLabelFor(customNameTextField);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(agroRadioButton);
+        buttonGroup.add(randomAgroRadioButton);
+        buttonGroup.add(notAgroRadioButton);
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(randomizeMobRadioButton);
+        buttonGroup.add(donTRandomizeMobRadioButton);
+        buttonGroup.add(randomlyRandomizeMobRadioButton);
     }
 
     /**

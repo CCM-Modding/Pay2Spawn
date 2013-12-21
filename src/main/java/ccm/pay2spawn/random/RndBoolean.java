@@ -40,6 +40,12 @@ public class RndBoolean implements IRandomResolver
     private static final Pattern PATTERN = Pattern.compile("^\\$random$");
 
     @Override
+    public String getIdentifier()
+    {
+        return "$random";
+    }
+
+    @Override
     public String solverRandom(int type, String value)
     {
         return RANDOM.nextBoolean() ? "1" : "0";

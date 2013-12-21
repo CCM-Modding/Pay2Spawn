@@ -23,12 +23,14 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.network.ConfigSyncPacket;
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.util.ConnectionHandler;
+import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.util.EventHandler;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
@@ -36,9 +38,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.network.NetworkRegistry;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -50,8 +54,6 @@ import static ccm.pay2spawn.util.Constants.*;
  * @author Dries007
  */
 @Mod(modid = MODID, name = NAME)
-@NetworkMod(clientSideRequired = false, serverSideRequired = false, packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class,
-        channels = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_CONFIGURATOR, CHANNEL_TEST})
 public class Pay2Spawn
 {
     @Mod.Instance(MODID)
@@ -134,11 +136,28 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void serverStarting(FMLServerStartingEvent event)
     {
+        try
+        {
+            ConfigSyncPacket.serverConfig = JsonNBTHelper.PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
         event.registerServerCommand(new CommandP2S());
+        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
+        PacketHandler packetHandler = new PacketHandler();
+        for (String channel : CHANNELS)
+            NetworkRegistry.instance().registerChannel(packetHandler, channel);
     }
 
     public static void reloadDB()
     {
         instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
+    }
+
+    public static void reloadDBFromServer(String input)
+    {
+        instance.rewardsDB = new RewardsDB(input);
     }
 }

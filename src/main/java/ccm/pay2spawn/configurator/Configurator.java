@@ -47,8 +47,6 @@ public class Configurator
     public static Configurator instance;
     public        JFrame       frame;
 
-    private HashSet<HelperGuiBase> openEditors = new HashSet<>();
-
     private JsonArray     rootArray;
     private JPanel        panel1;
     private JTabbedPane   tabbedPane1;
@@ -89,8 +87,6 @@ public class Configurator
             rewardData.get(rewardID).getAsJsonObject().add("data", newData);
             rewards.updateUI();
         }
-
-        System.out.println(rewardData.get(rewardID).toString());
     }
 
     private void setupListeners()
@@ -133,9 +129,6 @@ public class Configurator
             {
                 if (e.getClickCount() == 2)
                 {
-                    for (HelperGuiBase gui : openEditors) gui.close();
-                    openEditors.clear();
-
                     currentlyEditingID = mainTable.getSelectedRow();
                     currentlyEditingData = rootArray.get(currentlyEditingID).getAsJsonObject();
                     if (currentlyEditingData.has("rewards")) rewardData = JsonNBTHelper.cloneJSON(currentlyEditingData.getAsJsonArray("rewards")).getAsJsonArray();
@@ -204,9 +197,6 @@ public class Configurator
                 JsonArray newRoot = new JsonArray();
                 for (int i = 0; i < rootArray.size(); i++) if (i != currentlyEditingID) newRoot.add(rootArray.get(i));
 
-                for (HelperGuiBase gui : openEditors) gui.close();
-                openEditors.clear();
-
                 rootArray = newRoot;
                 clear();
                 tabbedPane1.setSelectedIndex(0);
@@ -224,15 +214,6 @@ public class Configurator
                     JsonArray newRewardData = new JsonArray();
                     for (int i = 0; i < rewardData.size(); i++) if (i != toRemove) newRewardData.add(rewardData.get(i));
                     rewardData = newRewardData;
-
-                    for (HelperGuiBase gui : openEditors)
-                    {
-                        if (gui.rewardID == toRemove)
-                        {
-                            gui.close();
-                            openEditors.remove(gui);
-                        }
-                    }
 
                     rewards.clearSelection();
                     rewards.updateUI();
@@ -380,8 +361,6 @@ public class Configurator
 
         nameLabel.setForeground(Color.black);
         amountLabel.setForeground(Color.black);
-
-        for (HelperGuiBase helperGuiBase : openEditors) helperGuiBase.close();
     }
 
     public static void show() throws FileNotFoundException
@@ -405,16 +384,14 @@ public class Configurator
             setupModels();
             setupListeners();
         }
-        frame.setVisible(true);
-        tabbedPane1.setSelectedIndex(0);
+        if (!frame.isVisible())
+        {
+            frame.setVisible(true);
+            tabbedPane1.setSelectedIndex(0);
+        }
 
         clear();
         ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
-    }
-
-    public void attachGui(HelperGuiBase helper)
-    {
-        openEditors.add(helper);
     }
 
     /**

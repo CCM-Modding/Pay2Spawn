@@ -24,10 +24,12 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.server.MinecraftServer;
 
 import java.util.HashSet;
 
@@ -68,6 +70,7 @@ public class HandshakePacket
         else if (message.equals(HANDSHAKE_CLIENT_TO_SERVER))
         {
             playersWithHandshake.add(((EntityPlayer) player).getEntityName());
+            if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
         }
         else
         {
