@@ -23,19 +23,50 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.types.guis.FireworksTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+
+import static ccm.pay2spawn.util.JsonNBTHelper.*;
 
 public class FireworksType extends TypeBase
 {
+    public static final String FLIGHT_KEY  = "Flight";
+    public static final String TYPE_KEY    = "Type";
+    public static final String FLICKER_KEY = "Flicker";
+    public static final String TRAIL_KEY   = "Trail";
+    public static final String COLORS_KEY  = "Colors";
+
+    public static final String EXPLOSIONS_KEY = "Explosions";
+    public static final String FIREWORKS_KEY  = "Fireworks";
+
+    public static final String RADIUS_KEY = "RADIUS";
+    public static final String AMOUNT_KEY = "AMOUNT";
+
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+
+    static
+    {
+        typeMap.put(FLIGHT_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(FLICKER_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(TRAIL_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(COLORS_KEY, NBTBase.NBTTypes[INT_ARRAY]);
+
+        typeMap.put(RADIUS_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[INT]);
+    }
+
     @Override
     public String getName()
     {
@@ -52,47 +83,29 @@ public class FireworksType extends TypeBase
         ItemStack out = new ItemStack(Item.firework);
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound fireworks = new NBTTagCompound();
-        fireworks.setByte("Flight", (byte) 0);
+        fireworks.setByte(FLIGHT_KEY, (byte) 0);
 
         NBTTagList explosions = new NBTTagList();
         NBTTagCompound explosion = new NBTTagCompound();
-        explosion.setByte("Type", (byte) 0);
-        explosion.setByte("Flicker", (byte) 0);
-        explosion.setByte("Trail", (byte) 0);
-        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
+        explosion.setByte(TYPE_KEY, (byte) 0);
+        explosion.setByte(FLICKER_KEY, (byte) 0);
+        explosion.setByte(TRAIL_KEY, (byte) 0);
+        explosion.setIntArray(COLORS_KEY, new int[] {14188952, 8073150});
         explosions.appendTag(explosion);
         explosion = new NBTTagCompound();
-        explosion.setByte("Type", (byte) 1);
-        explosion.setByte("Flicker", (byte) 1);
-        explosion.setByte("Trail", (byte) 0);
-        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
+        explosion.setByte(TYPE_KEY, (byte) 1);
+        explosion.setByte(FLICKER_KEY, (byte) 1);
+        explosion.setByte(TRAIL_KEY, (byte) 0);
+        explosion.setIntArray(COLORS_KEY, new int[] {14188952, 8073150});
         explosions.appendTag(explosion);
-        //        explosion = new NBTTagCompound();
-        //        explosion.setByte("Type", (byte) 2);
-        //        explosion.setByte("Flicker", (byte) 0);
-        //        explosion.setByte("Trail", (byte) 1);
-        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-        //        explosions.appendTag(explosion);
-        //        explosion = new NBTTagCompound();
-        //        explosion.setByte("Type", (byte) 3);
-        //        explosion.setByte("Flicker", (byte) 1);
-        //        explosion.setByte("Trail", (byte) 1);
-        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-        //        explosions.appendTag(explosion);
-        //        explosion = new NBTTagCompound();
-        //        explosion.setByte("Type", (byte) 4);
-        //        explosion.setByte("Flicker", (byte) 1);
-        //        explosion.setByte("Trail", (byte) 1);
-        //        explosion.setIntArray("Colors", new int[] {14188952, 8073150});
-        //        explosions.appendTag(explosion);
-        fireworks.setTag("Explosions", explosions);
-        tag.setCompoundTag("Fireworks", fireworks);
+        fireworks.setTag(EXPLOSIONS_KEY, explosions);
+        tag.setCompoundTag(FIREWORKS_KEY, fireworks);
         out.setTagCompound(tag);
 
         tag = out.writeToNBT(new NBTTagCompound());
 
-        tag.setInteger("RADIUS", 10);
-        tag.setInteger("AMOUNT", 10);
+        tag.setInteger(RADIUS_KEY, 10);
+        tag.setInteger(AMOUNT_KEY, 10);
 
         return tag;
     }
@@ -125,7 +138,7 @@ public class FireworksType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-
+        new FireworksTypeGui(rewardID, getName(), data, typeMap);
     }
 
     private static final Field fireworkAgeField = getHackField(0);

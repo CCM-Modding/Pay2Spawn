@@ -289,8 +289,7 @@ public class Configurator
             @Override
             public String getElementAt(int index)
             {
-                if (rewardData.get(index).getAsJsonObject().has("type"))
-                    return rewardData.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
+                if (rewardData.get(index).getAsJsonObject().has("type")) return rewardData.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
                 else return "ERROR IN CONFIG - No type for reward " + index;
             }
         });
@@ -375,10 +374,10 @@ public class Configurator
 
     private void init() throws FileNotFoundException
     {
-        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
-
         if (frame == null)
         {
+            rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
+
             frame = new JFrame("Configurator");
             frame.setContentPane(panel1);
             frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -391,10 +390,9 @@ public class Configurator
         {
             frame.setVisible(true);
             tabbedPane1.setSelectedIndex(0);
+            clear();
+            ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
         }
-
-        clear();
-        ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
     }
 
     /**

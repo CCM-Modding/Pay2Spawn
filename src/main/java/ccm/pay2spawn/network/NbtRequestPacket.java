@@ -23,9 +23,8 @@
 
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
+import ccm.pay2spawn.types.guis.FireworksTypeGui;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -34,9 +33,12 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemFirework;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -44,14 +46,15 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
 import static ccm.pay2spawn.util.Constants.CHANNEL_NBT_REQUEST;
-import static ccm.pay2spawn.util.Constants.CHANNEL_TEST;
 
 public class NbtRequestPacket
 {
-    public static final byte ITEM = 0;
-    public static final byte ENTITY = 1;
-    public static ItemTypeGui callbackItemTypeGui;
+    public static final byte ITEM     = 0;
+    public static final byte ENTITY   = 1;
+    public static final byte FIREWORK = 2;
+    public static ItemTypeGui         callbackItemTypeGui;
     public static CustomEntityTypeGui callbackCustomEntityTypeGui;
+    public static FireworksTypeGui    callbackFireworksTypeGui;
 
     public static void request(CustomEntityTypeGui instance)
     {
@@ -67,6 +70,25 @@ public class NbtRequestPacket
         {
             stream.writeByte(ENTITY);
             stream.writeInt(entityId);
+            stream.close();
+            streambyte.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
+    }
+
+    public static void request(FireworksTypeGui instance)
+    {
+        callbackFireworksTypeGui = instance;
+        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(streambyte);
+        try
+        {
+            stream.writeByte(FIREWORK);
             stream.close();
             streambyte.close();
         }
@@ -111,6 +133,9 @@ public class NbtRequestPacket
                 case ENTITY:
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityTypeGui.serverImport(stream.readUTF());
                     else respondEntity(player, stream.readInt());
+                case FIREWORK:
+                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackFireworksTypeGui.serverImport(stream.readUTF());
+                    else respondFirework(player);
             }
             stream.close();
             streambyte.close();
@@ -121,6 +146,33 @@ public class NbtRequestPacket
         }
     }
 
+    private static void respondFirework(Player player)
+    {
+        ItemStack itemStack = ((EntityPlayer) player).inventory.getCurrentItem();
+        if (itemStack != null && itemStack.getItem() instanceof ItemFirework)
+        {
+            ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+            DataOutputStream stream = new DataOutputStream(streambyte);
+            try
+            {
+                stream.writeByte(FIREWORK);
+                stream.writeUTF(JsonNBTHelper.parseNBT(itemStack.writeToNBT(new NBTTagCompound())).toString());
+                stream.close();
+                streambyte.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+
+            PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
+        }
+        else
+        {
+            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "You are not holding an ItemFirework..."));
+        }
+    }
+
     private static void respondEntity(Player player, int i)
     {
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
@@ -128,8 +180,7 @@ public class NbtRequestPacket
         try
         {
             stream.writeByte(ENTITY);
-
-            NBTTagCompound  nbt = new NBTTagCompound();
+            NBTTagCompound nbt = new NBTTagCompound();
             Entity entity = ((EntityPlayer) player).worldObj.getEntityByID(i);
             entity.writeToNBT(nbt);
             entity.writeToNBTOptional(nbt);
@@ -147,20 +198,27 @@ public class NbtRequestPacket
 
     private static void respondItem(Player player)
     {
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
+        if (((EntityPlayer) player).inventory.getCurrentItem() != null)
         {
-            stream.writeByte(ITEM);
-            stream.writeUTF(JsonNBTHelper.parseNBT(((EntityPlayer) player).inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString());
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
+            ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+            DataOutputStream stream = new DataOutputStream(streambyte);
+            try
+            {
+                stream.writeByte(ITEM);
+                stream.writeUTF(JsonNBTHelper.parseNBT(((EntityPlayer) player).inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString());
+                stream.close();
+                streambyte.close();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
 
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
+            PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
+        }
+        else
+        {
+            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "You are not holding an item..."));
+        }
     }
 }

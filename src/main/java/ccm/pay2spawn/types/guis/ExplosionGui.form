@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ccm.pay2spawn.types.guis.ExplosionGui">
+  <grid id="27dc6" binding="panel1" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <grid id="ecdbe" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="d0352" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <labelFor value="4b3f5"/>
+              <text value="Type:"/>
+            </properties>
+          </component>
+          <component id="69da8" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="BYTE"/>
+            </properties>
+          </component>
+          <component id="4b3f5" class="javax.swing.JComboBox" binding="typeComboBox" default-binding="true">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <editable value="true"/>
+            </properties>
+          </component>
+          <component id="e591f" class="javax.swing.JRadioButton" binding="flickerRadioButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Flicker"/>
+            </properties>
+          </component>
+          <component id="e238a" class="javax.swing.JRadioButton" binding="noFlickerRadioButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="No flicker"/>
+            </properties>
+          </component>
+          <component id="4e5b7" class="javax.swing.JRadioButton" binding="randomFlickerRadioButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Random flicker"/>
+            </properties>
+          </component>
+          <component id="24d3c" class="javax.swing.JRadioButton" binding="trailRadioButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Trail"/>
+            </properties>
+          </component>
+          <component id="bea7a" class="javax.swing.JRadioButton" binding="noTrailRadioButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="No trail"/>
+            </properties>
+          </component>
+          <component id="9be4b" class="javax.swing.JRadioButton" binding="randomTrailRadioButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Random trail"/>
+            </properties>
+          </component>
+          <component id="2c77d" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <labelFor value="6c920"/>
+              <text value="Colors"/>
+            </properties>
+          </component>
+          <component id="6c920" class="javax.swing.JTextField" binding="colorsTextField" default-binding="true">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="d3e0" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="3" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="INT ARRAY"/>
+            </properties>
+          </component>
+          <component id="361c8" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="5" vsize-policy="0" hsize-policy="0" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="Use comma seperated values, use java color codes. See help file."/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="46bf0" class="javax.swing.JButton" binding="saveButton" default-binding="true">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Save"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+  <buttonGroups>
+    <group name="flickerGroep">
+      <member id="e591f"/>
+      <member id="e238a"/>
+      <member id="4e5b7"/>
+    </group>
+    <group name="trailGroep">
+      <member id="24d3c"/>
+      <member id="bea7a"/>
+      <member id="9be4b"/>
+    </group>
+  </buttonGroups>
+</form>
