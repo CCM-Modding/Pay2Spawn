@@ -35,19 +35,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class ItemTypeGui extends HelperGuiBase
+public class CustomEntityTypeGui extends HelperGuiBase
 {
+    public JButton     importItemYouAreButton;
     public JScrollPane scrollPane;
     public JTextPane   jsonPane;
     public JButton     parseFromJsonButton;
     public JButton     saveButton;
     public JButton     updateJsonButton;
     public JButton     testButton;
-    public JButton     importItemYouAreButton;
-    public JPanel      pane1;
-    private ItemTypeGui instance = this;
+    public JPanel      panel1;
+    public CustomEntityTypeGui instance = this;
 
-    public ItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
+    public CustomEntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
 
@@ -133,7 +133,7 @@ public class ItemTypeGui extends HelperGuiBase
     @Override
     public JPanel getPanel()
     {
-        return pane1;
+        return panel1;
     }
 
     {
@@ -152,41 +152,50 @@ public class ItemTypeGui extends HelperGuiBase
      */
     private void $$$setupUI$$$()
     {
-        pane1 = new JPanel();
-        pane1.setLayout(new GridBagLayout());
-        final JPanel panel1 = new JPanel();
+        panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridBagLayout());
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        pane1.add(panel1, gbc);
+        panel1.add(panel2, gbc);
         importItemYouAreButton = new JButton();
-        importItemYouAreButton.setText("Import item you are holding ingame!");
+        importItemYouAreButton.setText("Import the next mob you right click ingame. Don't close this window untill you do!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel1.add(importItemYouAreButton, gbc);
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridBagLayout());
+        panel2.add(importItemYouAreButton, gbc);
+        final JLabel label1 = new JLabel();
+        label1.setHorizontalAlignment(0);
+        label1.setHorizontalTextPosition(0);
+        label1.setText("For mobs riding other mobs: You must right click the top one.");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        panel2.add(label1, gbc);
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        pane1.add(panel2, gbc);
-        final JLabel label1 = new JLabel();
-        label1.setText("Json:");
+        panel1.add(panel3, gbc);
+        final JLabel label2 = new JLabel();
+        label2.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(label1, gbc);
+        panel3.add(label2, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -194,19 +203,19 @@ public class ItemTypeGui extends HelperGuiBase
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel2.add(scrollPane, gbc);
+        panel3.add(scrollPane, gbc);
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
         scrollPane.setViewportView(jsonPane);
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridBagLayout());
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        pane1.add(panel3, gbc);
+        panel1.add(panel4, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
         gbc = new GridBagConstraints();
@@ -214,7 +223,7 @@ public class ItemTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(parseFromJsonButton, gbc);
+        panel4.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
         gbc = new GridBagConstraints();
@@ -222,7 +231,7 @@ public class ItemTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(saveButton, gbc);
+        panel4.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
         gbc = new GridBagConstraints();
@@ -230,7 +239,7 @@ public class ItemTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(updateJsonButton, gbc);
+        panel4.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
         gbc = new GridBagConstraints();
@@ -238,12 +247,12 @@ public class ItemTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel3.add(testButton, gbc);
+        panel4.add(testButton, gbc);
     }
 
     /**
      * @noinspection ALL
      */
     public JComponent $$$getRootComponent$$$()
-    { return pane1; }
+    { return panel1; }
 }

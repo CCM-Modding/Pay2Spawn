@@ -25,11 +25,14 @@ package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
+import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -46,11 +49,38 @@ import static ccm.pay2spawn.util.Constants.CHANNEL_TEST;
 public class NbtRequestPacket
 {
     public static final byte ITEM = 0;
+    public static final byte ENTITY = 1;
     public static ItemTypeGui callbackItemTypeGui;
+    public static CustomEntityTypeGui callbackCustomEntityTypeGui;
 
-    public static void request(ItemTypeGui itemTypeGui)
+    public static void request(CustomEntityTypeGui instance)
     {
-        callbackItemTypeGui = itemTypeGui;
+        callbackCustomEntityTypeGui = instance;
+        EventHandler.addEntityTracking();
+    }
+
+    public static void requestByEntityID(int entityId)
+    {
+        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(streambyte);
+        try
+        {
+            stream.writeByte(ENTITY);
+            stream.writeInt(entityId);
+            stream.close();
+            streambyte.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
+    }
+
+    public static void request(ItemTypeGui instance)
+    {
+        callbackItemTypeGui = instance;
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(streambyte);
         try
@@ -78,6 +108,9 @@ public class NbtRequestPacket
                 case ITEM:
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackItemTypeGui.serverImport(stream.readUTF());
                     else respondItem(player);
+                case ENTITY:
+                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityTypeGui.serverImport(stream.readUTF());
+                    else respondEntity(player, stream.readInt());
             }
             stream.close();
             streambyte.close();
@@ -86,6 +119,30 @@ public class NbtRequestPacket
         {
             e.printStackTrace();
         }
+    }
+
+    private static void respondEntity(Player player, int i)
+    {
+        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(streambyte);
+        try
+        {
+            stream.writeByte(ENTITY);
+
+            NBTTagCompound  nbt = new NBTTagCompound();
+            Entity entity = ((EntityPlayer) player).worldObj.getEntityByID(i);
+            entity.writeToNBT(nbt);
+            entity.writeToNBTOptional(nbt);
+            stream.writeUTF(JsonNBTHelper.parseNBT(nbt).toString());
+            stream.close();
+            streambyte.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
     }
 
     private static void respondItem(Player player)

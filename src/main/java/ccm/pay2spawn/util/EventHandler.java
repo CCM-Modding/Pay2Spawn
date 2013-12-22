@@ -23,8 +23,10 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.network.NbtRequestPacket;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -56,17 +58,18 @@ public class EventHandler
     // Right click tracker for entity NBT data
     public static HashSet<String> entitySet = new HashSet<>();
 
+    static boolean entityTracking = false;
+    public static void addEntityTracking()
+    {
+        entityTracking = true;
+    }
+
     @ForgeSubscribe
     public void event(EntityInteractEvent event)
     {
-        if (event.entityPlayer.worldObj.isRemote) return;
-        if (entitySet.contains(event.entityPlayer.getEntityName()))
+        if (entityTracking)
         {
-            entitySet.remove(event.entityPlayer.getEntityName());
-            NBTTagCompound tag = new NBTTagCompound();
-            event.target.writeToNBT(tag);
-            event.target.writeMountToNBT(tag);
-            event.entityPlayer.sendChatToPlayer(ChatMessageComponent.createFromText(JsonNBTHelper.parseNBT(tag).toString()));
+            NbtRequestPacket.requestByEntityID(event.target.entityId);
         }
     }
 

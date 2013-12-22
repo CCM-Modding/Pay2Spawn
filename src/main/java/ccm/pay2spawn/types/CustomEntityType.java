@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -59,7 +60,7 @@ public class CustomEntityType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-
+        new CustomEntityTypeGui(rewardID, getName(), data, null);
     }
 
     @Override

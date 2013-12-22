@@ -89,17 +89,6 @@ public class CommandP2S extends CommandBase
             if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName())) HandshakePacket.sendDebugToPlayer((Player) player);
             else sender.sendChatToPlayer(ChatMessageComponent.createFromText("You have to be OP to enable debug mode.").setColor(EnumChatFormatting.RED));
         }
-        if (args[0].equalsIgnoreCase("getnbtofitem"))
-        {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("The nbt of the item you are holding:"));
-            String text = JsonNBTHelper.parseNBT(player.inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString();
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(text));
-        }
-        if (args[0].equalsIgnoreCase("getnbtofentity"))
-        {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("You will get the nbt of the next entity you right click."));
-            EventHandler.entitySet.add(player.getEntityName());
-        }
         if (args[0].equalsIgnoreCase("reload"))
         {
             Pay2Spawn.reloadDB();
