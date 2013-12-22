@@ -53,9 +53,9 @@ public class PotionEffectTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        makeAndOpen();
-
         potionEffectComboBox.setModel(new DefaultComboBoxModel<>(nicePotionNamesMap.keySet().toArray(new String[nicePotionNamesMap.keySet().size()])));
+
+        makeAndOpen();
     }
 
     @Override

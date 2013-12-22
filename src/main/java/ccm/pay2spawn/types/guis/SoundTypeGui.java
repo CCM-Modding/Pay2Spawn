@@ -59,12 +59,12 @@ public class SoundTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        makeAndOpen();
-
         Set<String> set = new HashSet<>();
         set.addAll(SoundType.all);
         set.add(RandomRegistry.getInstanceFromClass(RndSound.class).getIdentifier());
         soundNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+
+        makeAndOpen();
     }
 
     @Override

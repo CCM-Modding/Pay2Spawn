@@ -67,12 +67,12 @@ public class EntityTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        makeAndOpen();
-
         Set<String> set = new HashSet<>();
         set.addAll(EntityType.NAMES);
         set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+
+        makeAndOpen();
     }
 
     public EntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap, EntityTypeGui superGui)
@@ -80,12 +80,12 @@ public class EntityTypeGui extends HelperGuiBase
         super(rewardID, name, inputData, typeMap);
         this.superGui = superGui;
 
-        makeAndOpen();
-
         Set<String> set = new HashSet<>();
         set.addAll(EntityType.NAMES);
         set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+
+        makeAndOpen();
     }
 
     private void callback(JsonObject superData)
