@@ -25,13 +25,10 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.network.HandshakePacket;
-import ccm.pay2spawn.util.EventHandler;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;

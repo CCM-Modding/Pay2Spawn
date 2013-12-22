@@ -124,9 +124,8 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (event.getSide().isClient())
-            for (TypeBase base : TypeRegistry.getAllTypes())
-                base.printHelpList(configFolder);
+        if (event.getSide().isClient()) for (TypeBase base : TypeRegistry.getAllTypes())
+            base.printHelpList(configFolder);
     }
 
     @Mod.EventHandler

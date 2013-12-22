@@ -24,9 +24,6 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.network.NbtRequestPacket;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -59,6 +56,7 @@ public class EventHandler
     public static HashSet<String> entitySet = new HashSet<>();
 
     static boolean entityTracking = false;
+
     public static void addEntityTracking()
     {
         entityTracking = true;
