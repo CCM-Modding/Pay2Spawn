@@ -255,6 +255,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(label4, gbc);
         entityNameComboBox = new JComboBox();
         entityNameComboBox.setEditable(true);
+        entityNameComboBox.setToolTipText("Look, a build in list!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -286,6 +287,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(label6, gbc);
         notAgroRadioButton = new JRadioButton();
         notAgroRadioButton.setText("Not agro");
+        notAgroRadioButton.setToolTipText("Don't piss off the mob.");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -293,6 +295,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(notAgroRadioButton, gbc);
         agroRadioButton = new JRadioButton();
         agroRadioButton.setText("Agro");
+        agroRadioButton.setToolTipText("Piss off the mob.");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 2;
@@ -300,6 +303,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(agroRadioButton, gbc);
         randomAgroRadioButton = new JRadioButton();
         randomAgroRadioButton.setText("Random agro");
+        randomAgroRadioButton.setToolTipText("Maybe piss off the mob.");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 2;
@@ -315,6 +319,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(randomlyRandomizeMobRadioButton, gbc);
         randomizeMobRadioButton = new JRadioButton();
         randomizeMobRadioButton.setText("Randomize mob");
+        randomizeMobRadioButton.setToolTipText("Randomly assign traits to the mob (as with spawneggs)");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 3;
@@ -322,6 +327,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel2.add(randomizeMobRadioButton, gbc);
         donTRandomizeMobRadioButton = new JRadioButton();
         donTRandomizeMobRadioButton.setText("Don't randomize mob");
+        donTRandomizeMobRadioButton.setToolTipText("Don't randomly assign traits to the mob (as with spawneggs)");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -354,9 +360,11 @@ public class EntityTypeGui extends HelperGuiBase
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
+        jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
         addMobThisEntityButton = new JButton();
         addMobThisEntityButton.setText("Edit/add the mob this entity rides on");
+        addMobThisEntityButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -372,6 +380,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel1.add(panel4, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
+        parseFromJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -380,6 +389,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel4.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
+        saveButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
@@ -388,6 +398,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel4.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
+        updateJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -396,6 +407,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel4.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
+        testButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;

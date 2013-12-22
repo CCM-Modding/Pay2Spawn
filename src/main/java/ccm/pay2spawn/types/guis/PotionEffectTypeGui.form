@@ -59,7 +59,9 @@
               </grid>
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="0 means lvl 1"/>
+            </properties>
           </component>
           <component id="42032" class="javax.swing.JTextField" binding="durationTextField" default-binding="true">
             <constraints>
@@ -68,7 +70,9 @@
               </grid>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="x 20 for seconds!"/>
+            </properties>
           </component>
           <component id="30b30" class="javax.swing.JLabel">
             <constraints>
@@ -115,6 +119,7 @@
             </constraints>
             <properties>
               <editable value="true"/>
+              <toolTipText value="Look, a build in list!"/>
             </properties>
           </component>
         </children>
@@ -150,6 +155,7 @@
                 <properties>
                   <enabled value="true"/>
                   <text value="" noi18n="true"/>
+                  <toolTipText value="Make sure you hit &quot;Parse from JSON&quot; after editing this!"/>
                 </properties>
               </component>
             </children>
@@ -171,6 +177,7 @@
             </constraints>
             <properties>
               <text value="Parse from Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="50a9e" class="javax.swing.JButton" binding="saveButton" default-binding="true">
@@ -180,6 +187,7 @@
             </constraints>
             <properties>
               <text value="Save"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="28df9" class="javax.swing.JButton" binding="updateJsonButton" default-binding="true">
@@ -189,6 +197,7 @@
             </constraints>
             <properties>
               <text value="Update Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="5a562" class="javax.swing.JButton" binding="testButton" default-binding="true">
@@ -198,6 +207,7 @@
             </constraints>
             <properties>
               <text value="Test"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
         </children>

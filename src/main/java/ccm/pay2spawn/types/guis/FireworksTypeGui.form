@@ -40,7 +40,9 @@
               </grid>
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="0 is eye-hight"/>
+            </properties>
           </component>
           <component id="5c90c" class="javax.swing.JLabel">
             <constraints>
@@ -88,7 +90,9 @@
               </grid>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="How many rockets fire"/>
+            </properties>
           </component>
           <component id="fc4ec" class="javax.swing.JTextField" binding="radiusTextField" default-binding="true">
             <constraints>
@@ -97,7 +101,9 @@
               </grid>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
-            <properties/>
+            <properties>
+              <toolTipText value="The radius around the player they fire in"/>
+            </properties>
           </component>
           <component id="cb68a" class="javax.swing.JLabel">
             <constraints>
@@ -150,6 +156,7 @@
                 <properties>
                   <enabled value="true"/>
                   <text value="" noi18n="true"/>
+                  <toolTipText value="Make sure you hit &quot;Parse from JSON&quot; after editing this!"/>
                 </properties>
               </component>
             </children>
@@ -171,6 +178,7 @@
             </constraints>
             <properties>
               <text value="Parse from Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="38812" class="javax.swing.JButton" binding="saveButton" default-binding="true">
@@ -180,6 +188,7 @@
             </constraints>
             <properties>
               <text value="Save"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="8d6cd" class="javax.swing.JButton" binding="updateJsonButton" default-binding="true">
@@ -189,6 +198,7 @@
             </constraints>
             <properties>
               <text value="Update Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="48272" class="javax.swing.JButton" binding="testButton" default-binding="true">
@@ -198,6 +208,7 @@
             </constraints>
             <properties>
               <text value="Test"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
         </children>
@@ -225,6 +236,7 @@
                 </constraints>
                 <properties>
                   <text value="Add explosion manually"/>
+                  <toolTipText value="Push the button!"/>
                 </properties>
               </component>
               <component id="8d4d8" class="javax.swing.JButton" binding="importFireworkStartButton" default-binding="true">
@@ -234,6 +246,7 @@
                 </constraints>
                 <properties>
                   <text value="Import firework start"/>
+                  <toolTipText value="Push the button!"/>
                 </properties>
               </component>
             </children>
@@ -248,7 +261,9 @@
             <children>
               <component id="1cc72" class="javax.swing.JList" binding="explosionList">
                 <constraints/>
-                <properties/>
+                <properties>
+                  <toolTipText value="Double click to edit!"/>
+                </properties>
               </component>
             </children>
           </scrollpane>

@@ -59,6 +59,7 @@
             </constraints>
             <properties>
               <editable value="true"/>
+              <toolTipText value="Look, a build in list!"/>
             </properties>
           </component>
           <component id="f5ce3" class="javax.swing.JLabel">
@@ -98,6 +99,7 @@
             </constraints>
             <properties>
               <text value="Not agro"/>
+              <toolTipText value="Don't piss off the mob."/>
             </properties>
           </component>
           <component id="a88" class="javax.swing.JRadioButton" binding="agroRadioButton" default-binding="true">
@@ -107,6 +109,7 @@
             </constraints>
             <properties>
               <text value="Agro"/>
+              <toolTipText value="Piss off the mob."/>
             </properties>
           </component>
           <component id="860f8" class="javax.swing.JRadioButton" binding="randomAgroRadioButton" default-binding="true">
@@ -116,6 +119,7 @@
             </constraints>
             <properties>
               <text value="Random agro"/>
+              <toolTipText value="Maybe piss off the mob."/>
             </properties>
           </component>
           <component id="1fa53" class="javax.swing.JRadioButton" binding="randomlyRandomizeMobRadioButton" default-binding="true">
@@ -135,6 +139,7 @@
             </constraints>
             <properties>
               <text value="Randomize mob"/>
+              <toolTipText value="Randomly assign traits to the mob (as with spawneggs)"/>
             </properties>
           </component>
           <component id="ca6ee" class="javax.swing.JRadioButton" binding="donTRandomizeMobRadioButton" default-binding="true">
@@ -144,6 +149,7 @@
             </constraints>
             <properties>
               <text value="Don't randomize mob"/>
+              <toolTipText value="Don't randomly assign traits to the mob (as with spawneggs)"/>
             </properties>
           </component>
         </children>
@@ -179,6 +185,7 @@
                 <properties>
                   <enabled value="true"/>
                   <text value="" noi18n="true"/>
+                  <toolTipText value="Make sure you hit &quot;Parse from JSON&quot; after editing this!"/>
                 </properties>
               </component>
             </children>
@@ -190,6 +197,7 @@
             </constraints>
             <properties>
               <text value="Edit/add the mob this entity rides on"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
         </children>
@@ -209,6 +217,7 @@
             </constraints>
             <properties>
               <text value="Parse from Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="1bed6" class="javax.swing.JButton" binding="saveButton" default-binding="true">
@@ -218,6 +227,7 @@
             </constraints>
             <properties>
               <text value="Save"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="56d22" class="javax.swing.JButton" binding="updateJsonButton" default-binding="true">
@@ -227,6 +237,7 @@
             </constraints>
             <properties>
               <text value="Update Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="8bbe3" class="javax.swing.JButton" binding="testButton" default-binding="true">
@@ -236,6 +247,7 @@
             </constraints>
             <properties>
               <text value="Test"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
         </children>

@@ -22,6 +22,7 @@
             </constraints>
             <properties>
               <text value="Import the next mob you right click ingame. Don't close this window untill you do!"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="4e013" class="javax.swing.JLabel">
@@ -68,6 +69,7 @@
                 <properties>
                   <enabled value="true"/>
                   <text value="" noi18n="true"/>
+                  <toolTipText value="Make sure you hit &quot;Parse from JSON&quot; after editing this!"/>
                 </properties>
               </component>
             </children>
@@ -89,6 +91,7 @@
             </constraints>
             <properties>
               <text value="Parse from Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="a5a56" class="javax.swing.JButton" binding="saveButton" default-binding="true">
@@ -98,6 +101,7 @@
             </constraints>
             <properties>
               <text value="Save"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="8aa22" class="javax.swing.JButton" binding="updateJsonButton" default-binding="true">
@@ -107,6 +111,7 @@
             </constraints>
             <properties>
               <text value="Update Json"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
           <component id="6f96e" class="javax.swing.JButton" binding="testButton" default-binding="true">
@@ -116,6 +121,7 @@
             </constraints>
             <properties>
               <text value="Test"/>
+              <toolTipText value="Push the button!"/>
             </properties>
           </component>
         </children>

@@ -188,6 +188,7 @@ public class XPOrbsGui extends HelperGuiBase
         panel3.add(label3, gbc);
         amountField = new JTextField();
         amountField.setColumns(20);
+        amountField.setToolTipText("XP orbs everywhere");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -229,6 +230,7 @@ public class XPOrbsGui extends HelperGuiBase
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
+        jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridBagLayout());
@@ -240,6 +242,7 @@ public class XPOrbsGui extends HelperGuiBase
         panel2.add(panel5, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
+        parseFromJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -248,6 +251,7 @@ public class XPOrbsGui extends HelperGuiBase
         panel5.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
+        saveButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
@@ -256,6 +260,7 @@ public class XPOrbsGui extends HelperGuiBase
         panel5.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
+        updateJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -264,6 +269,7 @@ public class XPOrbsGui extends HelperGuiBase
         panel5.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
+        testButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;

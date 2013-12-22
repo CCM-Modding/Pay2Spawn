@@ -179,6 +179,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         panel2.add(label3, gbc);
         itemNameField = new JTextField();
         itemNameField.setColumns(20);
+        itemNameField.setToolTipText("I added this cause of easy :p");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -220,6 +221,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
+        jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
@@ -231,6 +233,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         panel1.add(panel4, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
+        parseFromJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -239,6 +242,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         panel4.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
+        saveButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
@@ -247,6 +251,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         panel4.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
+        updateJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -255,6 +260,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         panel4.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
+        testButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;

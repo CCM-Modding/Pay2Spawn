@@ -270,6 +270,7 @@ public class FireworksTypeGui extends HelperGuiBase
         gbc.gridy = 0;
         panel2.add(label2, gbc);
         flightMultiplierTextField = new JTextField();
+        flightMultiplierTextField.setToolTipText("0 is eye-hight");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 1;
@@ -305,6 +306,7 @@ public class FireworksTypeGui extends HelperGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label6, gbc);
         amountTextField = new JTextField();
+        amountTextField.setToolTipText("How many rockets fire");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 2;
@@ -312,6 +314,7 @@ public class FireworksTypeGui extends HelperGuiBase
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel2.add(amountTextField, gbc);
         radiusTextField = new JTextField();
+        radiusTextField.setToolTipText("The radius around the player they fire in");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 3;
@@ -357,6 +360,7 @@ public class FireworksTypeGui extends HelperGuiBase
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
+        jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
@@ -368,6 +372,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel1.add(panel4, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
+        parseFromJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -376,6 +381,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel4.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
+        saveButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
         gbc.gridy = 0;
@@ -384,6 +390,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel4.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
+        updateJsonButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -392,6 +399,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel4.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
+        testButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
         gbc.gridy = 0;
@@ -417,6 +425,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel5.add(panel6, gbc);
         addExplosionManuallyButton = new JButton();
         addExplosionManuallyButton.setText("Add explosion manually");
+        addExplosionManuallyButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -425,6 +434,7 @@ public class FireworksTypeGui extends HelperGuiBase
         panel6.add(addExplosionManuallyButton, gbc);
         importFireworkStartButton = new JButton();
         importFireworkStartButton.setText("Import firework start");
+        importFireworkStartButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -440,6 +450,7 @@ public class FireworksTypeGui extends HelperGuiBase
         gbc.fill = GridBagConstraints.BOTH;
         panel5.add(scrollPane1, gbc);
         explosionList = new JList();
+        explosionList.setToolTipText("Double click to edit!");
         scrollPane1.setViewportView(explosionList);
         label3.setLabelFor(flightMultiplierTextField);
         label5.setLabelFor(amountTextField);
