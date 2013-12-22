@@ -289,7 +289,9 @@ public class Configurator
             @Override
             public String getElementAt(int index)
             {
-                return rewardData.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
+                if (rewardData.get(index).getAsJsonObject().has("type"))
+                    return rewardData.get(index).getAsJsonObject().getAsJsonPrimitive("type").getAsString();
+                else return "ERROR IN CONFIG - No type for reward " + index;
             }
         });
     }
