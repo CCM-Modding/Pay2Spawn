@@ -12,7 +12,8 @@ If you encounter issues with other mods, please make a bugreport!
 Configuration
 -------------
 *Untill the ingame configurator is 100% done, you can edit the json manually (see ConfigReadme.md).<br>*
-The configurator can't edit type data yet, but please test all the other functions!
+The configurator can't edit everything, but please test all the other functions!
+Use /p2s configure to get started.
 
 Issues & bugreports
 -------------------
