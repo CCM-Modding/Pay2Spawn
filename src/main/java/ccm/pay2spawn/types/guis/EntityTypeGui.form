@@ -80,7 +80,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <toolTipText value="Relative to 1.0"/>
+              <toolTipText value="Nametag of entity"/>
             </properties>
           </component>
           <component id="c271" class="javax.swing.JLabel">

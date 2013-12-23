@@ -271,7 +271,7 @@ public class EntityTypeGui extends HelperGuiBase
         gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label5, gbc);
         customNameTextField = new JTextField();
-        customNameTextField.setToolTipText("Relative to 1.0");
+        customNameTextField.setToolTipText("Nametag of entity");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 4;
