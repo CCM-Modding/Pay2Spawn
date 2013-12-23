@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ccm.pay2spawn.configurator.Configurator">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="BorderLayout" hgap="0" vgap="0">
     <constraints>
-      <xy x="20" y="20" width="884" height="540"/>
+      <xy x="20" y="20" width="979" height="540"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -176,7 +176,7 @@
                       <gridbag weightx="0.0" weighty="1.0"/>
                     </constraints>
                     <properties>
-                      <text value="Help me with randomization, colors and variables!"/>
+                      <text value="Help me"/>
                     </properties>
                   </component>
                   <component id="1bcc0" class="javax.swing.JButton" binding="clearButton" default-binding="true">
@@ -205,6 +205,26 @@
                     <properties>
                       <enabled value="false"/>
                       <text value="Remove group"/>
+                    </properties>
+                  </component>
+                  <component id="72677" class="javax.swing.JButton" binding="duplicateSelectedRewardButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="Duplicate selected reward"/>
+                    </properties>
+                  </component>
+                  <component id="cf6f7" class="javax.swing.JButton" binding="deleteSelectedRewardButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                      <gridbag weightx="0.0" weighty="0.0"/>
+                    </constraints>
+                    <properties>
+                      <enabled value="false"/>
+                      <text value="Delete selected reward"/>
                     </properties>
                   </component>
                 </children>
@@ -256,6 +276,7 @@
                         <properties>
                           <layoutOrientation value="0"/>
                           <model/>
+                          <selectionMode value="0"/>
                         </properties>
                       </component>
                     </children>

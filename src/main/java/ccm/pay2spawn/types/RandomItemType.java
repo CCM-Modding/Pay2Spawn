@@ -76,9 +76,8 @@ public class RandomItemType extends TypeBase
     {
         try
         {
-            NBTTagCompound nbtTagCompound = pickRandomItemStack().writeToNBT(new NBTTagCompound());
-
             ItemStack is = pickRandomItemStack();
+            NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
             for (Object o : dataFromClient.getTags())
             {
                 NBTBase tag = (NBTBase) o;

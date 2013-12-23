@@ -31,6 +31,8 @@ import com.google.common.base.Joiner;
 import com.google.gson.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.*;
@@ -62,6 +64,9 @@ public class Configurator
     private JButton       removeGroupButton;
     private JLabel        nameLabel;
     private JLabel        amountLabel;
+    public  JButton       duplicateSelectedRewardButton;
+    public  JButton       deleteSelectedRewardButton;
+    public  JButton       deleteButton;
     private JsonObject    currentlyEditingData;
     private int           currentlyEditingID;
     private JsonArray     rewardData;
@@ -111,6 +116,15 @@ public class Configurator
                     int id = rewards.getSelectedIndex();
                     TypeRegistry.getByName(rewards.getSelectedValue()).openNewGui(id, rewardData.get(id).getAsJsonObject().getAsJsonObject("data"));
                 }
+            }
+        });
+        rewards.addListSelectionListener(new ListSelectionListener()
+        {
+            @Override
+            public void valueChanged(ListSelectionEvent e)
+            {
+                deleteSelectedRewardButton.setEnabled(!rewards.isSelectionEmpty());
+                duplicateSelectedRewardButton.setEnabled(!rewards.isSelectionEmpty());
             }
         });
         helpMeWithRandomizationButton.addActionListener(new ActionListener()
@@ -202,21 +216,29 @@ public class Configurator
                 saveMainJsonToFile();
             }
         });
-        rewards.addKeyListener(new KeyAdapter()
+        duplicateSelectedRewardButton.addActionListener(new ActionListener()
         {
             @Override
-            public void keyTyped(KeyEvent e)
+            public void actionPerformed(ActionEvent e)
             {
-                if (KeyEvent.VK_DELETE == e.getKeyChar())
-                {
-                    int toRemove = rewards.getSelectedIndex();
-                    JsonArray newRewardData = new JsonArray();
-                    for (int i = 0; i < rewardData.size(); i++) if (i != toRemove) newRewardData.add(rewardData.get(i));
-                    rewardData = newRewardData;
+                int toDuplicate = rewards.getSelectedIndex();
+                rewardData.add(JsonNBTHelper.cloneJSON(rewardData.get(toDuplicate)));
 
-                    rewards.clearSelection();
-                    rewards.updateUI();
-                }
+                rewards.updateUI();
+            }
+        });
+        deleteSelectedRewardButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                int toRemove = rewards.getSelectedIndex();
+                JsonArray newRewardData = new JsonArray();
+                for (int i = 0; i < rewardData.size(); i++) if (i != toRemove) newRewardData.add(rewardData.get(i));
+                rewardData = newRewardData;
+
+                rewards.clearSelection();
+                rewards.updateUI();
             }
         });
     }
@@ -525,7 +547,7 @@ public class Configurator
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(saveOverOldGroupButton, gbc);
         helpMeWithRandomizationButton = new JButton();
-        helpMeWithRandomizationButton.setText("Help me with randomization, colors and variables!");
+        helpMeWithRandomizationButton.setText("Help me");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
@@ -555,6 +577,22 @@ public class Configurator
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(removeGroupButton, gbc);
+        duplicateSelectedRewardButton = new JButton();
+        duplicateSelectedRewardButton.setEnabled(false);
+        duplicateSelectedRewardButton.setText("Duplicate selected reward");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel5.add(duplicateSelectedRewardButton, gbc);
+        deleteSelectedRewardButton = new JButton();
+        deleteSelectedRewardButton.setEnabled(false);
+        deleteSelectedRewardButton.setText("Delete selected reward");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 6;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel5.add(deleteSelectedRewardButton, gbc);
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -595,6 +633,7 @@ public class Configurator
         panel7.add(scrollPane3, gbc);
         rewards = new JList();
         rewards.setLayoutOrientation(0);
+        rewards.setSelectionMode(0);
         scrollPane3.setViewportView(rewards);
     }
 
