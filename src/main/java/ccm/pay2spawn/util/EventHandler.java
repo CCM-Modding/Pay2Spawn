@@ -67,6 +67,7 @@ public class EventHandler
     {
         if (entityTracking)
         {
+            entityTracking = false;
             NbtRequestPacket.requestByEntityID(event.target.entityId);
         }
     }

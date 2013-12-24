@@ -130,12 +130,15 @@ public class NbtRequestPacket
                 case ITEM:
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackItemTypeGui.serverImport(stream.readUTF());
                     else respondItem(player);
+                    break;
                 case ENTITY:
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityTypeGui.serverImport(stream.readUTF());
                     else respondEntity(player, stream.readInt());
+                    break;
                 case FIREWORK:
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackFireworksTypeGui.serverImport(stream.readUTF());
                     else respondFirework(player);
+                    break;
             }
             stream.close();
             streambyte.close();
