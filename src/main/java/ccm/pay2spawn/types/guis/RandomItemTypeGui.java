@@ -52,7 +52,7 @@ public class RandomItemTypeGui extends HelperGuiBase
         super(rewardID, name, inputData, typeMap);
 
         if (!inputData.has(TAG_KEY)) inputData.add(TAG_KEY, new JsonObject());
-        if (!inputData.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) inputData.getAsJsonObject(DISPLAY_KEY).add(DISPLAY_KEY, new JsonObject());
+        if (!inputData.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) inputData.getAsJsonObject(TAG_KEY).add(DISPLAY_KEY, new JsonObject());
 
         makeAndOpen();
     }

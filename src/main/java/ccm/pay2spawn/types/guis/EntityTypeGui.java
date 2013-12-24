@@ -35,9 +35,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static ccm.pay2spawn.types.EntityType.*;
 
@@ -67,10 +65,11 @@ public class EntityTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        Set<String> set = new HashSet<>();
-        set.addAll(EntityType.NAMES);
-        set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
-        entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(EntityType.NAMES);
+        list.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        Collections.sort(list);
+        entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
         makeAndOpen();
     }
