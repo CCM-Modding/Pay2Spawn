@@ -110,5 +110,6 @@ public class TypeRegistry
         TypeRegistry.register(new FireworksType());
         TypeRegistry.register(new CustomEntityType());
         TypeRegistry.register(new RandomItemType());
+        TypeRegistry.register(new DropItemType());
     }
 }
