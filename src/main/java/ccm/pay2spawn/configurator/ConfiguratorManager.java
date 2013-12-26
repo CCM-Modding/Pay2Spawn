@@ -45,11 +45,16 @@ public class ConfiguratorManager
 
     public static void handelPacket(Packet250CustomPayload packet, Player player)
     {
+        String message = new String(packet.data);
+        if (message.equals(MESSAGE_INIT)) open();
+    }
+
+    public static void open()
+    {
         if (!Pay2Spawn.getRewardsDB().editable) Helper.msg(EnumChatFormatting.GOLD + "[P2S] You can't edit a server side config.");
         else
         {
-            String message = new String(packet.data);
-            if (message.equals(MESSAGE_INIT) && FMLCommonHandler.instance().getEffectiveSide().isClient())
+            if (FMLCommonHandler.instance().getEffectiveSide().isClient())
             {
                 try
                 {
@@ -60,6 +65,21 @@ public class ConfiguratorManager
                     e.printStackTrace();
                 }
             }
+            else
+            {
+                Pay2Spawn.getLogger().warning("WTF? Can't open the Configurator on the server. How did this happen?");
+            }
         }
+    }
+
+    public static void reload()
+    {
+        boolean wasthere = false;
+        if (Configurator.instance != null)
+        {
+            wasthere = Configurator.instance.frame.isVisible();
+            Configurator.instance.frame.dispose();
+        }
+        if (wasthere) open();
     }
 }

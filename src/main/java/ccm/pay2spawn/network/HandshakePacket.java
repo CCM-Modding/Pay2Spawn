@@ -24,6 +24,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.configurator.ConfiguratorManager;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,6 +52,7 @@ public class HandshakePacket
     private static final String HANDSHAKE_DEBUG            = "debug";
     private static final String HANDSHAKE_OFF              = "off";
     private static final String HANDSHAKE_ON               = "on";
+    private static final String HANDSHAKE_RELOAD           = "reload";
 
     public static void sendDebugToPlayer(Player player)
     {
@@ -96,6 +98,11 @@ public class HandshakePacket
             Pay2Spawn.enable = true;
             ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Spawning on.").setColor(EnumChatFormatting.RED));
         }
+        else if(message.equals(HANDSHAKE_RELOAD))
+        {
+            Pay2Spawn.reloadDB();
+            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
+        }
         else
         {
             Pay2Spawn.getLogger().severe("Invalid handshake received. Assuming no connection.");
@@ -122,5 +129,10 @@ public class HandshakePacket
     public static void toggle(EntityPlayer player, boolean enable)
     {
         PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, enable ? HANDSHAKE_ON.getBytes() : HANDSHAKE_OFF.getBytes()), (Player) player);
+    }
+
+    public static void reload(EntityPlayer player)
+    {
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_RELOAD.getBytes()), (Player) player);
     }
 }

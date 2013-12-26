@@ -25,6 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.network.HandshakePacket;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -88,8 +89,14 @@ public class CommandP2S extends CommandBase
         }
         else if (args[0].equalsIgnoreCase("reload"))
         {
-            Pay2Spawn.reloadDB();
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
+            if (Pay2Spawn.getConfig().forceServerconfig && FMLCommonHandler.instance().getSide().isServer())
+            {
+                sender.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] You can't do that with forced server configs. Reboot the server.").setColor(EnumChatFormatting.RED));
+            }
+            else
+            {
+                HandshakePacket.reload(player);
+            }
         }
         else if (args[0].equalsIgnoreCase("configure"))
         {

@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.network.ConfigSyncPacket;
 import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
@@ -150,10 +151,12 @@ public class Pay2Spawn
     public static void reloadDB()
     {
         instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
+        ConfiguratorManager.reload();
     }
 
     public static void reloadDBFromServer(String input)
     {
         instance.rewardsDB = new RewardsDB(input);
+        ConfiguratorManager.reload();
     }
 }

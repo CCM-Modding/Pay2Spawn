@@ -71,9 +71,24 @@ public class Configurator
     private int           currentlyEditingID;
     private JsonArray     rewardData;
 
-    private Configurator()
+    private Configurator() throws FileNotFoundException
     {
         $$$setupUI$$$();
+
+        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
+
+        frame = new JFrame("Configurator");
+        frame.setContentPane(panel1);
+        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setSize(750, 600);
+        frame.pack();
+        setupModels();
+        setupListeners();
+
+        frame.setVisible(true);
+        tabbedPane1.setSelectedIndex(0);
+        clear();
+        ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
     }
 
     public void callback(int rewardID, String type, JsonObject newData)
@@ -389,32 +404,8 @@ public class Configurator
 
     public static void show() throws FileNotFoundException
     {
-        if (instance == null) instance = new Configurator();
-
-        instance.init();
-    }
-
-    private void init() throws FileNotFoundException
-    {
-        if (frame == null)
-        {
-            rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
-
-            frame = new JFrame("Configurator");
-            frame.setContentPane(panel1);
-            frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-            frame.setSize(750, 600);
-            frame.pack();
-            setupModels();
-            setupListeners();
-        }
-        if (!frame.isVisible())
-        {
-            frame.setVisible(true);
-            tabbedPane1.setSelectedIndex(0);
-            clear();
-            ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
-        }
+        if (instance != null) instance.frame.dispose();
+        instance = new Configurator();
     }
 
     /**
