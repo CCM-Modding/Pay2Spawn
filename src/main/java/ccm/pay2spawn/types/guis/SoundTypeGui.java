@@ -35,9 +35,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 import static ccm.pay2spawn.types.SoundType.*;
 
@@ -59,10 +57,11 @@ public class SoundTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        Set<String> set = new HashSet<>();
-        set.addAll(SoundType.all);
-        set.add(RandomRegistry.getInstanceFromClass(RndSound.class).getIdentifier());
-        soundNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(SoundType.all);
+        list.add(RandomRegistry.getInstanceFromClass(RndSound.class).getIdentifier());
+        Collections.sort(list);
+        soundNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
         makeAndOpen();
     }

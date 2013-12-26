@@ -53,8 +53,8 @@ public class PotionEffectType extends TypeBase
     public static final String AMPLIFIER_KEY = "Amplifier";
     public static final String DURATION_KEY  = "Duration";
 
-    public static final HashBiMap<String, Integer> nicePotionNamesMap = HashBiMap.create();
-    public static final HashMap<String, String>    typeMap            = new HashMap<>();
+    public static final HashBiMap<String, Integer> POTIONS = HashBiMap.create();
+    public static final HashMap<String, String>    typeMap = new HashMap<>();
 
     static
     {
@@ -95,7 +95,7 @@ public class PotionEffectType extends TypeBase
             {
                 if (potion != null)
                 {
-                    nicePotionNamesMap.put(potion.getId() + ": " + potion.getName(), potion.getId());
+                    POTIONS.put(potion.getId() + ": " + potion.getName(), potion.getId());
                     pw.println(potion.getId() + ": " + potion.getName());
                 }
             }

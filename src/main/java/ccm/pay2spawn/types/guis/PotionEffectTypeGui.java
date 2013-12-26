@@ -32,6 +32,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PotionEffectType.*;
@@ -53,7 +55,10 @@ public class PotionEffectTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        potionEffectComboBox.setModel(new DefaultComboBoxModel<>(nicePotionNamesMap.keySet().toArray(new String[nicePotionNamesMap.keySet().size()])));
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(POTIONS.keySet());
+        Collections.sort(list);
+        potionEffectComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
         makeAndOpen();
     }
@@ -65,7 +70,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         try
         {
             int i = Integer.parseInt(id);
-            if (nicePotionNamesMap.inverse().containsKey(i)) id = nicePotionNamesMap.inverse().get(i);
+            if (POTIONS.inverse().containsKey(i)) id = POTIONS.inverse().get(i);
         }
         catch (NumberFormatException e)
         {
@@ -82,7 +87,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
     public void updateJson()
     {
         String id = potionEffectComboBox.getSelectedItem().toString();
-        if (nicePotionNamesMap.containsKey(id)) id = "" + nicePotionNamesMap.get(id);
+        if (POTIONS.containsKey(id)) id = "" + POTIONS.get(id);
 
         storeValue(ID_KEY, data, id);
         storeValue(AMPLIFIER_KEY, data, amplifierTextField.getText());
