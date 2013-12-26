@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.network.RedonatePacket;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -49,6 +50,7 @@ public class DonationCheckerThread extends Thread
     final String API_Key;
     final String URL;
     boolean firstrun = true;
+    JsonArray latest;
 
     public DonationCheckerThread(int interval, String channel, String API_Key)
     {
@@ -59,8 +61,13 @@ public class DonationCheckerThread extends Thread
         this.URL = "http://donationtrack.nightdev.com/api/poll?channel=" + channel + "&key=" + API_Key;
     }
 
-    ArrayList<String> doneIDs = new ArrayList<>();
+    ArrayList<String>     doneIDs = new ArrayList<>();
     ArrayList<JsonObject> backlog = new ArrayList<>();
+
+    public synchronized JsonObject getLatestById(int id)
+    {
+        return latest.get(id).getAsJsonObject();
+    }
 
     @Override
     public void run()
@@ -77,6 +84,7 @@ public class DonationCheckerThread extends Thread
                 if (root.get("status").getAsString().equals("success"))
                 {
                     doFileAndHud(root);
+                    latest = root.getAsJsonArray("mostRecent");
                     for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());
                 }
                 else
@@ -89,8 +97,7 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
-                if (Minecraft.getMinecraft().running)
-                    e.printStackTrace();
+                if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
         }
     }

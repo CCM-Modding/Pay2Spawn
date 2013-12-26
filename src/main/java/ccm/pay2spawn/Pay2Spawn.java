@@ -59,15 +59,16 @@ public class Pay2Spawn
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static boolean debug = false;
+    public static boolean debug  = false;
     public static boolean enable = true;
 
     @Mod.Metadata(MODID)
-    private ModMetadata metadata;
-    private RewardsDB   rewardsDB;
-    private P2SConfig   config;
-    private File        configFolder;
-    private Logger      logger;
+    private ModMetadata           metadata;
+    private RewardsDB             rewardsDB;
+    private P2SConfig             config;
+    private File                  configFolder;
+    private Logger                logger;
+    private DonationCheckerThread donationCheckerThread;
 
     public static String getVersion()
     {
@@ -89,6 +90,8 @@ public class Pay2Spawn
     }
 
     public static File getDBFile() { return new File(instance.configFolder, NAME + ".json"); }
+
+    public static DonationCheckerThread getDonationCheckerThread() { return instance.donationCheckerThread; }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -118,7 +121,8 @@ public class Pay2Spawn
 
         if (event.getSide().isClient())
         {
-            new DonationCheckerThread(config.interval, config.channel, config.API_Key).start();
+            donationCheckerThread = new DonationCheckerThread(config.interval, config.channel, config.API_Key);
+            donationCheckerThread.start();
             new EventHandler();
         }
     }

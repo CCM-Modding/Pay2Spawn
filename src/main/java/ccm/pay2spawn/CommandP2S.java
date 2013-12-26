@@ -25,6 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.network.RedonatePacket;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.command.CommandBase;
@@ -110,12 +111,37 @@ public class CommandP2S extends CommandBase
         {
             HandshakePacket.toggle(player, true);
         }
+        else if (args[0].equalsIgnoreCase("donate"))
+        {
+            if (args.length == 1)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s donate <amount>'."));
+            }
+            else
+            {
+                double amount = CommandBase.parseDouble(sender, args[1]);
+                RedonatePacket.send((Player) player, amount);
+            }
+        }
+        else if (args[0].equalsIgnoreCase("redonate"))
+        {
+            if (args.length == 1)
+            {
+                player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s redonate <1-5>' to redo one of the last 5 donations."));
+            }
+            else
+            {
+                int amount = CommandBase.parseIntBounded(sender, args[1], 1, 5) - 1;
+                RedonatePacket.send((Player) player, amount);
+            }
+        }
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload", "configure", "off", "on");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload", "configure", "off", "on", "donate", "redonate");
+        if (args.length == 2 && args[0].equalsIgnoreCase("donate")) return getListOfStringsMatchingLastWord(args, "");
         return null;
     }
 }

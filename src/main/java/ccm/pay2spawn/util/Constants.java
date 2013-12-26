@@ -39,6 +39,7 @@ public class Constants
     public static final String CHANNEL_TEST         = MODID + "_t";
     public static final String CHANNEL_SYNC         = MODID + "_sync";
     public static final String CHANNEL_NBT_REQUEST  = MODID + "_req";
+    public static final String CHANNEL_REDONATE     = MODID + "_rd";
 
-    public static final String[] CHANNELS = {CHANNEL_CONFIGURATOR, CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_SYNC, CHANNEL_NBT_REQUEST};
+    public static final String[] CHANNELS = {CHANNEL_CONFIGURATOR, CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_SYNC, CHANNEL_NBT_REQUEST, CHANNEL_REDONATE};
 }
