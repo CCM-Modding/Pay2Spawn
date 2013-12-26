@@ -23,7 +23,11 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.P2SConfig;
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.NbtRequestPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
@@ -73,41 +77,75 @@ public class EventHandler
     }
 
     // HUD messages
-    final static ArrayList<String> left  = new ArrayList<>();
-    final static ArrayList<String> right = new ArrayList<>();
+    public final static ArrayList<String> TOP  = new ArrayList<>();
+    public final static ArrayList<String> RECENT = new ArrayList<>();
 
     @ForgeSubscribe
     public void hudEvent(RenderGameOverlayEvent.Text event)
     {
-        event.left.addAll(left);
-        event.right.addAll(right);
-    }
-
-    public static synchronized void reset()
-    {
-        left.clear();
-        right.clear();
-    }
-
-    public static synchronized void addLeft(String line)
-    {
-        left.add(line);
-    }
-
-    public static synchronized void addRight(String line)
-    {
-        right.add(line);
-    }
-
-    public static void add(int side, String line)
-    {
-        switch (side)
+        FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
+        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
+        int baseHeight = event.resolution.getScaledHeight() - TOP.size() * 10;
+        switch (hudSettings.top)
         {
             case 1:
-                addLeft(line);
+                event.left.addAll(TOP);
                 break;
             case 2:
-                addRight(line);
+                event.right.addAll(TOP);
+                break;
+            case 5:
+                baseHeight -= 25;
+            case 3:
+                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
+                for (int x = 0; x < TOP.size(); x++)
+                {
+                    String msg = TOP.get(x);
+                    fontRenderer.drawStringWithShadow(msg, 2, baseHeight + 2 + x * 10, 0xFFFFFF);
+                }
+                break;
+            case 6:
+                baseHeight -= 25;
+            case 4:
+                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
+                for (int x = 0; x < TOP.size(); x++)
+                {
+                    String msg = TOP.get(x);
+                    int w = fontRenderer.getStringWidth(msg);
+                    fontRenderer.drawStringWithShadow(msg, event.resolution.getScaledWidth() - w - 10, baseHeight + 2 + x * 10, 0xFFFFFF);
+                }
+                break;
+        }
+
+        baseHeight = event.resolution.getScaledHeight() - RECENT.size() * 10;
+        switch (hudSettings.recent)
+        {
+            case 1:
+                event.left.addAll(RECENT);
+                break;
+            case 2:
+                event.right.addAll(RECENT);
+                break;
+            case 5:
+                baseHeight -= 25;
+            case 3:
+                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
+                for (int x = 0; x < RECENT.size(); x++)
+                {
+                    String msg = RECENT.get(x);
+                    fontRenderer.drawStringWithShadow(msg, 2, baseHeight + 2 + x * 10, 0xFFFFFF);
+                }
+                break;
+            case 6:
+                baseHeight -= 25;
+            case 4:
+                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
+                for (int x = 0; x < RECENT.size(); x++)
+                {
+                    String msg = RECENT.get(x);
+                    int w = fontRenderer.getStringWidth(msg);
+                    fontRenderer.drawStringWithShadow(msg, event.resolution.getScaledWidth() - w - 10, baseHeight + 2 + x * 10, 0xFFFFFF);
+                }
                 break;
         }
     }

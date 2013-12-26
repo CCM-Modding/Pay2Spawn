@@ -67,7 +67,7 @@ public class P2SConfig
         configuration.save();
     }
 
-    class HudSettings
+    public class HudSettings
     {
         public final static String HUD = MODID + ".Hud";
 
@@ -80,17 +80,17 @@ public class P2SConfig
         public String recent_format = "$name: $$amount";
         public String recent_header = "-- Recent donations --";
 
-        public HudSettings()
+        private HudSettings()
         {
             configuration.addCustomCategoryComment(HUD, "Donation lists on screen!");
 
-            top = configuration.get(HUD, "top", top, "Display a list of the top donations on screen. 0 = off, 1 = left, 2 = right.").getInt();
+            top = configuration.get(HUD, "top", top, "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom, 5 = left above hotbar, 6 = right above hotbar.").getInt();
             top_amount = configuration.get(HUD, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
             if (top_amount > 5) top_amount = 5;
             top_format = Helper.formatColors(configuration.get(HUD, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
             top_header = Helper.formatColors(configuration.get(HUD, "top_header", top_header, "empty for no header.").getString());
 
-            recent = configuration.get(HUD, "recent", recent, "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right.").getInt();
+            recent = configuration.get(HUD, "recent", recent, "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom, 5 = left above hotbar, 6 = right above hotbar.").getInt();
             recent_amount = configuration.get(HUD, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
             if (recent_amount > 5) recent_amount = 5;
             recent_format = Helper.formatColors(configuration.get(HUD, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
@@ -98,7 +98,7 @@ public class P2SConfig
         }
     }
 
-    class FileSettings
+    public class FileSettings
     {
         public final static String FILE = MODID + ".file";
 
@@ -109,7 +109,7 @@ public class P2SConfig
         public int    recent_amount = 5;
         public String recent_format = "$name: $$amount";
 
-        public FileSettings()
+        private FileSettings()
         {
             configuration.addCustomCategoryComment(FILE, "Donation lists on file!\nUse with OBS (or others) and a text on screen plugin.");
 

@@ -134,80 +134,100 @@ public class DonationCheckerThread extends Thread
     @SuppressWarnings("ResultOfMethodCallIgnored")
     private void doFileAndHud(JsonObject root)
     {
-        EventHandler.reset();
-        if (Pay2Spawn.getConfig().hud.top != 0)
+        /**
+         * Hud
+         */
         {
-            String header = Pay2Spawn.getConfig().hud.top_header.trim();
-            if (!Strings.isNullOrEmpty(header)) EventHandler.add(Pay2Spawn.getConfig().hud.top, header);
-
-            for (int i = 0; i < Pay2Spawn.getConfig().hud.top_amount; i++)
+            /**
+             * Top
+             */
+            EventHandler.TOP.clear();
+            P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
+            if (hudSettings.top != 0)
             {
-                JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
-                if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                EventHandler.add(Pay2Spawn.getConfig().hud.top, Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation));
-            }
-        }
-        if (Pay2Spawn.getConfig().file.top != 0)
-        {
-            try
-            {
-                String end = (Pay2Spawn.getConfig().file.top == 1 ? "\n" : "");
-                File file = new File(Pay2Spawn.getFolder(), "topList.txt");
-                //file.delete();
-                file.createNewFile();
-
-                PrintWriter pw = new PrintWriter(file);
-
-                for (int i = 0; i < Pay2Spawn.getConfig().file.top_amount; i++)
+                String header = hudSettings.top_header.trim();
+                if (!Strings.isNullOrEmpty(header)) EventHandler.TOP.add(header);
+                for (int i = 0; i < hudSettings.top_amount; i++)
                 {
-                    if (i == Pay2Spawn.getConfig().file.top_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.top_format, donation) + end);
+                    EventHandler.TOP.add(Helper.formatText(hudSettings.top_format, donation));
                 }
-                pw.close();
             }
-            catch (IOException e)
+            /**
+             * Recent
+             */
+            EventHandler.RECENT.clear();
+            if (hudSettings.recent != 0)
             {
-                e.printStackTrace();
-            }
-        }
-
-        if (Pay2Spawn.getConfig().hud.recent != 0)
-        {
-            String header = Pay2Spawn.getConfig().hud.recent_header.trim();
-            if (!Strings.isNullOrEmpty(header)) EventHandler.add(Pay2Spawn.getConfig().hud.recent, header);
-
-            for (int i = 0; i < Pay2Spawn.getConfig().hud.recent_amount; i++)
-            {
-                JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
-                if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                EventHandler.add(Pay2Spawn.getConfig().hud.recent, Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation));
-            }
-        }
-        if (Pay2Spawn.getConfig().file.recent != 0)
-        {
-            try
-            {
-                String end = (Pay2Spawn.getConfig().file.recent == 1 ? "\n" : "");
-                File file = new File(Pay2Spawn.getFolder(), "recentList.txt");
-                //file.delete();
-                file.createNewFile();
-
-                PrintWriter pw = new PrintWriter(file);
-
-                for (int i = 0; i < Pay2Spawn.getConfig().file.recent_amount; i++)
+                String header = hudSettings.recent_header.trim();
+                if (!Strings.isNullOrEmpty(header)) EventHandler.RECENT.add(header);
+                for (int i = 0; i < hudSettings.recent_amount; i++)
                 {
-                    if (i == Pay2Spawn.getConfig().file.recent_amount - 1) end = "";
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    pw.print(Helper.formatText(Pay2Spawn.getConfig().hud.recent_format, donation) + end);
+                    EventHandler.RECENT.add(Helper.formatText(hudSettings.recent_format, donation));
                 }
-                pw.close();
             }
-            catch (IOException e)
+        }
+        /**
+         * File
+         */
+        {
+            P2SConfig.FileSettings fileSettings = Pay2Spawn.getConfig().file;
+            /**
+             * Top
+             */
+            if (fileSettings.top != 0)
             {
-                e.printStackTrace();
+                try
+                {
+                    String end = (fileSettings.top == 1 ? "\n" : "");
+                    File file = new File(Pay2Spawn.getFolder(), "topList.txt");
+                    //file.delete();
+                    file.createNewFile();
+                    PrintWriter pw = new PrintWriter(file);
+                    for (int i = 0; i < fileSettings.top_amount; i++)
+                    {
+                        if (i == fileSettings.top_amount - 1) end = "";
+                        JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
+                        if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
+                        pw.print(Helper.formatText(fileSettings.top_format, donation) + end);
+                    }
+                    pw.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            /**
+             * Recent
+             */
+            if (fileSettings.recent != 0)
+            {
+                try
+                {
+                    String end = (fileSettings.recent == 1 ? "\n" : "");
+                    File file = new File(Pay2Spawn.getFolder(), "recentList.txt");
+                    //file.delete();
+                    file.createNewFile();
+
+                    PrintWriter pw = new PrintWriter(file);
+
+                    for (int i = 0; i < fileSettings.recent_amount; i++)
+                    {
+                        if (i == fileSettings.recent_amount - 1) end = "";
+                        JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
+                        if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
+                        pw.print(Helper.formatText(fileSettings.recent_format, donation) + end);
+                    }
+                    pw.close();
+                }
+                catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
             }
         }
     }
