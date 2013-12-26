@@ -34,7 +34,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import static ccm.pay2spawn.types.LightningType.SPREAD_KEY;
+import static ccm.pay2spawn.types.LightningType.*;
 
 public class LightningTypeGui extends HelperGuiBase
 {
@@ -46,7 +46,11 @@ public class LightningTypeGui extends HelperGuiBase
     public JButton     updateJsonButton;
     public JButton     testButton;
 
-    public JTextField spreadTextField;
+    public JTextField   spreadTextField;
+    public JRadioButton nearestEntityRadioButton;
+    public JRadioButton rndEntityRadioButton;
+    public JRadioButton rndSpotRadioButton;
+    public JRadioButton playerRadioButton;
 
     public LightningTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -116,6 +120,12 @@ public class LightningTypeGui extends HelperGuiBase
     {
         spreadTextField.setText(readValue(SPREAD_KEY, data));
 
+        String type = readValue(TYPE_KEY, data);
+        playerRadioButton.setSelected(type.equals(PLAYER_ENTITY + ""));
+        nearestEntityRadioButton.setSelected(type.equals(NEAREST_ENTITY + ""));
+        rndEntityRadioButton.setSelected(type.equals(RND_ENTITY + ""));
+        rndSpotRadioButton.setSelected(type.equals(RND_SPOT + ""));
+
         jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
     }
 
@@ -123,6 +133,15 @@ public class LightningTypeGui extends HelperGuiBase
     public void updateJson()
     {
         storeValue(SPREAD_KEY, data, spreadTextField.getText());
+
+        String type = RND_SPOT + "";
+
+        if (playerRadioButton.isSelected()) type = PLAYER_ENTITY + "";
+        else if (nearestEntityRadioButton.isSelected()) type = NEAREST_ENTITY + "";
+        else if (rndEntityRadioButton.isSelected()) type = RND_ENTITY + "";
+        else if (rndSpotRadioButton.isSelected()) type = RND_SPOT + "";
+
+        storeValue(TYPE_KEY, data, type);
 
         jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
     }
@@ -167,31 +186,60 @@ public class LightningTypeGui extends HelperGuiBase
         final JLabel label2 = new JLabel();
         label2.setText("Type:");
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
+        gbc.gridx = 5;
         gbc.gridy = 0;
         panel3.add(label2, gbc);
         final JLabel label3 = new JLabel();
-        label3.setText("Spread:");
+        label3.setText("Radius:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.EAST;
         panel3.add(label3, gbc);
         final JLabel label4 = new JLabel();
         label4.setText("INT");
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 1;
+        gbc.gridx = 5;
+        gbc.gridy = 2;
         panel3.add(label4, gbc);
         spreadTextField = new JTextField();
         spreadTextField.setToolTipText("The lightning spread");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
+        gbc.gridwidth = 4;
         gbc.weightx = 1.0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel3.add(spreadTextField, gbc);
+        nearestEntityRadioButton = new JRadioButton();
+        nearestEntityRadioButton.setText("Nearest entity");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(nearestEntityRadioButton, gbc);
+        rndEntityRadioButton = new JRadioButton();
+        rndEntityRadioButton.setText("Rnd entity");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(rndEntityRadioButton, gbc);
+        rndSpotRadioButton = new JRadioButton();
+        rndSpotRadioButton.setText("Rnd spot");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(rndSpotRadioButton, gbc);
+        playerRadioButton = new JRadioButton();
+        playerRadioButton.setText("Player");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(playerRadioButton, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -266,6 +314,12 @@ public class LightningTypeGui extends HelperGuiBase
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(testButton, gbc);
         label3.setLabelFor(spreadTextField);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(nearestEntityRadioButton);
+        buttonGroup.add(rndEntityRadioButton);
+        buttonGroup.add(rndSpotRadioButton);
+        buttonGroup.add(playerRadioButton);
     }
 
     /**

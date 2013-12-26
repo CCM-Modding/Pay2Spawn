@@ -79,10 +79,11 @@ public class EntityTypeGui extends HelperGuiBase
         super(rewardID, name, inputData, typeMap);
         this.superGui = superGui;
 
-        Set<String> set = new HashSet<>();
-        set.addAll(EntityType.NAMES);
-        set.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
-        entityNameComboBox.setModel(new DefaultComboBoxModel<>(set.toArray(new String[set.size()])));
+        ArrayList<String> list = new ArrayList<>();
+        list.addAll(EntityType.NAMES);
+        list.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
+        Collections.sort(list);
+        entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
         makeAndOpen();
     }
