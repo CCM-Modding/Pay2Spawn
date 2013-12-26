@@ -31,9 +31,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
+import scala.sys.process.processInternal;
 
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * The thread that does the actual checking with nightdevs donationtracker
@@ -46,7 +48,7 @@ public class DonationCheckerThread extends Thread
     final String channel;
     final String API_Key;
     final String URL;
-    String lastKnownDonation;
+    boolean firstrun = true;
 
     public DonationCheckerThread(int interval, String channel, String API_Key)
     {
@@ -57,51 +59,79 @@ public class DonationCheckerThread extends Thread
         this.URL = "http://donationtrack.nightdev.com/api/poll?channel=" + channel + "&key=" + API_Key;
     }
 
+    ArrayList<String> doneIDs = new ArrayList<>();
+    ArrayList<JsonObject> backlog = new ArrayList<>();
+
     @Override
     public void run()
     {
-        String message;
         while (true)
         {
             try
             {
-                if (Pay2Spawn.debug) lastKnownDonation = "";
+                for (JsonObject donation : backlog) process(donation);
+
                 String input = readUrl(URL);
                 JsonObject root = JsonNBTHelper.PARSER.parse(input).getAsJsonObject();
 
                 if (root.get("status").getAsString().equals("success"))
                 {
                     doFileAndHud(root);
-                    go(root.getAsJsonArray("mostRecent"));
+                    for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());
                 }
                 else
                 {
-                    message = root.get("error").getAsString();
-                    break;
+                    throw new IllegalArgumentException(root.get("error").getAsString());
                 }
+
+                firstrun = false;
+                doWait(interval);
             }
             catch (Exception e)
             {
                 e.printStackTrace();
             }
-            finally
-            {
-                try
-                {
-                    synchronized (this)
-                    {
-                        this.wait(interval * 1000);
-                    }
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
         }
-        throw new IllegalArgumentException(message);
     }
 
+    private void process(JsonObject donation)
+    {
+        if (Minecraft.getMinecraft().thePlayer == null || !Pay2Spawn.enable)
+        {
+            if (!backlog.contains(donation)) backlog.add(donation);
+        }
+        else if (Pay2Spawn.debug || !doneIDs.contains(donation.get("transactionID").getAsString()))
+        {
+            doneIDs.add(donation.get("transactionID").getAsString());
+            if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
+            try
+            {
+                Pay2Spawn.getRewardsDB().process(donation);
+            }
+            catch (Exception e)
+            {
+                Pay2Spawn.getLogger().warning("Error processing a donation.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void doWait(int time)
+    {
+        try
+        {
+            synchronized (this)
+            {
+                this.wait(time * 1000);
+            }
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private void doFileAndHud(JsonObject root)
     {
         EventHandler.reset();
@@ -181,29 +211,6 @@ public class DonationCheckerThread extends Thread
             }
         }
     }
-
-    private void go(JsonArray mostRecent)
-    {
-        if (Minecraft.getMinecraft().thePlayer == null) return;
-        for (JsonElement aMostRecent : mostRecent)
-        {
-            JsonObject donation = aMostRecent.getAsJsonObject();
-
-            if (lastKnownDonation == null || lastKnownDonation.equals(donation.get("transactionID").getAsString())) break;
-            if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-            try
-            {
-                Pay2Spawn.getRewardsDB().process(donation);
-            }
-            catch (Exception e)
-            {
-                Pay2Spawn.getLogger().warning("Error processing a donation.");
-                e.printStackTrace();
-            }
-        }
-        lastKnownDonation = mostRecent.get(0).getAsJsonObject().get("transactionID").getAsString();
-    }
-
 
     private String readUrl(String urlString) throws Exception
     {

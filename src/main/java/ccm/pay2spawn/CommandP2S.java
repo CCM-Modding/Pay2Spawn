@@ -81,26 +81,34 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
             return;
         }
-        if (args[0].equalsIgnoreCase("debug"))
+        else if (args[0].equalsIgnoreCase("debug"))
         {
             if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName())) HandshakePacket.sendDebugToPlayer((Player) player);
             else sender.sendChatToPlayer(ChatMessageComponent.createFromText("You have to be OP to enable debug mode.").setColor(EnumChatFormatting.RED));
         }
-        if (args[0].equalsIgnoreCase("reload"))
+        else if (args[0].equalsIgnoreCase("reload"))
         {
             Pay2Spawn.reloadDB();
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
         }
-        if (args[0].equalsIgnoreCase("configure"))
+        else if (args[0].equalsIgnoreCase("configure"))
         {
             ConfiguratorManager.handleCommand(player);
+        }
+        else if (args[0].equalsIgnoreCase("off"))
+        {
+            HandshakePacket.toggle(player, false);
+        }
+        else if (args[0].equalsIgnoreCase("on"))
+        {
+            HandshakePacket.toggle(player, true);
         }
     }
 
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload", "configure");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "debug", "getnbtofitem", "getnbtofentity", "reload", "configure", "off", "on");
         return null;
     }
 }
