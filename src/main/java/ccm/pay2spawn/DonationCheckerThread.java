@@ -89,7 +89,8 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
-                e.printStackTrace();
+                if (Minecraft.getMinecraft().running)
+                    e.printStackTrace();
             }
         }
     }
