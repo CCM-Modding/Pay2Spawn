@@ -155,7 +155,7 @@ public class DonationCheckerThread extends Thread
             {
                 String header = hudSettings.top_header.trim();
                 if (!Strings.isNullOrEmpty(header)) EventHandler.TOP.add(header);
-                for (int i = 0; i < hudSettings.top_amount; i++)
+                for (int i = 0; i < hudSettings.top_amount && i < root.getAsJsonArray("top").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
@@ -170,7 +170,7 @@ public class DonationCheckerThread extends Thread
             {
                 String header = hudSettings.recent_header.trim();
                 if (!Strings.isNullOrEmpty(header)) EventHandler.RECENT.add(header);
-                for (int i = 0; i < hudSettings.recent_amount; i++)
+                for (int i = 0; i < hudSettings.recent_amount && i < root.getAsJsonArray("mostRecent").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
