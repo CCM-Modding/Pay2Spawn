@@ -89,7 +89,7 @@ public class DonationCheckerThread extends Thread
                 }
                 else
                 {
-                    throw new IllegalArgumentException(root.get("error").getAsString());
+                    throw new IllegalArgumentException("Could not fetch recent donations.\n Message:" + root.get("error").getAsString());
                 }
 
                 firstrun = false;

@@ -54,6 +54,7 @@ If a donation matches no reward, a default message shows. (See .cfg file)
 ## Variables
 If you actually read all the things up to this point, you will have seen (Vars usable).<br>
 This means you can use $name, $amount and $note to represent the donators name, the amount donated and the message left in PayPal.
+The streamers username can be inserted with $streamer.
 
 ### Example:
 starting from (4) in previous example.

@@ -179,6 +179,7 @@ public class Helper
         if (donation.has("twitchUsername") && donation.get("twitchUsername").isJsonPrimitive()) format = format.replace("$name", donation.get("twitchUsername").getAsString());
         if (donation.has("amount") && donation.get("amount").isJsonPrimitive()) format = format.replace("$amount", donation.get("amount").getAsString());
         if (donation.has("note") && donation.get("note").isJsonPrimitive()) format = format.replace("$note", donation.get("note").getAsString());
+        format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getEntityName());
         return format;
     }
 
