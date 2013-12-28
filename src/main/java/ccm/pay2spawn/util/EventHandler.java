@@ -77,15 +77,19 @@ public class EventHandler
     }
 
     // HUD messages
-    public final static ArrayList<String> TOP    = new ArrayList<>();
-    public final static ArrayList<String> RECENT = new ArrayList<>();
+    public final static ArrayList<String> TOP       = new ArrayList<>();
+    public final static ArrayList<String> RECENT    = new ArrayList<>();
+    public final static ArrayList<String> COUNTDOWN = new ArrayList<>();
 
     @ForgeSubscribe
     public void hudEvent(RenderGameOverlayEvent.Text event)
     {
+        ArrayList<String> bottomLeft = new ArrayList<>();
+        ArrayList<String> bottomRight = new ArrayList<>();
+
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
         P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
-        int baseHeight = event.resolution.getScaledHeight() - TOP.size() * 10;
+
         switch (hudSettings.top)
         {
             case 1:
@@ -94,30 +98,14 @@ public class EventHandler
             case 2:
                 event.right.addAll(TOP);
                 break;
-            case 5:
-                baseHeight -= 25;
             case 3:
-                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
-                for (int x = 0; x < TOP.size(); x++)
-                {
-                    String msg = TOP.get(x);
-                    fontRenderer.drawStringWithShadow(msg, 2, baseHeight + 2 + x * 10, 0xFFFFFF);
-                }
+                bottomLeft.addAll(TOP);
                 break;
-            case 6:
-                baseHeight -= 25;
             case 4:
-                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
-                for (int x = 0; x < TOP.size(); x++)
-                {
-                    String msg = TOP.get(x);
-                    int w = fontRenderer.getStringWidth(msg);
-                    fontRenderer.drawStringWithShadow(msg, event.resolution.getScaledWidth() - w - 10, baseHeight + 2 + x * 10, 0xFFFFFF);
-                }
+                bottomRight.addAll(TOP);
                 break;
         }
 
-        baseHeight = event.resolution.getScaledHeight() - RECENT.size() * 10;
         switch (hudSettings.recent)
         {
             case 1:
@@ -126,27 +114,49 @@ public class EventHandler
             case 2:
                 event.right.addAll(RECENT);
                 break;
-            case 5:
-                baseHeight -= 25;
             case 3:
-                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
-                for (int x = 0; x < RECENT.size(); x++)
-                {
-                    String msg = RECENT.get(x);
-                    fontRenderer.drawStringWithShadow(msg, 2, baseHeight + 2 + x * 10, 0xFFFFFF);
-                }
+                bottomLeft.addAll(RECENT);
                 break;
-            case 6:
-                baseHeight -= 25;
             case 4:
-                if (Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen()) break;
-                for (int x = 0; x < RECENT.size(); x++)
-                {
-                    String msg = RECENT.get(x);
-                    int w = fontRenderer.getStringWidth(msg);
-                    fontRenderer.drawStringWithShadow(msg, event.resolution.getScaledWidth() - w - 10, baseHeight + 2 + x * 10, 0xFFFFFF);
-                }
+                bottomRight.addAll(RECENT);
                 break;
+        }
+
+        switch (hudSettings.countdown)
+        {
+            case 1:
+                event.left.addAll(COUNTDOWN);
+                break;
+            case 2:
+                event.right.addAll(COUNTDOWN);
+                break;
+            case 3:
+                bottomLeft.addAll(COUNTDOWN);
+                break;
+            case 4:
+                bottomRight.addAll(COUNTDOWN);
+                break;
+        }
+
+        int baseHeight = event.resolution.getScaledHeight() - 25 - bottomLeft.size() * 10;
+        if (!Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen())
+        {
+            for (int x = 0; x < bottomLeft.size(); x++)
+            {
+                String msg = bottomLeft.get(x);
+                fontRenderer.drawStringWithShadow(msg, 2, baseHeight + 2 + x * 10, 0xFFFFFF);
+            }
+        }
+
+        baseHeight = event.resolution.getScaledHeight() - 25 - bottomRight.size() * 10;
+        if (!Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen())
+        {
+            for (int x = 0; x < bottomRight.size(); x++)
+            {
+                String msg = bottomRight.get(x);
+                int w = fontRenderer.getStringWidth(msg);
+                fontRenderer.drawStringWithShadow(msg, event.resolution.getScaledWidth() - w - 10, baseHeight + 2 + x * 10, 0xFFFFFF);
+            }
         }
     }
 }

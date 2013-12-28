@@ -109,13 +109,13 @@ public class RewardsDB
     {
         double highestmatch = 0d;
         double amount = donation.get("amount").getAsDouble();
-        if (map.containsKey(amount)) map.get(amount).sendToServer(donation);
+        if (map.containsKey(amount)) map.get(amount).addToCountdown(donation);
         else
         {
             for (double key : map.keySet())
                 if (key < amount && highestmatch < key) highestmatch = key;
 
-            if (map.containsKey(highestmatch)) map.get(highestmatch).sendToServer(donation);
+            if (map.containsKey(highestmatch)) map.get(highestmatch).addToCountdown(donation);
         }
     }
 }

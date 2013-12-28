@@ -80,6 +80,10 @@ public class P2SConfig
         public String recent_format = "$name: $$amount";
         public String recent_header = "-- Recent donations --";
 
+        public int    countdown        = 2;
+        public String countdown_format = "$name incoming in $time sec.";
+        public String countdown_header = "-- Countdown --";
+
         private HudSettings()
         {
             configuration.addCustomCategoryComment(HUD, "Donation lists on screen!");
@@ -87,7 +91,7 @@ public class P2SConfig
             top = configuration.get(HUD,
                     "top",
                     top,
-                    "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom, 5 = left above hotbar, 6 = right above hotbar.").getInt();
+                    "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
             top_amount = configuration.get(HUD, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
             if (top_amount > 5) top_amount = 5;
             top_format = Helper.formatColors(configuration.get(HUD, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
@@ -96,11 +100,18 @@ public class P2SConfig
             recent = configuration.get(HUD,
                     "recent",
                     recent,
-                    "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom, 5 = left above hotbar, 6 = right above hotbar.").getInt();
+                    "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
             recent_amount = configuration.get(HUD, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
             if (recent_amount > 5) recent_amount = 5;
             recent_format = Helper.formatColors(configuration.get(HUD, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
             recent_header = Helper.formatColors(configuration.get(HUD, "recent_header", recent_header, "empty for no header.").getString());
+
+            countdown = configuration.get(HUD,
+                    "countdown",
+                    countdown,
+                    "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
+            countdown_format = Helper.formatColors(configuration.get(HUD, "countdown_format", countdown_format, "Vars: $name (of the group), $time (in seconds).").getString());
+            countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header.").getString());
         }
     }
 

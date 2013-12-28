@@ -26,6 +26,7 @@ package ccm.pay2spawn.network;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.util.Reward;
+import ccm.pay2spawn.util.TickHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +45,6 @@ public class PacketHandler implements IPacketHandler
     @Override
     public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player)
     {
-        Pay2Spawn.getLogger().info("Got packet on channel: " + packet.channel + " with data " + new String(packet.data));
         try
         {
             if (packet.channel.equals(CHANNEL_HANDSHAKE)) HandshakePacket.handel(packet, player);

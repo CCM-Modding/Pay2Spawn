@@ -26,6 +26,7 @@ package ccm.pay2spawn.network;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.network.INetworkManager;
@@ -67,7 +68,7 @@ public class ConnectionHandler implements IConnectionHandler
     @Override
     public void connectionClosed(INetworkManager manager)
     {
-
+        Pay2Spawn.getLogger().severe("connectionClosed " + FMLCommonHandler.instance().getEffectiveSide());
     }
 
     @Override

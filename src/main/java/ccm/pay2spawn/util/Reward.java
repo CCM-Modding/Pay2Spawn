@@ -48,6 +48,7 @@ public class Reward
     private String    name;
     private Double    amount;
     private JsonArray rewards;
+    private Integer   countdown;
 
     public Reward(JsonObject json)
     {
@@ -55,6 +56,8 @@ public class Reward
         amount = json.get("amount").getAsDouble();
         message = Helper.formatColors(json.get("message").getAsString());
         rewards = json.getAsJsonArray("rewards");
+        if (json.has("countdown")) countdown = json.get("countdown").getAsInt();
+        else countdown = 0;
     }
 
     public Reward(String name, Double amount, JsonArray rewards)
@@ -74,10 +77,10 @@ public class Reward
         return amount;
     }
 
-    public void sendToServer(JsonObject donation)
+    public void addToCountdown(JsonObject donation)
     {
         Helper.msg(Helper.formatText(message, donation));
-        if (HandshakePacket.doesServerHaveMod()) PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
+        if (HandshakePacket.doesServerHaveMod()) TickHandler.INSTANCE.add(this, donation);
     }
 
     private byte[] toBytes(String formattedData)
@@ -107,6 +110,8 @@ public class Reward
         String name = stream.readUTF();
         Double amount = stream.readDouble();
         JsonArray rewards = JsonNBTHelper.PARSER.parse(stream.readUTF()).getAsJsonArray();
+        stream.close();
+        streambyte.close();
 
         return new Reward(name, amount, rewards);
     }
@@ -140,5 +145,15 @@ public class Reward
                 e.printStackTrace();
             }
         }
+    }
+
+    public void send(JsonObject donation)
+    {
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
+    }
+
+    public int getCountdown()
+    {
+        return countdown;
     }
 }

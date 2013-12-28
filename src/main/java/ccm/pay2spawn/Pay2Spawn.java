@@ -34,6 +34,7 @@ import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;
+import ccm.pay2spawn.util.TickHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -41,6 +42,8 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -116,6 +119,7 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void init(FMLInitializationEvent event)
     {
+        TickRegistry.registerScheduledTickHandler(TickHandler.INSTANCE, Side.CLIENT);
         TypeRegistry.doConfig(config.configuration);
         config.configuration.save();
         rewardsDB = new RewardsDB(getRewardDBFile());
