@@ -42,7 +42,7 @@ import java.util.HashSet;
 
 public class Configurator
 {
-    public static final Joiner   joiner       = Joiner.on(", ").skipNulls();
+    public static final Joiner   JOINER       = Joiner.on(", ").skipNulls();
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "rewards"};
     public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Types of rewards"};
     public static Configurator instance;
@@ -75,7 +75,7 @@ public class Configurator
     {
         $$$setupUI$$$();
 
-        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getDBFile())).getAsJsonArray();
+        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getRewardDBFile())).getAsJsonArray();
 
         frame = new JFrame("Configurator");
         frame.setContentPane(panel1);
@@ -287,7 +287,7 @@ public class Configurator
                         if (jsonObject.has(COLUMN_KEYS[columnIndex])) return "";
                         HashSet<String> types = new HashSet<>();
                         for (JsonElement element : jsonObject.getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
-                        return joiner.join(types);
+                        return JOINER.join(types);
                 }
             }
 
@@ -336,7 +336,7 @@ public class Configurator
     {
         try
         {
-            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getDBFile()));
+            BufferedWriter bw = new BufferedWriter(new FileWriter(Pay2Spawn.getRewardDBFile()));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             bw.write(gson.toJson(rootArray));
             bw.close();

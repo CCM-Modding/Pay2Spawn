@@ -21,56 +21,60 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
+package ccm.pay2spawn.permissions;
 
-import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.permissions.Node;
-import ccm.pay2spawn.permissions.PermissionsHandler;
-import com.google.gson.JsonObject;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import com.google.common.base.Joiner;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.Arrays;
 
-public class DropItemType extends TypeBase
+public class Node
 {
-    public static final String                  NODENAME = "dropitem";
-    @Override
-    public String getName()
+    public static final Joiner JOINER = Joiner.on(".").skipNulls();
+    final String[] parts;
+
+    public Node(String parts)
     {
-        return NODENAME;
+        this.parts = parts.split("\\.");
+    }
+
+    public Node(String... parts)
+    {
+        this.parts = parts;
+    }
+
+    public boolean matches(Node requestNode)
+    {
+        return this.equals(requestNode) || checkPart(0, requestNode);
+    }
+
+    private boolean checkPart(int i, Node requestNode)
+    {
+        if (i < parts.length || requestNode.parts.length < i) return false;
+        if (parts[i].equals("*")) return true;
+        if (parts[i].equals(requestNode.parts[i])) return true;
+        return checkPart(++i, requestNode);
     }
 
     @Override
-    public NBTTagCompound getExample()
+    public String toString()
     {
-        return new NBTTagCompound();
+        return JOINER.join(parts);
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public boolean equals(Object o)
     {
-        player.dropOneItem(true);
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return Arrays.equals(parts, node.parts);
     }
 
     @Override
-    public void openNewGui(int rewardID, JsonObject data)
+    public int hashCode()
     {
-        Configurator.instance.callback(rewardID, getName(), data);
-    }
-
-    @Override
-    public Collection<Node> getPermissionNodes()
-    {
-        HashSet<Node> nodes = new HashSet<>();
-        nodes.add(new Node(NODENAME));
-        return nodes;
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NODENAME);
+        return Arrays.hashCode(parts);
     }
 }

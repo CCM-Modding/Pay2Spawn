@@ -23,12 +23,14 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
+import java.util.Collection;
 
 /**
  * Base class for reward types
@@ -79,4 +81,7 @@ public abstract class TypeBase
 
     public abstract void openNewGui(int rewardID, JsonObject data);
 
+    public abstract Collection<Node> getPermissionNodes();
+
+    public abstract Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient);
 }

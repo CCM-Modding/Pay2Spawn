@@ -21,56 +21,49 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.types;
+package ccm.pay2spawn.permissions;
 
-import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.permissions.Node;
-import ccm.pay2spawn.permissions.PermissionsHandler;
-import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
-public class DropItemType extends TypeBase
+public class PermissionsHandler
 {
-    public static final String                  NODENAME = "dropitem";
-    @Override
-    public String getName()
+    private static PermissionsDB permissionsDB = new PermissionsDB();
+    private static HashSet<String> nodes = new HashSet<>();
+
+    public static boolean hasPermissionNode(EntityPlayer player, Node node)
     {
-        return NODENAME;
+        return permissionsDB.check(player.getEntityName(), node);
     }
 
-    @Override
-    public NBTTagCompound getExample()
+    public static void init() throws IOException
     {
-        return new NBTTagCompound();
+        permissionsDB.load();
     }
 
-    @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public static void register(Collection<Node> nodesToAdd)
     {
-        player.dropOneItem(true);
+        for (Node node : nodesToAdd)
+            nodes.add(node.toString());
     }
 
-    @Override
-    public void openNewGui(int rewardID, JsonObject data)
+    public static boolean needPermCheck(EntityPlayer player)
     {
-        Configurator.instance.callback(rewardID, getName(), data);
+        MinecraftServer mcs = MinecraftServer.getServer();
+        return !(mcs.isSinglePlayer() || mcs.getConfigurationManager().isPlayerOpped(player.getEntityName()));
     }
 
-    @Override
-    public Collection<Node> getPermissionNodes()
+    public static PermissionsDB getDB()
     {
-        HashSet<Node> nodes = new HashSet<>();
-        nodes.add(new Node(NODENAME));
+        return permissionsDB;
+    }
+
+    public static Iterable getAllPermNodes()
+    {
         return nodes;
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NODENAME);
     }
 }

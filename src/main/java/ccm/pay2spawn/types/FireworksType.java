@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.FireworksTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
@@ -35,12 +36,16 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.util.JsonNBTHelper.*;
 
 public class FireworksType extends TypeBase
 {
+    public static final String                  NODENAME = "fireworks";
+
     public static final String FLIGHT_KEY  = "Flight";
     public static final String TYPE_KEY    = "Type";
     public static final String FLICKER_KEY = "Flicker";
@@ -70,7 +75,7 @@ public class FireworksType extends TypeBase
     @Override
     public String getName()
     {
-        return "fireworks";
+        return NODENAME;
     }
 
     @Override
@@ -115,13 +120,13 @@ public class FireworksType extends TypeBase
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
         int i = 0;
-        NBTTagCompound nbttagcompound1 = itemStack.getTagCompound().getCompoundTag("Fireworks");
-        if (nbttagcompound1 != null) i += nbttagcompound1.getByte("Flight");
+        NBTTagCompound nbttagcompound1 = itemStack.getTagCompound().getCompoundTag(FIREWORKS_KEY);
+        if (nbttagcompound1 != null) i += nbttagcompound1.getByte(FLIGHT_KEY);
 
         try
         {
-            int rad = dataFromClient.getInteger("RADIUS");
-            for (double dgr = 0; dgr < 2 * Math.PI; dgr += (2 * Math.PI / dataFromClient.getInteger("AMOUNT")))
+            int rad = dataFromClient.getInteger(RADIUS_KEY);
+            for (double dgr = 0; dgr < 2 * Math.PI; dgr += (2 * Math.PI / dataFromClient.getInteger(AMOUNT_KEY)))
             {
                 EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX + rad * Math.cos(dgr), player.posY, player.posZ + rad * Math.sin(dgr), itemStack.copy());
                 fireworkAgeField.set(entityfireworkrocket, 1);
@@ -139,6 +144,20 @@ public class FireworksType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new FireworksTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        nodes.add(new Node(NODENAME));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NODENAME);
     }
 
     private static final Field fireworkAgeField = getHackField(0);

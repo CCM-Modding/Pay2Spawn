@@ -25,12 +25,15 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.permissions.PermissionsHandler;
+import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 import java.io.*;
@@ -111,7 +114,9 @@ public class Reward
             try
             {
                 JsonObject reward = element.getAsJsonObject();
-                TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase()).spawnServerSide(player, JsonNBTHelper.parseJSON(reward.getAsJsonObject("data")));
+                TypeBase type = TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase());
+                NBTTagCompound nbt = JsonNBTHelper.parseJSON(reward.getAsJsonObject("data"));
+                if (!PermissionsHandler.needPermCheck(player) || PermissionsHandler.hasPermissionNode(player, type.getPermissionNode(player, nbt))) type.spawnServerSide(player, nbt);
             }
             catch (Exception e)
             {

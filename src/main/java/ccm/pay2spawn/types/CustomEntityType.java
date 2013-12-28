@@ -23,13 +23,19 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
+import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 import static ccm.pay2spawn.util.Constants.MODID;
@@ -64,18 +70,34 @@ public class CustomEntityType extends TypeBase
     }
 
     @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        for (String s : EntityType.NAMES) nodes.add(new Node(EntityType.NODENAME, s));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
+        return new Node(EntityType.NODENAME, EntityList.getEntityString(entity));
+    }
+
+    @Override
     public NBTTagCompound getExample()
     {
         NBTTagCompound tag = new NBTTagCompound();
         Entity entity = EntityList.createEntityByName("Wolf", null);
         entity.writeMountToNBT(tag);
-        tag.setBoolean("agro", true);
+        tag.setBoolean(EntityType.AGRO_KEY, true);
         return tag;
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
+        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
         double x, y, z;
 
         y = player.posY + 1;
@@ -83,20 +105,21 @@ public class CustomEntityType extends TypeBase
         x = player.posX + (radius / 2 - RANDOM.nextInt(radius));
         z = player.posZ + (radius / 2 - RANDOM.nextInt(radius));
 
-        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-
         if (entity != null)
         {
+            if (dataFromClient.getBoolean(EntityType.AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
             entity.setPosition(x, y, z);
             player.worldObj.spawnEntityInWorld(entity);
 
             Entity entity1 = entity;
-            for (NBTTagCompound tag = dataFromClient; tag.hasKey("Riding"); tag = tag.getCompoundTag("Riding"))
+            for (NBTTagCompound tag = dataFromClient; tag.hasKey(EntityType.RIDING_KEY); tag = tag.getCompoundTag(EntityType.RIDING_KEY))
             {
-                Entity entity2 = EntityList.createEntityFromNBT(tag.getCompoundTag("Riding"), player.getEntityWorld());
+                Entity entity2 = EntityList.createEntityFromNBT(tag.getCompoundTag(EntityType.RIDING_KEY), player.getEntityWorld());
 
                 if (entity2 != null)
                 {
+                    if (tag.getCompoundTag(EntityType.RIDING_KEY).getBoolean(EntityType.AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
+
                     entity2.setPosition(x, y, z);
                     player.worldObj.spawnEntityInWorld(entity2);
                     entity1.mountEntity(entity2);

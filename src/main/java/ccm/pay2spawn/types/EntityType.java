@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.EntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
@@ -36,6 +37,7 @@ import net.minecraftforge.common.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -62,8 +64,9 @@ public class EntityType extends TypeBase
     public static final String RIDING_KEY     = "Riding";
     public static final String RANDOM_KEY     = "random";
 
-    public static final HashSet<String>         NAMES   = new HashSet<>();
-    public static final HashMap<String, String> typeMap = new HashMap<>();
+    public static final HashSet<String>         NAMES    = new HashSet<>();
+    public static final HashMap<String, String> typeMap  = new HashMap<>();
+    public static final String                  NODENAME = NAME;
 
     private static int radius = 10;
 
@@ -110,6 +113,21 @@ public class EntityType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new EntityTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        for (String s : EntityType.NAMES) nodes.add(new Node(EntityType.NODENAME, s));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
+        return new Node(EntityType.NODENAME, EntityList.getEntityString(entity));
     }
 
     @Override

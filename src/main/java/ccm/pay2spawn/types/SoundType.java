@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.SoundTypeGui;
 import com.google.common.base.Throwables;
@@ -42,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -58,6 +60,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
  */
 public class SoundType extends TypeBase
 {
+    public static final String NAME          = "sound";
     public static final String SOUNDNAME_KEY = "soundName";
     public static final String VOLUME_KEY    = "volume";
     public static final String PITCH_KEY     = "pitch";
@@ -84,7 +87,7 @@ public class SoundType extends TypeBase
     @Override
     public String getName()
     {
-        return "sound";
+        return NAME;
     }
 
     @Override
@@ -162,6 +165,20 @@ public class SoundType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new SoundTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        for (String s : all) nodes.add(new Node(NAME, s));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NAME, dataFromClient.getString(SOUNDNAME_KEY));
     }
 
     /**

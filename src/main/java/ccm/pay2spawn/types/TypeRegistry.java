@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.PermissionsHandler;
 import net.minecraftforge.common.Configuration;
 
 import java.util.ArrayList;
@@ -75,6 +76,14 @@ public class TypeRegistry
         for (TypeBase type : map.values())
         {
             type.doConfig(configuration);
+        }
+    }
+
+    public static void registerPermissions()
+    {
+        for (TypeBase type : map.values())
+        {
+            PermissionsHandler.register(type.getPermissionNodes());
         }
     }
 

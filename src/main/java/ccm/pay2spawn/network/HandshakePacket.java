@@ -54,9 +54,9 @@ public class HandshakePacket
     private static final String HANDSHAKE_ON               = "on";
     private static final String HANDSHAKE_RELOAD           = "reload";
 
-    public static void sendDebugToPlayer(Player player)
+    public static void sendDebugToPlayer(EntityPlayer player)
     {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_DEBUG.getBytes()), player);
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_DEBUG.getBytes()), (Player) player);
     }
 
     public static void sendHandshakeToPlayer(Player player)

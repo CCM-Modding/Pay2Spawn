@@ -24,9 +24,12 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PotionEffectTypeGui;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -36,7 +39,9 @@ import net.minecraft.potion.PotionEffect;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 import static ccm.pay2spawn.util.JsonNBTHelper.BYTE;
@@ -49,6 +54,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.INT;
  */
 public class PotionEffectType extends TypeBase
 {
+    public static final String NODENAME = "potioneffect";
     public static final String ID_KEY        = "Id";
     public static final String AMPLIFIER_KEY = "Amplifier";
     public static final String DURATION_KEY  = "Duration";
@@ -66,7 +72,7 @@ public class PotionEffectType extends TypeBase
     @Override
     public String getName()
     {
-        return "potioneffect";
+        return NODENAME;
     }
 
     @Override
@@ -118,5 +124,31 @@ public class PotionEffectType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new PotionEffectTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+
+        for (Potion potion : Potion.potionTypes)
+        {
+            if (potion != null)
+            {
+                String name = potion.getName();
+                if (name.startsWith("potion.")) name = name.substring("potion.".length());
+                nodes.add(new Node(NODENAME, name.replace(".", "_")));
+            }
+        }
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(dataFromClient);
+        String name = effect.getEffectName();
+        if (name.startsWith("potion.")) name = name.substring("potion.".length());
+        return new Node(NODENAME, name.replace(".", "_"));
     }
 }

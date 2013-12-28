@@ -30,6 +30,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 import java.io.ByteArrayInputStream;
@@ -76,7 +77,7 @@ public class RedonatePacket
         Helper.msg("[P2S] Redoing " + donation.get("twitchUsername").getAsString() + "'s donation of " + donation.get("amount").getAsString() + ".");
     }
 
-    public static void send(Player player, double amount)
+    public static void send(EntityPlayer player, double amount)
     {
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(streambyte);
@@ -92,7 +93,7 @@ public class RedonatePacket
             e.printStackTrace();
         }
 
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_REDONATE, streambyte.toByteArray()), player);
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_REDONATE, streambyte.toByteArray()), (Player) player);
     }
 
     public static void send(Player player, int id)

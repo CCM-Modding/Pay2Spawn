@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.LightningTypeGui;
 import com.google.gson.JsonObject;
@@ -35,7 +36,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
@@ -51,6 +54,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.INT;
  */
 public class LightningType extends TypeBase
 {
+    public static final String NODENAME = "lightning";
     public static final String SPREAD_KEY = "spread";
     public static final String TYPE_KEY = "type";
 
@@ -71,7 +75,7 @@ public class LightningType extends TypeBase
     @Override
     public String getName()
     {
-        return "lightning";
+        return NODENAME;
     }
 
     @Override
@@ -134,5 +138,30 @@ public class LightningType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new LightningTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        nodes.add(new Node(NODENAME, "player"));
+        nodes.add(new Node(NODENAME, "nearest"));
+        nodes.add(new Node(NODENAME, "rnd_entity"));
+        nodes.add(new Node(NODENAME, "rnd_spot"));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        if (!dataFromClient.hasKey(TYPE_KEY)) dataFromClient.setInteger(TYPE_KEY, RND_SPOT);
+        switch (dataFromClient.getInteger(TYPE_KEY))
+        {
+            case PLAYER_ENTITY: return new Node(NODENAME, "player");
+            case NEAREST_ENTITY: return new Node(NODENAME, "nearest");
+            case RND_SPOT: return new Node(NODENAME, "rnd_entity");
+            case RND_ENTITY: return new Node(NODENAME, "rnd_spot");
+            default: return new Node(NODENAME, "player");
+        }
     }
 }

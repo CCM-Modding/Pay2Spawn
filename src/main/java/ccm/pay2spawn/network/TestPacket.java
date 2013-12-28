@@ -24,6 +24,8 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.PermissionsHandler;
+import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -32,6 +34,7 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.MemoryConnection;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.ChatMessageComponent;
@@ -64,15 +67,18 @@ public class TestPacket
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_TEST, streambyte.toByteArray()));
     }
 
-    public static void reconstruct(Packet250CustomPayload packet, Player player) throws IOException
+    public static void reconstruct(Packet250CustomPayload packet, Player playero) throws IOException
     {
+        EntityPlayer player = (EntityPlayer) playero;
         ByteArrayInputStream streambyte = new ByteArrayInputStream(packet.data);
         DataInputStream stream = new DataInputStream(streambyte);
         String name = stream.readUTF();
         String json = stream.readUTF();
-        ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
-        Pay2Spawn.getLogger().info("Test by " + ((EntityPlayer) player).getEntityName() + " Type: " + name + " Data: " + json);
-        TypeRegistry.getByName(name).spawnServerSide((EntityPlayer) player, JsonNBTHelper.parseJSON(JsonNBTHelper.PARSER.parse(json).getAsJsonObject()));
+        player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
+        Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
+        TypeBase type = TypeRegistry.getByName(name);
+        NBTTagCompound nbt = JsonNBTHelper.parseJSON(JsonNBTHelper.PARSER.parse(json).getAsJsonObject());
+        if (!PermissionsHandler.needPermCheck(player) || PermissionsHandler.hasPermissionNode(player, type.getPermissionNode(player, nbt))) type.spawnServerSide(player, nbt);
         stream.close();
         streambyte.close();
     }

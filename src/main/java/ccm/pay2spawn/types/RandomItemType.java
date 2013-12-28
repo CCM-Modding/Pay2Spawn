@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.RandomItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -36,7 +37,9 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
@@ -64,9 +67,9 @@ public class RandomItemType extends TypeBase
         NBTTagCompound root = new NBTTagCompound();
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound display = new NBTTagCompound();
-        display.setString("Name", "$name");
-        tag.setCompoundTag("display", display);
-        root.setCompoundTag("tag", tag);
+        display.setString(NAME_KEY, "$name");
+        tag.setCompoundTag(DISPLAY_KEY, display);
+        root.setCompoundTag(TAG_KEY, tag);
 
         return root;
     }
@@ -96,6 +99,37 @@ public class RandomItemType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new RandomItemTypeGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        ArrayList<ItemStack> itemStacks = new ArrayList<>();
+        for (Item item : Item.itemsList)
+        {
+            if (item == null) continue;
+
+            item.getSubItems(item.itemID, CreativeTabs.tabAllSearch, itemStacks);
+        }
+
+        HashSet<Node> nodes = new HashSet<>();
+        for (ItemStack itemStack : itemStacks)
+        {
+            String name = itemStack.getUnlocalizedName();
+            if (name.startsWith("item.")) name = name.substring(5);
+            nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
+        }
+
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+        String name = itemStack.getUnlocalizedName();
+        if (name.startsWith("item.")) name = name.substring("item.".length());
+        return new Node(ItemType.NAME, name.replace(".", "_"));
     }
 
     public ItemStack pickRandomItemStack()

@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.XPOrbsGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityXPOrb;
@@ -30,13 +31,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 import static ccm.pay2spawn.util.JsonNBTHelper.INT;
 
 public class XPOrbsType extends TypeBase
 {
+    public static final String                  NODENAME = "xporbs";
     public static final String AMOUNTOFORBS_KEY = "amoutOfOrbs";
 
     public static final HashMap<String, String> typeMap = new HashMap<>();
@@ -49,7 +53,7 @@ public class XPOrbsType extends TypeBase
     @Override
     public String getName()
     {
-        return "xporbs";
+        return NODENAME;
     }
 
     @Override
@@ -78,5 +82,19 @@ public class XPOrbsType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new XPOrbsGui(rewardID, getName(), data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+        nodes.add(new Node(NODENAME));
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NODENAME);
     }
 }

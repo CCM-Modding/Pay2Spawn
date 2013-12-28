@@ -24,13 +24,19 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 
 /**
  * Spawn an itemstack
@@ -40,7 +46,7 @@ import net.minecraft.nbt.NBTTagCompound;
  */
 public class ItemType extends TypeBase
 {
-    private static final String NAME = "item";
+    public static final String NAME = "item";
 
     @Override
     public String getName()
@@ -74,5 +80,36 @@ public class ItemType extends TypeBase
     public void openNewGui(int rewardID, JsonObject data)
     {
         new ItemTypeGui(rewardID, getName(), data, null);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        ArrayList<ItemStack> itemStacks = new ArrayList<>();
+        for (Item item : Item.itemsList)
+        {
+            if (item == null) continue;
+
+            item.getSubItems(item.itemID, CreativeTabs.tabAllSearch, itemStacks);
+        }
+
+        HashSet<Node> nodes = new HashSet<>();
+        for (ItemStack itemStack : itemStacks)
+        {
+            String name = itemStack.getUnlocalizedName();
+            if (name.startsWith("item.")) name = name.substring(5);
+            nodes.add(new Node(NAME, name.replace(".", "_")));
+        }
+
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
+        String name = itemStack.getUnlocalizedName();
+        if (name.startsWith("item.")) name = name.substring("item.".length());
+        return new Node(NAME, name.replace(".", "_"));
     }
 }

@@ -27,6 +27,7 @@ import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.network.ConfigSyncPacket;
 import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
+import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
@@ -44,6 +45,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -89,7 +91,7 @@ public class Pay2Spawn
         return instance.configFolder;
     }
 
-    public static File getDBFile() { return new File(instance.configFolder, NAME + ".json"); }
+    public static File getRewardDBFile() { return new File(instance.configFolder, NAME + ".json"); }
 
     public static DonationCheckerThread getDonationCheckerThread() { return instance.donationCheckerThread; }
 
@@ -116,7 +118,7 @@ public class Pay2Spawn
     {
         TypeRegistry.doConfig(config.configuration);
         config.configuration.save();
-        rewardsDB = new RewardsDB(getDBFile());
+        rewardsDB = new RewardsDB(getRewardDBFile());
         MetricsHelper.init();
 
         if (event.getSide().isClient())
@@ -135,8 +137,9 @@ public class Pay2Spawn
     }
 
     @Mod.EventHandler
-    public void serverStarting(FMLServerStartingEvent event)
+    public void serverStarting(FMLServerStartingEvent event) throws IOException
     {
+        PermissionsHandler.init();
         try
         {
             ConfigSyncPacket.serverConfig = JsonNBTHelper.PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
