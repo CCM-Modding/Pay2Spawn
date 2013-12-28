@@ -162,6 +162,14 @@ public class Pay2Spawn
     {
         instance.rewardsDB = new RewardsDB(new File(instance.configFolder, NAME + ".json"));
         ConfiguratorManager.reload();
+        try
+        {
+            PermissionsHandler.init();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void reloadDBFromServer(String input)

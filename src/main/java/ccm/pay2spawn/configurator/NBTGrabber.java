@@ -34,7 +34,6 @@ import java.awt.event.ActionListener;
 
 public class NBTGrabber implements IIHasCallback
 {
-    private final JFrame    frame;
     public        JButton   grabEntityButton;
     public        JTextPane out;
     public        JPanel    panel1;
@@ -43,7 +42,7 @@ public class NBTGrabber implements IIHasCallback
 
     public NBTGrabber()
     {
-        frame = new JFrame("NBTGrabber");
+        JFrame frame = new JFrame("NBTGrabber");
         frame.setContentPane(panel1);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setPreferredSize(new Dimension(450, 600));

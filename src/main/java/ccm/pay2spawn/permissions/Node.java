@@ -44,15 +44,13 @@ public class Node
 
     public boolean matches(Node requestNode)
     {
-        return this.equals(requestNode) || checkPart(0, requestNode);
-    }
-
-    private boolean checkPart(int i, Node requestNode)
-    {
-        if (i < parts.length || requestNode.parts.length < i) return false;
-        if (parts[i].equals("*")) return true;
-        if (parts[i].equals(requestNode.parts[i])) return true;
-        return checkPart(++i, requestNode);
+        if (this.equals(requestNode)) return true;
+        for (int i = 0; i < this.parts.length && i < requestNode.parts.length; i++)
+        {
+            if (this.parts[i].equals("*")) return true;
+            if (!this.parts[i].equals(requestNode.parts[i])) return false;
+        }
+        return true;
     }
 
     @Override

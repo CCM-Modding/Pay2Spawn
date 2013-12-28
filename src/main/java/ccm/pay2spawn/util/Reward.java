@@ -25,6 +25,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
@@ -36,6 +37,8 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 
@@ -117,14 +120,17 @@ public class Reward
                 JsonObject reward = element.getAsJsonObject();
                 TypeBase type = TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase());
                 NBTTagCompound nbt = JsonNBTHelper.parseJSON(reward.getAsJsonObject("data"));
-                if (PermissionsHandler.needPermCheck(player))
+                Node node = type.getPermissionNode(player, nbt);
+                if (BanHelper.isBanned(node))
                 {
-                    Node node = type.getPermissionNode(player, nbt);
-                    if (!PermissionsHandler.hasPermissionNode(player, node))
-                    {
-                        Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
-                        continue;
-                    }
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
+                    Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+                    continue;
+                }
+                if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
+                {
+                    Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                    continue;
                 }
                 type.spawnServerSide(player, nbt);
             }

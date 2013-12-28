@@ -24,6 +24,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
@@ -82,14 +83,18 @@ public class TestPacket
         Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
         TypeBase type = TypeRegistry.getByName(name);
         NBTTagCompound nbt = JsonNBTHelper.parseJSON(JsonNBTHelper.PARSER.parse(json).getAsJsonObject());
-        if (PermissionsHandler.needPermCheck(player))
+
+        Node node = type.getPermissionNode(player, nbt);
+        if (BanHelper.isBanned(node))
         {
-            Node node = type.getPermissionNode(player, nbt);
-            if (!PermissionsHandler.hasPermissionNode(player, node))
-            {
-                Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
-                return;
-            }
+            player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
+            Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+            return;
+        }
+        if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
+        {
+            Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+            return;
         }
         type.spawnServerSide(player, nbt);
     }

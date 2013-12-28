@@ -23,7 +23,10 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
+import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.EntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
@@ -32,6 +35,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
@@ -155,6 +160,19 @@ public class EntityType extends TypeBase
             for (NBTTagCompound tag = dataFromClient; tag.hasKey(RIDING_KEY); tag = tag.getCompoundTag(RIDING_KEY))
             {
                 Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag(RIDING_KEY).getString(ENTITYNAME_KEY), player.getEntityWorld());
+
+                Node node = this.getPermissionNode(player, tag.getCompoundTag(EntityType.RIDING_KEY));
+                if (BanHelper.isBanned(node))
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
+                    Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+                    continue;
+                }
+                if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
+                {
+                    Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                    continue;
+                }
 
                 if (entity2 != null)
                 {

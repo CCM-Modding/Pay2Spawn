@@ -23,48 +23,19 @@
 
 package ccm.pay2spawn.permissions;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashSet;
 
-public class PermissionsHandler
+public class BanHelper
 {
-    private static PermissionsDB   permissionsDB = new PermissionsDB();
-    private static HashSet<String> nodes         = new HashSet<>();
+    private static BanList   banList = new BanList();
 
-    public static boolean hasPermissionNode(EntityPlayer player, Node node)
+    public static boolean isBanned(Node node)
     {
-        return permissionsDB.check(player.getEntityName(), node);
+        return banList.contains(node);
     }
 
     public static void init() throws IOException
     {
-        permissionsDB.load();
-        BanHelper.init();
-    }
-
-    public static void register(Collection<Node> nodesToAdd)
-    {
-        for (Node node : nodesToAdd)
-            nodes.add(node.toString());
-    }
-
-    public static boolean needPermCheck(EntityPlayer player)
-    {
-        MinecraftServer mcs = MinecraftServer.getServer();
-        return !(mcs.isSinglePlayer() || mcs.getConfigurationManager().isPlayerOpped(player.getEntityName()));
-    }
-
-    public static PermissionsDB getDB()
-    {
-        return permissionsDB;
-    }
-
-    public static Iterable<String> getAllPermNodes()
-    {
-        return nodes;
+        banList.load();
     }
 }
