@@ -87,7 +87,6 @@ public class CommandP2S extends CommandBase
             sender.sendChatToPlayer(ChatMessageComponent.createFromText(HELP));
             sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
         }
-
         switch (args[0])
         {
             case "debug":

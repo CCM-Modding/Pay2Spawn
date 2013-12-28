@@ -108,8 +108,7 @@ public class PermissionsDB
         if (player.hasSpecificPermissionFor(node)) return true;
         for (String groupName : player.getGroups())
         {
-            if (checkGroup(entityName, node)) return true;
-            else player.removeGroup(groupName);
+            if (checkGroup(groupName, node)) return true;
         }
         return false;
     }
@@ -147,5 +146,10 @@ public class PermissionsDB
     public Iterable getPlayers()
     {
         return playerDB.keySet();
+    }
+
+    public void newPlayer(String name)
+    {
+        playerDB.put(name, new Player(name));
     }
 }

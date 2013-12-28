@@ -25,6 +25,8 @@ package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
+import ccm.pay2spawn.permissions.PermissionsDB;
+import ccm.pay2spawn.permissions.PermissionsHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,6 +82,7 @@ public class HandshakePacket
         }
         else if (message.equals(HANDSHAKE_CLIENT_TO_SERVER))
         {
+            PermissionsHandler.getDB().newPlayer(((EntityPlayer) player).getEntityName());
             playersWithHandshake.add(((EntityPlayer) player).getEntityName());
             if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
         }

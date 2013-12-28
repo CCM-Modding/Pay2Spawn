@@ -25,6 +25,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
@@ -116,7 +117,16 @@ public class Reward
                 JsonObject reward = element.getAsJsonObject();
                 TypeBase type = TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase());
                 NBTTagCompound nbt = JsonNBTHelper.parseJSON(reward.getAsJsonObject("data"));
-                if (!PermissionsHandler.needPermCheck(player) || PermissionsHandler.hasPermissionNode(player, type.getPermissionNode(player, nbt))) type.spawnServerSide(player, nbt);
+                if (PermissionsHandler.needPermCheck(player))
+                {
+                    Node node = type.getPermissionNode(player, nbt);
+                    if (!PermissionsHandler.hasPermissionNode(player, node))
+                    {
+                        Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                        continue;
+                    }
+                }
+                type.spawnServerSide(player, nbt);
             }
             catch (Exception e)
             {

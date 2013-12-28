@@ -87,10 +87,8 @@ public class Group
 
         Group group = (Group) o;
 
-        if (!name.equals(group.name)) return false;
-        if (!nodes.equals(group.nodes)) return false;
+        return name.equals(group.name) && nodes.equals(group.nodes) && parent.equals(group.parent);
 
-        return true;
     }
 
     @Override
@@ -98,6 +96,7 @@ public class Group
     {
         int result = nodes.hashCode();
         result = 31 * result + name.hashCode();
+        result = 31 * result + parent.hashCode();
         return result;
     }
 

@@ -127,6 +127,10 @@ public class Pay2Spawn
             donationCheckerThread.start();
             new EventHandler();
         }
+
+        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
+        PacketHandler packetHandler = new PacketHandler();
+        for (String channel : CHANNELS) NetworkRegistry.instance().registerChannel(packetHandler, channel);
     }
 
     @Mod.EventHandler
@@ -150,9 +154,6 @@ public class Pay2Spawn
             e.printStackTrace();
         }
         event.registerServerCommand(new CommandP2S());
-        NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
-        PacketHandler packetHandler = new PacketHandler();
-        for (String channel : CHANNELS) NetworkRegistry.instance().registerChannel(packetHandler, channel);
 
         // for (String node : PermissionsHandler.getAllPermNodes()) logger.info(node);
     }

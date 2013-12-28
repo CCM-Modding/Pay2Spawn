@@ -24,6 +24,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
@@ -74,12 +75,22 @@ public class TestPacket
         DataInputStream stream = new DataInputStream(streambyte);
         String name = stream.readUTF();
         String json = stream.readUTF();
+        stream.close();
+        streambyte.close();
+
         player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
         Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
         TypeBase type = TypeRegistry.getByName(name);
         NBTTagCompound nbt = JsonNBTHelper.parseJSON(JsonNBTHelper.PARSER.parse(json).getAsJsonObject());
-        if (!PermissionsHandler.needPermCheck(player) || PermissionsHandler.hasPermissionNode(player, type.getPermissionNode(player, nbt))) type.spawnServerSide(player, nbt);
-        stream.close();
-        streambyte.close();
+        if (PermissionsHandler.needPermCheck(player))
+        {
+            Node node = type.getPermissionNode(player, nbt);
+            if (!PermissionsHandler.hasPermissionNode(player, node))
+            {
+                Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                return;
+            }
+        }
+        type.spawnServerSide(player, nbt);
     }
 }

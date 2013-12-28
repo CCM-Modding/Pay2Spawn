@@ -35,13 +35,17 @@ public class Player
     private HashSet<String> groups        = new HashSet<>();
     private HashSet<Node>   overrideNodes = new HashSet<>();
     private String name;
-    private Iterable nodes;
 
     public Player(JsonObject jsonObject)
     {
         name = jsonObject.get("name").getAsString();
-        for (JsonElement groupName : jsonObject.getAsJsonArray("groups")) groups.add(groupName.getAsString());
-        for (JsonElement node : jsonObject.getAsJsonArray("overrideNodes")) overrideNodes.add(new Node(node.getAsString()));
+        if (jsonObject.has("groups")) for (JsonElement groupName : jsonObject.getAsJsonArray("groups")) groups.add(groupName.getAsString());
+        if (jsonObject.has("overrideNodes")) for (JsonElement node : jsonObject.getAsJsonArray("overrideNodes")) overrideNodes.add(new Node(node.getAsString()));
+    }
+
+    public Player(String name)
+    {
+        this.name = name;
     }
 
     public String getName()
@@ -93,11 +97,8 @@ public class Player
 
         Player player = (Player) o;
 
-        if (!groups.equals(player.groups)) return false;
-        if (!name.equals(player.name)) return false;
-        if (!overrideNodes.equals(player.overrideNodes)) return false;
+        return groups.equals(player.groups) && name.equals(player.name) && overrideNodes.equals(player.overrideNodes);
 
-        return true;
     }
 
     @Override
