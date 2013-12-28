@@ -40,7 +40,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.INT;
 
 public class XPOrbsType extends TypeBase
 {
-    public static final String                  NODENAME = "xporbs";
+    public static final String NODENAME         = "xporbs";
     public static final String AMOUNTOFORBS_KEY = "amoutOfOrbs";
 
     public static final HashMap<String, String> typeMap = new HashMap<>();

@@ -77,7 +77,7 @@ public class EventHandler
     }
 
     // HUD messages
-    public final static ArrayList<String> TOP  = new ArrayList<>();
+    public final static ArrayList<String> TOP    = new ArrayList<>();
     public final static ArrayList<String> RECENT = new ArrayList<>();
 
     @ForgeSubscribe

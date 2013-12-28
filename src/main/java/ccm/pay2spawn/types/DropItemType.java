@@ -25,7 +25,6 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.permissions.Node;
-import ccm.pay2spawn.permissions.PermissionsHandler;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,7 +34,8 @@ import java.util.HashSet;
 
 public class DropItemType extends TypeBase
 {
-    public static final String                  NODENAME = "dropitem";
+    public static final String NODENAME = "dropitem";
+
     @Override
     public String getName()
     {

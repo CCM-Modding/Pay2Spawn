@@ -24,8 +24,6 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.permissions.PermissionsDB;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
@@ -101,7 +99,7 @@ public class HandshakePacket
             Pay2Spawn.enable = true;
             ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Spawning on.").setColor(EnumChatFormatting.RED));
         }
-        else if(message.equals(HANDSHAKE_RELOAD))
+        else if (message.equals(HANDSHAKE_RELOAD))
         {
             Pay2Spawn.reloadDB();
             ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));

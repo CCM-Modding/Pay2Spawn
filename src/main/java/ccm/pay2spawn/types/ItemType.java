@@ -28,7 +28,6 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -93,7 +92,7 @@ public class ItemType extends TypeBase
             if (item.getHasSubtypes())
             {
                 HashSet<String> names = new HashSet<>();
-                for (short s = 0; s < Short.MAX_VALUE; s ++)
+                for (short s = 0; s < Short.MAX_VALUE; s++)
                 {
                     ItemStack is = new ItemStack(item, 1, s);
                     if (!names.contains(is.getUnlocalizedName()))
@@ -102,7 +101,7 @@ public class ItemType extends TypeBase
                         itemStacks.add(is);
                     }
                 }
-                for (short s = 0; s > Short.MIN_VALUE; s --)
+                for (short s = 0; s > Short.MIN_VALUE; s--)
                 {
                     ItemStack is = new ItemStack(item, 1, s);
                     if (!names.contains(is.getUnlocalizedName()))

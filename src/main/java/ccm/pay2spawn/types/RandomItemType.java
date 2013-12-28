@@ -112,7 +112,7 @@ public class RandomItemType extends TypeBase
             if (item.getHasSubtypes())
             {
                 HashSet<String> names = new HashSet<>();
-                for (short s = 0; s < Short.MAX_VALUE; s ++)
+                for (short s = 0; s < Short.MAX_VALUE; s++)
                 {
                     ItemStack is = new ItemStack(item, 1, s);
                     if (!names.contains(is.getUnlocalizedName()))
@@ -121,7 +121,7 @@ public class RandomItemType extends TypeBase
                         itemStacks.add(is);
                     }
                 }
-                for (short s = 0; s > Short.MIN_VALUE; s --)
+                for (short s = 0; s > Short.MIN_VALUE; s--)
                 {
                     ItemStack is = new ItemStack(item, 1, s);
                     if (!names.contains(is.getUnlocalizedName()))

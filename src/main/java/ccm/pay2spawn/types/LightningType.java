@@ -54,14 +54,14 @@ import static ccm.pay2spawn.util.JsonNBTHelper.INT;
  */
 public class LightningType extends TypeBase
 {
-    public static final String NODENAME = "lightning";
+    public static final String NODENAME   = "lightning";
     public static final String SPREAD_KEY = "spread";
-    public static final String TYPE_KEY = "type";
+    public static final String TYPE_KEY   = "type";
 
-    public static final int PLAYER_ENTITY = 0;
+    public static final int PLAYER_ENTITY  = 0;
     public static final int NEAREST_ENTITY = 1;
-    public static final int RND_ENTITY = 2;
-    public static final int RND_SPOT = 3;
+    public static final int RND_ENTITY     = 2;
+    public static final int RND_SPOT       = 3;
 
 
     public static final HashMap<String, String> typeMap = new HashMap<>();
@@ -157,11 +157,16 @@ public class LightningType extends TypeBase
         if (!dataFromClient.hasKey(TYPE_KEY)) dataFromClient.setInteger(TYPE_KEY, RND_SPOT);
         switch (dataFromClient.getInteger(TYPE_KEY))
         {
-            case PLAYER_ENTITY: return new Node(NODENAME, "player");
-            case NEAREST_ENTITY: return new Node(NODENAME, "nearest");
-            case RND_SPOT: return new Node(NODENAME, "rnd_entity");
-            case RND_ENTITY: return new Node(NODENAME, "rnd_spot");
-            default: return new Node(NODENAME, "player");
+            case PLAYER_ENTITY:
+                return new Node(NODENAME, "player");
+            case NEAREST_ENTITY:
+                return new Node(NODENAME, "nearest");
+            case RND_SPOT:
+                return new Node(NODENAME, "rnd_entity");
+            case RND_ENTITY:
+                return new Node(NODENAME, "rnd_spot");
+            default:
+                return new Node(NODENAME, "player");
         }
     }
 }

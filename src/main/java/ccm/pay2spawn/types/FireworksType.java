@@ -44,7 +44,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.*;
 
 public class FireworksType extends TypeBase
 {
-    public static final String                  NODENAME = "fireworks";
+    public static final String NODENAME = "fireworks";
 
     public static final String FLIGHT_KEY  = "Flight";
     public static final String TYPE_KEY    = "Type";

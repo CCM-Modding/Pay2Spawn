@@ -24,7 +24,6 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
-import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;

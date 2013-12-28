@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn;
 
-import ccm.pay2spawn.network.RedonatePacket;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
@@ -32,7 +31,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
-import scala.sys.process.processInternal;
 
 import java.io.*;
 import java.net.URL;

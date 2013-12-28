@@ -37,9 +37,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
-import sun.net.www.content.audio.wav;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -94,7 +92,8 @@ public class CommandP2S extends CommandBase
                 else sender.sendChatToPlayer(ChatMessageComponent.createFromText("You have to be OP to enable debug mode.").setColor(EnumChatFormatting.RED));
                 break;
             case "reload":
-                if (Pay2Spawn.getConfig().forceServerconfig && FMLCommonHandler.instance().getSide().isServer()) sender.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] You can't do that with forced server configs. Reboot the server.").setColor(EnumChatFormatting.RED));
+                if (Pay2Spawn.getConfig().forceServerconfig && FMLCommonHandler.instance().getSide().isServer())
+                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] You can't do that with forced server configs. Reboot the server.").setColor(EnumChatFormatting.RED));
                 else HandshakePacket.reload(player);
                 break;
             case "configure":
@@ -151,11 +150,11 @@ public class CommandP2S extends CommandBase
                                 case "add":
                                     String parent = args.length == 5 ? args[4] : null;
                                     PermissionsHandler.getDB().newGroup(name, parent);
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Added new group named '" + name + (parent != null ? "' with parent group '" + parent : "") + "'." ));
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Added new group named '" + name + (parent != null ? "' with parent group '" + parent : "") + "'."));
                                     break;
                                 case "remove":
                                     PermissionsHandler.getDB().remove(name);
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group named '" + name + "'" ));
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group named '" + name + "'"));
                                     break;
                             }
                         }
@@ -300,7 +299,7 @@ public class CommandP2S extends CommandBase
                         {
                             case "groups":
                                 if (args[2].equals("remove")) return getListOfStringsFromIterableMatchingLastWord(args, PermissionsHandler.getDB().getGroups());
-                                    break;
+                                break;
                             case "group":
                                 return getListOfStringsMatchingLastWord(args, "parent", "add", "remove");
                             case "player":

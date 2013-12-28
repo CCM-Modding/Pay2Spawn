@@ -28,8 +28,6 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PotionEffectTypeGui;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -54,7 +52,7 @@ import static ccm.pay2spawn.util.JsonNBTHelper.INT;
  */
 public class PotionEffectType extends TypeBase
 {
-    public static final String NODENAME = "potioneffect";
+    public static final String NODENAME      = "potioneffect";
     public static final String ID_KEY        = "Id";
     public static final String AMPLIFIER_KEY = "Amplifier";
     public static final String DURATION_KEY  = "Duration";

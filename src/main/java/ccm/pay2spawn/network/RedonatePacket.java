@@ -26,7 +26,6 @@ package ccm.pay2spawn.network;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.client.Minecraft;
@@ -38,7 +37,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import static ccm.pay2spawn.util.Constants.CHANNEL_NBT_REQUEST;
 import static ccm.pay2spawn.util.Constants.CHANNEL_REDONATE;
 
 public class RedonatePacket

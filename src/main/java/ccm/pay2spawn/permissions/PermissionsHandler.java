@@ -32,8 +32,8 @@ import java.util.HashSet;
 
 public class PermissionsHandler
 {
-    private static PermissionsDB permissionsDB = new PermissionsDB();
-    private static HashSet<String> nodes = new HashSet<>();
+    private static PermissionsDB   permissionsDB = new PermissionsDB();
+    private static HashSet<String> nodes         = new HashSet<>();
 
     public static boolean hasPermissionNode(EntityPlayer player, Node node)
     {

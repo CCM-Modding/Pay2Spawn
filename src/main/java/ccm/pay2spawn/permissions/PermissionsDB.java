@@ -35,7 +35,7 @@ import java.util.HashMap;
 public class PermissionsDB
 {
     private HashMap<String, Player> playerDB = new HashMap<>();
-    private HashMap<String, Group> groupDB = new HashMap<>();
+    private HashMap<String, Group>  groupDB  = new HashMap<>();
 
     public void save()
     {
