@@ -171,14 +171,14 @@ public class SoundType extends TypeBase
     public Collection<Node> getPermissionNodes()
     {
         HashSet<Node> nodes = new HashSet<>();
-        for (String s : all) nodes.add(new Node(NAME, s));
+        nodes.add(new Node(NAME));
         return nodes;
     }
 
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        return new Node(NAME, dataFromClient.getString(SOUNDNAME_KEY));
+        return new Node(NAME);
     }
 
     /**

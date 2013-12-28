@@ -62,7 +62,7 @@ public class PermissionsHandler
         return permissionsDB;
     }
 
-    public static Iterable getAllPermNodes()
+    public static Iterable<String> getAllPermNodes()
     {
         return nodes;
     }

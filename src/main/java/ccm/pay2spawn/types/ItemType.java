@@ -90,15 +90,38 @@ public class ItemType extends TypeBase
         {
             if (item == null) continue;
 
-            item.getSubItems(item.itemID, CreativeTabs.tabAllSearch, itemStacks);
+            if (item.getHasSubtypes())
+            {
+                HashSet<String> names = new HashSet<>();
+                for (short s = 0; s < Short.MAX_VALUE; s ++)
+                {
+                    ItemStack is = new ItemStack(item, 1, s);
+                    if (!names.contains(is.getUnlocalizedName()))
+                    {
+                        names.add(is.getUnlocalizedName());
+                        itemStacks.add(is);
+                    }
+                }
+                for (short s = 0; s > Short.MIN_VALUE; s --)
+                {
+                    ItemStack is = new ItemStack(item, 1, s);
+                    if (!names.contains(is.getUnlocalizedName()))
+                    {
+                        names.add(is.getUnlocalizedName());
+                        itemStacks.add(is);
+                    }
+                }
+            }
+            else itemStacks.add(new ItemStack(item));
         }
 
         HashSet<Node> nodes = new HashSet<>();
         for (ItemStack itemStack : itemStacks)
         {
             String name = itemStack.getUnlocalizedName();
-            if (name.startsWith("item.")) name = name.substring(5);
-            nodes.add(new Node(NAME, name.replace(".", "_")));
+            if (name.startsWith("item.")) name = name.substring("item.".length());
+            if (name.startsWith("tile.")) name = name.substring("tile.".length());
+            nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
         }
 
         return nodes;
@@ -110,6 +133,7 @@ public class ItemType extends TypeBase
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
         String name = itemStack.getUnlocalizedName();
         if (name.startsWith("item.")) name = name.substring("item.".length());
+        if (name.startsWith("tile.")) name = name.substring("tile.".length());
         return new Node(NAME, name.replace(".", "_"));
     }
 }

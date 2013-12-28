@@ -126,11 +126,24 @@ public class CommandP2S extends CommandBase
             case "permissions":
             case "permission":
             case "perm":
-                if (args.length == 1) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group|groups|player' for more info."));
+                if (!MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName()))
+                {
+                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("You need to be OP to change permissions.").setColor(EnumChatFormatting.RED));
+                    break;
+                }
+                if (args.length == 1)
+                {
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group|groups|player' for more info."));
+                    break;
+                }
                 switch (args[1])
                 {
                     case "groups":
-                        if (args.length < 4) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm groups add|remove <name> [parent group]' to add or remove a group."));
+                        if (args.length < 4)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm groups add|remove <name> [parent group]' to add or remove a group."));
+                            break;
+                        }
                         else
                         {
                             String name = args[3];
@@ -149,7 +162,11 @@ public class CommandP2S extends CommandBase
                         }
                         break;
                     case "group":
-                        if (args.length < 4) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group <name> add|remove <node>' OR '<name> parent set|clear [name]'"));
+                        if (args.length < 5)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group <name> add|remove <node>' OR '<name> parent set|clear [name]'"));
+                            break;
+                        }
                         else
                         {
                             Group group = PermissionsHandler.getDB().getGroup(args[2]);
@@ -164,11 +181,17 @@ public class CommandP2S extends CommandBase
                                     switch (args[4])
                                     {
                                         case "set":
+                                            if (args.length != 6)
+                                            {
+                                                player.sendChatToPlayer(ChatMessageComponent.createFromText("Use 'parent set <name>."));
+                                                return;
+                                            }
                                             group.setParent(args[5]);
                                             player.sendChatToPlayer(ChatMessageComponent.createFromText("Set parent to: " + args[5]));
                                             break;
                                         case "clear":
                                             group.setParent(null);
+                                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Cleared parent group."));
                                             break;
                                     }
                                     break;
@@ -184,7 +207,11 @@ public class CommandP2S extends CommandBase
                         }
                         break;
                     case "player":
-                        if (args.length < 6) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm player <name> group add|remove <group>' OR '<name> perm add|remove <node>'"));
+                        if (args.length < 6)
+                        {
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm player <name> group add|remove <group>' OR '<name> perm add|remove <node>'"));
+                            break;
+                        }
                         else
                         {
                             Player playero = PermissionsHandler.getDB().getPlayer(args[2]);
@@ -272,6 +299,9 @@ public class CommandP2S extends CommandBase
                     case "perm":
                         switch (args[1])
                         {
+                            case "groups":
+                                if (args[2].equals("remove")) return getListOfStringsFromIterableMatchingLastWord(args, PermissionsHandler.getDB().getGroups());
+                                    break;
                             case "group":
                                 return getListOfStringsMatchingLastWord(args, "parent", "add", "remove");
                             case "player":

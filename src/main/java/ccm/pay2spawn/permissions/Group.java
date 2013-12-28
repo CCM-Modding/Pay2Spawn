@@ -39,7 +39,7 @@ public class Group
     public Group(JsonObject jsonObject)
     {
         name = jsonObject.get("name").getAsString();
-        name = jsonObject.get("parent").getAsString();
+        if (jsonObject.has("parent")) parent = jsonObject.get("parent").getAsString();
         for (JsonElement node : jsonObject.getAsJsonArray("nodes")) nodes.add(new Node(node.getAsString()));
     }
 

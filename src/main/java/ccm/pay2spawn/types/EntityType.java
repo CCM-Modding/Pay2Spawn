@@ -119,7 +119,7 @@ public class EntityType extends TypeBase
     public Collection<Node> getPermissionNodes()
     {
         HashSet<Node> nodes = new HashSet<>();
-        for (String s : EntityType.NAMES) nodes.add(new Node(EntityType.NODENAME, s));
+        for (String s : EntityType.NAMES) nodes.add(new Node(NODENAME, s));
         return nodes;
     }
 
@@ -127,7 +127,7 @@ public class EntityType extends TypeBase
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        return new Node(EntityType.NODENAME, EntityList.getEntityString(entity));
+        return new Node(NODENAME, EntityList.getEntityString(entity));
     }
 
     @Override

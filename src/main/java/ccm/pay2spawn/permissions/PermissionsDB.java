@@ -34,15 +34,16 @@ import java.util.HashMap;
 
 public class PermissionsDB
 {
-    private HashMap<String, Player> playerDB;
-    private HashMap<String, Group> groupDB;
+    private HashMap<String, Player> playerDB = new HashMap<>();
+    private HashMap<String, Group> groupDB = new HashMap<>();
 
     public void save()
     {
         try
         {
             File file = getFile();
-            if (!file.exists()) file.createNewFile();
+            if (!file.exists()) //noinspection ResultOfMethodCallIgnored
+                file.createNewFile();
             JsonObject rootObject = new JsonObject();
 
             JsonArray players = new JsonArray();

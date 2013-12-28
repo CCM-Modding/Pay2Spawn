@@ -132,8 +132,9 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        if (event.getSide().isClient()) for (TypeBase base : TypeRegistry.getAllTypes())
-            base.printHelpList(configFolder);
+        for (TypeBase base : TypeRegistry.getAllTypes()) base.printHelpList(configFolder);
+
+        TypeRegistry.registerPermissions();
     }
 
     @Mod.EventHandler
@@ -151,8 +152,9 @@ public class Pay2Spawn
         event.registerServerCommand(new CommandP2S());
         NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
         PacketHandler packetHandler = new PacketHandler();
-        for (String channel : CHANNELS)
-            NetworkRegistry.instance().registerChannel(packetHandler, channel);
+        for (String channel : CHANNELS) NetworkRegistry.instance().registerChannel(packetHandler, channel);
+
+        // for (String node : PermissionsHandler.getAllPermNodes()) logger.info(node);
     }
 
     public static void reloadDB()
