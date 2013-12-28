@@ -30,6 +30,7 @@ import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
@@ -56,7 +57,7 @@ public class DonationCheckerThread extends Thread
         this.interval = interval;
         this.channel = channel;
         this.API_Key = API_Key;
-        this.URL = "http://donationtrack.nightdev.com/api/poll?channel=" + channel + "&key=" + API_Key;
+        this.URL = "http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + API_Key;
     }
 
     ArrayList<String>     doneIDs = new ArrayList<>();
@@ -76,8 +77,7 @@ public class DonationCheckerThread extends Thread
             {
                 for (JsonObject donation : backlog) process(donation);
 
-                String input = readUrl(URL);
-                JsonObject root = JsonNBTHelper.PARSER.parse(input).getAsJsonObject();
+                JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(URL)).getAsJsonObject();
 
                 if (root.get("status").getAsString().equals("success"))
                 {
@@ -92,6 +92,10 @@ public class DonationCheckerThread extends Thread
 
                 firstrun = false;
                 doWait(interval);
+            }
+            catch (JsonSyntaxException e)
+            {
+                e.printStackTrace();
             }
             catch (Exception e)
             {
@@ -109,7 +113,7 @@ public class DonationCheckerThread extends Thread
         else if (Pay2Spawn.debug || !doneIDs.contains(donation.get("transactionID").getAsString()))
         {
             doneIDs.add(donation.get("transactionID").getAsString());
-            if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
+            if (firstrun || donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
             try
             {
                 Pay2Spawn.getRewardsDB().process(donation);
@@ -238,23 +242,24 @@ public class DonationCheckerThread extends Thread
         }
     }
 
-    private String readUrl(String urlString) throws Exception
+    private String readUrl(String urlString) throws IOException
     {
         BufferedReader reader = null;
+        StringBuilder buffer = new StringBuilder();
+
         try
         {
             URL url = new URL(urlString);
             reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            StringBuilder buffer = new StringBuilder();
+
             int read;
             char[] chars = new char[1024];
             while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);
-
-            return buffer.toString();
         }
         finally
         {
             if (reader != null) reader.close();
         }
+        return buffer.toString();
     }
 }

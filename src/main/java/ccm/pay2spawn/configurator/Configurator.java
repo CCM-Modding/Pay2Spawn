@@ -47,8 +47,8 @@ import java.util.HashSet;
 public class Configurator implements IIHasCallback
 {
     public static final Joiner   JOINER       = Joiner.on(", ").skipNulls();
-    public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "rewards"};
-    public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Types of rewards"};
+    public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};
+    public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Countdown", "Types of rewards"};
     public static Configurator instance;
     public        JFrame       frame;
 
@@ -70,6 +70,7 @@ public class Configurator implements IIHasCallback
     private JLabel        amountLabel;
     public  JButton       duplicateSelectedRewardButton;
     public  JButton       deleteSelectedRewardButton;
+    public  JTextField    countdownTextField;
     public  JButton       deleteButton;
     private JsonObject    currentlyEditingData;
     private int           currentlyEditingID;
@@ -180,6 +181,7 @@ public class Configurator implements IIHasCallback
                     nameField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[0]).getAsString());
                     amountField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[1]).getAsString());
                     messageField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[2]).getAsString());
+                    countdownTextField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[4]).getAsString());
                 }
             }
         });
@@ -291,7 +293,7 @@ public class Configurator implements IIHasCallback
                 {
                     default:
                         return rootArray.get(rowIndex).getAsJsonObject().get(COLUMN_KEYS[columnIndex]).getAsString();
-                    case 3:
+                    case 4:
                         JsonObject jsonObject = rootArray.get(rowIndex).getAsJsonObject();
                         if (jsonObject.has(COLUMN_KEYS[columnIndex])) return "";
                         HashSet<String> types = new HashSet<>();
@@ -386,7 +388,8 @@ public class Configurator implements IIHasCallback
             currentlyEditingData.addProperty(COLUMN_KEYS[1], amountField.getText());
         }
         currentlyEditingData.addProperty(COLUMN_KEYS[2], messageField.getText());
-        currentlyEditingData.add(COLUMN_KEYS[3], rewardData);
+        currentlyEditingData.addProperty(COLUMN_KEYS[3], countdownTextField.getText());
+        currentlyEditingData.add(COLUMN_KEYS[4], rewardData);
 
         return flag;
     }
@@ -406,6 +409,7 @@ public class Configurator implements IIHasCallback
         amountField.setText("");
         messageField.setText("");
         mainTable.updateUI();
+        countdownTextField.setText("");
 
         nameLabel.setForeground(Color.black);
         amountLabel.setForeground(Color.black);
@@ -529,6 +533,27 @@ public class Configurator implements IIHasCallback
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel4.add(amountField, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("Countdown:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(label6, gbc);
+        countdownTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel4.add(countdownTextField, gbc);
+        final JLabel label7 = new JLabel();
+        label7.setText("0 for no countdown");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel4.add(label7, gbc);
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -635,6 +660,7 @@ public class Configurator implements IIHasCallback
         rewards.setLayoutOrientation(0);
         rewards.setSelectionMode(0);
         scrollPane3.setViewportView(rewards);
+        label6.setLabelFor(countdownTextField);
     }
 
     /**
