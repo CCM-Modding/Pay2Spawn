@@ -36,20 +36,46 @@ import static ccm.pay2spawn.util.Constants.CHANNEL_CONFIGURATOR;
 
 public class ConfiguratorManager
 {
-    private static String MESSAGE_INIT = "init";
+    private static String MESSAGE_CONFIGURATOR = "config";
+    private static String MESSAGE_NBTGRABBER = "nbt";
 
-    public static void handleCommand(EntityPlayer player)
+    public static void openConfigurator(EntityPlayer player)
     {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_INIT.getBytes()), (Player) player);
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_CONFIGURATOR.getBytes()), (Player) player);
+    }
+
+    public static void openNBTGrabber(EntityPlayer player)
+    {
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_NBTGRABBER.getBytes()), (Player) player);
     }
 
     public static void handelPacket(Packet250CustomPayload packet, Player player)
     {
         String message = new String(packet.data);
-        if (message.equals(MESSAGE_INIT)) open();
+        if (message.equals(MESSAGE_CONFIGURATOR)) openCfg();
+        if (message.equals(MESSAGE_NBTGRABBER)) openNbt();
     }
 
-    public static void open()
+    public static void openNbt()
+    {
+        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        {
+            try
+            {
+                new NBTGrabber();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            Pay2Spawn.getLogger().warning("WTF? Can't open the NBT Grabber on the server. How did this happen?");
+        }
+    }
+
+    public static void openCfg()
     {
         if (!Pay2Spawn.getRewardsDB().editable) Helper.msg(EnumChatFormatting.GOLD + "[P2S] You can't edit a server side config.");
         else
@@ -80,6 +106,6 @@ public class ConfiguratorManager
             wasthere = Configurator.instance.frame.isVisible();
             Configurator.instance.frame.dispose();
         }
-        if (wasthere) open();
+        if (wasthere) openCfg();
     }
 }

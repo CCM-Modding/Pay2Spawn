@@ -26,6 +26,7 @@ package ccm.pay2spawn.configurator;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Joiner;
 import com.google.gson.*;
@@ -43,7 +44,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class Configurator
+public class Configurator implements IIHasCallback
 {
     public static final Joiner   JOINER       = Joiner.on(", ").skipNulls();
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "rewards"};
@@ -94,8 +95,13 @@ public class Configurator
         ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
     }
 
-    public void callback(int rewardID, String type, JsonObject newData)
+    @Override
+    public void callback(Object... data)
     {
+        int rewardID = (int) data[0];
+        String type = (String) data[1];
+        JsonObject newData = (JsonObject) data[2];
+
         if (rewardID == -1)
         {
             JsonObject object = new JsonObject();

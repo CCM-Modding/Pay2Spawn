@@ -26,6 +26,7 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 
@@ -35,7 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-public class ItemTypeGui extends HelperGuiBase
+public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
 {
     public JScrollPane scrollPane;
     public JTextPane   jsonPane;
@@ -119,14 +120,15 @@ public class ItemTypeGui extends HelperGuiBase
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.request(instance);
+                NbtRequestPacket.requestItem(instance);
             }
         });
     }
 
-    public void serverImport(String s)
+    @Override
+    public void callback(Object... data)
     {
-        data = JsonNBTHelper.PARSER.parse(s).getAsJsonObject();
+        this.data = JsonNBTHelper.PARSER.parse((String) data[0]).getAsJsonObject();
         updateJson();
     }
 

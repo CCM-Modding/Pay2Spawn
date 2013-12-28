@@ -27,6 +27,7 @@ import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import ccm.pay2spawn.types.guis.FireworksTypeGui;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.EventHandler;
+import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -52,13 +53,13 @@ public class NbtRequestPacket
     public static final byte ITEM     = 0;
     public static final byte ENTITY   = 1;
     public static final byte FIREWORK = 2;
-    public static ItemTypeGui         callbackItemTypeGui;
-    public static CustomEntityTypeGui callbackCustomEntityTypeGui;
-    public static FireworksTypeGui    callbackFireworksTypeGui;
+    public static IIHasCallback callbackItemType;
+    public static IIHasCallback callbackCustomEntityType;
+    public static IIHasCallback callbackFireworksType;
 
-    public static void request(CustomEntityTypeGui instance)
+    public static void requestEntity(IIHasCallback instance)
     {
-        callbackCustomEntityTypeGui = instance;
+        callbackCustomEntityType = instance;
         EventHandler.addEntityTracking();
     }
 
@@ -81,9 +82,9 @@ public class NbtRequestPacket
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
     }
 
-    public static void request(FireworksTypeGui instance)
+    public static void requestFirework(IIHasCallback instance)
     {
-        callbackFireworksTypeGui = instance;
+        callbackFireworksType = instance;
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(streambyte);
         try
@@ -100,9 +101,9 @@ public class NbtRequestPacket
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
     }
 
-    public static void request(ItemTypeGui instance)
+    public static void requestItem(IIHasCallback instance)
     {
-        callbackItemTypeGui = instance;
+        callbackItemType = instance;
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(streambyte);
         try
@@ -128,15 +129,15 @@ public class NbtRequestPacket
             switch (stream.readByte())
             {
                 case ITEM:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackItemTypeGui.serverImport(stream.readUTF());
+                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackItemType.callback(stream.readUTF());
                     else respondItem(player);
                     break;
                 case ENTITY:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityTypeGui.serverImport(stream.readUTF());
+                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityType.callback(stream.readUTF());
                     else respondEntity(player, stream.readInt());
                     break;
                 case FIREWORK:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackFireworksTypeGui.serverImport(stream.readUTF());
+                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackFireworksType.callback(stream.readUTF());
                     else respondFirework(player);
                     break;
             }

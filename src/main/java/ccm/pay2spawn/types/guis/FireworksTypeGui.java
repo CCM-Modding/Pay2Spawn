@@ -26,6 +26,7 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.types.FireworksType.*;
 
-public class FireworksTypeGui extends HelperGuiBase
+public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 {
     public JTextField    flightMultiplierTextField;
     public JScrollPane   scrollPane;
@@ -190,7 +191,7 @@ public class FireworksTypeGui extends HelperGuiBase
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.request(instance);
+                NbtRequestPacket.requestFirework(instance);
             }
         });
         addExplosionManuallyButton.addActionListener(new ActionListener()
@@ -214,12 +215,14 @@ public class FireworksTypeGui extends HelperGuiBase
         });
     }
 
-    public void serverImport(String s)
+
+    @Override
+    public void callback(Object... data)
     {
-        data = JsonNBTHelper.PARSER.parse(s).getAsJsonObject();
-        fireworks = data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
-        data.addProperty(AMOUNT_KEY, "INT:5");
-        data.addProperty(RADIUS_KEY, "INT:5");
+        this.data = JsonNBTHelper.PARSER.parse((String) data[0]).getAsJsonObject();
+        this.fireworks = this.data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
+        this.data.addProperty(AMOUNT_KEY, "INT:5");
+        this.data.addProperty(RADIUS_KEY, "INT:5");
         readJson();
     }
 

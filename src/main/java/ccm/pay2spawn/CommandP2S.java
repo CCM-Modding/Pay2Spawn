@@ -97,7 +97,10 @@ public class CommandP2S extends CommandBase
                 else HandshakePacket.reload(player);
                 break;
             case "configure":
-                ConfiguratorManager.handleCommand(player);
+                ConfiguratorManager.openConfigurator(player);
+                break;
+            case "getnbt":
+                ConfiguratorManager.openNBTGrabber(player);
                 break;
             case "off":
                 HandshakePacket.toggle(player, false);
@@ -262,7 +265,7 @@ public class CommandP2S extends CommandBase
         switch (args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "debug", "reload", "configure", "off", "on", "donate", "redonate", "permissions");
+                return getListOfStringsMatchingLastWord(args, "debug", "reload", "configure", "getnbt", "off", "on", "donate", "redonate", "permissions");
             case 2:
                 switch (args[0])
                 {
