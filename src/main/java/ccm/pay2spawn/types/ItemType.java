@@ -144,4 +144,18 @@ public class ItemType extends TypeBase
         if (name.startsWith("tile.")) name = name.substring("tile.".length());
         return new Node(NAME, name.replace(".", "_"));
     }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "stacksize":
+                return jsonObject.get("Count").getAsString().replace("BYTE:", "");
+            case "itemname":
+                ItemStack is = ItemStack.loadItemStackFromNBT(JsonNBTHelper.parseJSON(jsonObject));
+                return is.getItem().getItemDisplayName(is);
+        }
+        return id;
+    }
 }

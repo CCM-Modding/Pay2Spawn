@@ -46,7 +46,7 @@ import java.util.HashSet;
 
 public class Configurator implements IIHasCallback
 {
-    public static final Joiner   JOINER       = Joiner.on(", ").skipNulls();
+
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};
     public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Countdown", "Types of rewards"};
     public static Configurator instance;
@@ -71,7 +71,7 @@ public class Configurator implements IIHasCallback
     public  JButton       duplicateSelectedRewardButton;
     public  JButton       deleteSelectedRewardButton;
     public  JTextField    countdownTextField;
-    public  JButton       deleteButton;
+    public  JButton       makeNiceHtmlPageButton;
     private JsonObject    currentlyEditingData;
     private int           currentlyEditingID;
     private JsonArray     rewardData;
@@ -267,6 +267,21 @@ public class Configurator implements IIHasCallback
                 rewards.updateUI();
             }
         });
+        makeNiceHtmlPageButton.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try
+                {
+                    HTMLGenerator.generate();
+                }
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setupModels()
@@ -298,7 +313,7 @@ public class Configurator implements IIHasCallback
                         if (jsonObject.has(COLUMN_KEYS[columnIndex])) return "";
                         HashSet<String> types = new HashSet<>();
                         for (JsonElement element : jsonObject.getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
-                        return JOINER.join(types);
+                        return Helper.JOINER.join(types);
                 }
             }
 
@@ -435,16 +450,34 @@ public class Configurator implements IIHasCallback
         tabbedPane1 = new JTabbedPane();
         panel1.add(tabbedPane1, BorderLayout.CENTER);
         final JPanel panel2 = new JPanel();
-        panel2.setLayout(new BorderLayout(0, 0));
+        panel2.setLayout(new GridBagLayout());
         tabbedPane1.addTab("List", panel2);
         final JLabel label1 = new JLabel();
         label1.setHorizontalAlignment(0);
         label1.setHorizontalTextPosition(0);
         label1.setText("<html><b>Double click any row to edit!</b></html>");
         label1.putClientProperty("html.disable", Boolean.FALSE);
-        panel2.add(label1, BorderLayout.NORTH);
+        GridBagConstraints gbc;
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel2.add(label1, gbc);
+        makeNiceHtmlPageButton = new JButton();
+        makeNiceHtmlPageButton.setText("Make nice html page!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(makeNiceHtmlPageButton, gbc);
         final JScrollPane scrollPane1 = new JScrollPane();
-        panel2.add(scrollPane1, BorderLayout.CENTER);
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel2.add(scrollPane1, gbc);
         mainTable = new JTable();
         mainTable.setAutoCreateRowSorter(false);
         mainTable.setAutoResizeMode(2);
@@ -455,7 +488,6 @@ public class Configurator implements IIHasCallback
         tabbedPane1.addTab("Add/edit", panel3);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
-        GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;

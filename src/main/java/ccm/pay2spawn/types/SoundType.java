@@ -181,6 +181,17 @@ public class SoundType extends TypeBase
         return new Node(NAME);
     }
 
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "name":
+                return jsonObject.get(SOUNDNAME_KEY).getAsString().replace(typeMap.get(SOUNDNAME_KEY), "");
+        }
+        return id;
+    }
+
     /**
      * Them cheaty ways...
      */

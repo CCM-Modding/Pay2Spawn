@@ -29,6 +29,7 @@ import ccm.pay2spawn.permissions.BanList;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -87,6 +88,24 @@ public class CustomEntityType extends TypeBase
     {
         Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
         return new Node(EntityType.NODENAME, EntityList.getEntityString(entity));
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "entity":
+                StringBuilder sb = new StringBuilder();
+                sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                while (jsonObject.has(EntityType.RIDING_KEY))
+                {
+                    jsonObject = jsonObject.getAsJsonObject(EntityType.RIDING_KEY);
+                    sb.append(" riding a ").append(jsonObject.get("id").getAsString().replace("STRING:", ""));
+                }
+                return sb.toString();
+        }
+        return id;
     }
 
     @Override

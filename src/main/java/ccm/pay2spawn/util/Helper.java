@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.util;
 
+import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -43,6 +44,8 @@ import java.util.Map;
  */
 public class Helper
 {
+    public static final Joiner JOINER = Joiner.on(", ").skipNulls();
+
     /**
      * NBT to byte[]
      * Use for packets

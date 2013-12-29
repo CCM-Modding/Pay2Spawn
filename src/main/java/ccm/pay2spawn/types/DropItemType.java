@@ -73,4 +73,10 @@ public class DropItemType extends TypeBase
     {
         return new Node(NODENAME);
     }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        return id;
+    }
 }

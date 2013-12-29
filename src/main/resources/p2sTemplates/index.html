@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2013 Dries K. Aka Dries007 and the CCM modding crew.
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy of
+  ~ this software and associated documentation files (the "Software"), to deal in
+  ~ the Software without restriction, including without limitation the rights to
+  ~ use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+  ~ the Software, and to permit persons to whom the Software is furnished to do so,
+  ~ subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in all
+  ~ copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+  ~ FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+  ~ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+  ~ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+  ~ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  -->
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Pay2Spawn</title>
+        <meta name="author" content="Dries007">
+        <meta name="Generator" content="Pay2Spawn">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- Le styles -->
+        <link href="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+        <!-- Custom style for footer, centering of all text and the table -->
+        <style type="text/css">
+        html, body {
+	        height: 100%; text-align: center;
+        }
+        th {
+          text-align: center;
+        }
+        #wrap {
+          min-height: 100%;
+          height: auto;
+          margin: 0 auto -50px;
+          padding: 0 0 50px;
+        }
+        #footer {
+          height: 50px;
+        }
+        </style>
+	</head>
+	<body>
+  <!-- Container -->
+  <div class="container container-narrow" id="wrap">
+    <div class="row">
+      <h2>Help or hurt ${channel}!</h2>
+      <p>Donate the appropriate amount <a href="https://www.streamdonations.net/c/${channel}">here</a>!<br>
+      Click any row for more details.</p>
+    </div>
+    <div class="row">
+      <div class="panel-group" id="accordion">
+        <!-- BEGIN REWARDS -->
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" href="#collapse${reward.uid}">
+              <div class="row">
+                  <div class="col-sm-6 text-right">$${reward.amount}:</div>
+                  <div class="col-sm-6 text-left">${reward.name}</div>
+                </div>
+              </a>
+            </h4>
+          </div>
+          <div id="collapse${reward.uid}" class="panel-collapse collapse">
+            <div class="panel-body">
+              <b>Countdown:</b> ${reward.countdown} sec.<br>
+              <b>Message:</b> ${reward.message}<br>
+              <b>Types:</b> ${reward.types}<br>
+              <b>Exact rewards:</b><br>
+              ${reward.rewards}
+            </div>
+          </div>
+        </div>
+        <!-- END REWARDS -->
+      </div>
+    </div>
+  </div>
+  <!-- Footer -->
+		<div id="footer">
+			<div class="container">
+				<p class="muted credit">
+					<a href="https://github.com/CCM-Modding/Pay2Spawn">&copy; Dries007 & CCM</a> 2014<br>
+					Built with 
+					<a href="http://getbootstrap.com/">Bootstrap</a> &amp; <a href="http://www.bootstrapcdn.com/">Bootstrap CDN</a>.
+				</p>
+			</div>
+		</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+  </body>
+</html>

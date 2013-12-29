@@ -24,6 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.RandomItemTypeGui;
@@ -36,6 +37,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -115,6 +117,12 @@ public class RandomItemType extends TypeBase
         if (name.startsWith("item.")) name = name.substring("item.".length());
         if (name.startsWith("tile.")) name = name.substring("tile.".length());
         return new Node(ItemType.NAME, name.replace(".", "_"));
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        return id;
     }
 
     public ItemStack pickRandomItemStack()

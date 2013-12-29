@@ -160,6 +160,12 @@ public class FireworksType extends TypeBase
         return new Node(NODENAME);
     }
 
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        return id;
+    }
+
     private static final Field fireworkAgeField = getHackField(0);
     private static final Field lifetimeField    = getHackField(1);
 

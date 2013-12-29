@@ -23,14 +23,21 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.Node;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.Collection;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Base class for reward types
@@ -39,6 +46,8 @@ import java.util.Collection;
  */
 public abstract class TypeBase
 {
+    public static final Pattern VAR = Pattern.compile("\\$\\{([\\w.]*?)\\}");
+
     /**
      * Used in JSON file
      *
@@ -84,4 +93,33 @@ public abstract class TypeBase
     public abstract Collection<Node> getPermissionNodes();
 
     public abstract Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient);
+
+    public void copyTemplateFile(File destinationFolder) throws IOException
+    {
+        File template = new File(destinationFolder, getName() + ".html");
+        if (!template.exists())
+        {
+            InputStream link = (getClass().getResourceAsStream("/p2sTemplates/" + getName() + ".html"));
+            Files.copy(link, template.getAbsoluteFile().toPath());
+        }
+    }
+
+    public String getHTML(JsonObject data) throws IOException
+    {
+        String text = HTMLGenerator.readFile(getTermlateFile());
+        while (true)
+        {
+            Matcher matcher = VAR.matcher(text);
+            if (!matcher.find()) break;
+            text = text.replace(matcher.group(), replaceInTemplate(matcher.group(1), data));
+        }
+        return text;
+    }
+
+    public File getTermlateFile()
+    {
+        return new File(HTMLGenerator.templateFolder, getName() + ".html");
+    }
+
+    public abstract String replaceInTemplate(String id, JsonObject jsonObject);
 }

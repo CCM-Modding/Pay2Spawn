@@ -25,6 +25,7 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.CommandTypeGui;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import net.minecraft.command.CommandHandler;
@@ -37,22 +38,26 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.Configuration;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static ccm.pay2spawn.util.Constants.MODID;
 import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
 
 public class CommandType extends TypeBase
 {
-    public static final  String                  COMMAND_KEY   = "command";
-    private static final String                  NAME          = "command";
-    public static final  HashMap<String, String> typeMap       = new HashMap<>();
-    public static final HashSet<String>          commands      = new HashSet<>();
-    public boolean feedback       = true;
+    public static final  String                  COMMAND_KEY = "command";
+    private static final String                  NAME        = "command";
+    public static final  HashMap<String, String> typeMap     = new HashMap<>();
+    public static final  HashSet<String>         commands    = new HashSet<>();
+    public               boolean                 feedback    = true;
 
     private static Field commandSetField = getHackField();
 
@@ -121,6 +126,17 @@ public class CommandType extends TypeBase
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         return new Node(NAME, dataFromClient.getString(COMMAND_KEY).split(" ")[0]);
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "cmd":
+                return jsonObject.get(COMMAND_KEY).getAsString().replace(typeMap.get(COMMAND_KEY) + ":", "");
+        }
+        return id;
     }
 
     @Override

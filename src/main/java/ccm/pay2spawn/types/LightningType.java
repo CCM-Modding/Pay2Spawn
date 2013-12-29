@@ -169,4 +169,25 @@ public class LightningType extends TypeBase
                 return new Node(NODENAME, "player");
         }
     }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "target":
+                switch (jsonObject.get(TYPE_KEY).getAsInt())
+                {
+                    case PLAYER_ENTITY:
+                        return "the streamer";
+                    case NEAREST_ENTITY:
+                        return "the nearest entity";
+                    case RND_SPOT:
+                        return "a random near spot";
+                    case RND_ENTITY:
+                        return "a random near entity";
+                }
+        }
+        return id;
+    }
 }

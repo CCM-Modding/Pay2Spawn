@@ -97,4 +97,10 @@ public class XPOrbsType extends TypeBase
     {
         return new Node(NODENAME);
     }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        return id;
+    }
 }

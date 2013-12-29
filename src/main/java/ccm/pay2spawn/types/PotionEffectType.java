@@ -26,6 +26,7 @@ package ccm.pay2spawn.types;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PotionEffectTypeGui;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
@@ -148,5 +149,19 @@ public class PotionEffectType extends TypeBase
         String name = effect.getEffectName();
         if (name.startsWith("potion.")) name = name.substring("potion.".length());
         return new Node(NODENAME, name.replace(".", "_"));
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "effect":
+                PotionEffect effect = PotionEffect.readCustomPotionEffectFromNBT(JsonNBTHelper.parseJSON(jsonObject));
+                return effect.getEffectName() + " " + (effect.getAmplifier() + 1);
+            case "duration":
+                return jsonObject.get(DURATION_KEY).getAsString().replace(typeMap.get(DURATION_KEY), "");
+        }
+        return id;
     }
 }

@@ -136,6 +136,24 @@ public class EntityType extends TypeBase
     }
 
     @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        switch (id)
+        {
+            case "entity":
+                StringBuilder sb = new StringBuilder();
+                sb.append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
+                while (jsonObject.has(RIDING_KEY))
+                {
+                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
+                    sb.append(" riding a ").append(jsonObject.get(ENTITYNAME_KEY).getAsString().replace("STRING:", ""));
+                }
+                return sb.toString();
+        }
+        return id;
+    }
+
+    @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         double x, y, z;

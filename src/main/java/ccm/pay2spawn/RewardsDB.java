@@ -32,7 +32,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Set;
 
 /**
  * The rewards database
@@ -117,5 +119,15 @@ public class RewardsDB
 
             if (map.containsKey(highestmatch)) map.get(highestmatch).addToCountdown(donation);
         }
+    }
+
+    public Set<Double> getAmounts()
+    {
+        return map.keySet();
+    }
+
+    public Collection<Reward> getRewards()
+    {
+        return map.values();
     }
 }

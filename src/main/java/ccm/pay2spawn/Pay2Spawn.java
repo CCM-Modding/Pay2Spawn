@@ -24,6 +24,7 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
+import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.network.ConfigSyncPacket;
 import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
@@ -143,6 +144,15 @@ public class Pay2Spawn
         for (TypeBase base : TypeRegistry.getAllTypes()) base.printHelpList(configFolder);
 
         TypeRegistry.registerPermissions();
+        try
+        {
+            HTMLGenerator.init();
+        }
+        catch (IOException e)
+        {
+            logger.severe("Error initializing the HTMLGenerator.");
+            e.printStackTrace();
+        }
     }
 
     @Mod.EventHandler

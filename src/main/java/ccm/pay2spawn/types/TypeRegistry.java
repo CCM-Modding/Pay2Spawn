@@ -23,9 +23,11 @@
 
 package ccm.pay2spawn.types;
 
+import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import net.minecraftforge.common.Configuration;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -84,6 +86,14 @@ public class TypeRegistry
         for (TypeBase type : map.values())
         {
             PermissionsHandler.register(type.getPermissionNodes());
+        }
+    }
+
+    public static void copyTemplates() throws IOException
+    {
+        for (TypeBase type : map.values())
+        {
+            type.copyTemplateFile(HTMLGenerator.templateFolder);
         }
     }
 

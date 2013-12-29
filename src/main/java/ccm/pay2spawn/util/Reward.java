@@ -30,6 +30,7 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonIOException;
@@ -43,6 +44,7 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
+import java.util.HashSet;
 
 public class Reward
 {
@@ -160,8 +162,30 @@ public class Reward
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
     }
 
-    public int getCountdown()
+    public Integer getCountdown()
     {
         return countdown;
+    }
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public String getTypes()
+    {
+        HashSet<String> types = new HashSet<>();
+        for (JsonElement element : rewards) types.add(element.getAsJsonObject().get("type").getAsString());
+        return Helper.JOINER.join(types);
+    }
+
+    public String getHTML() throws IOException
+    {
+        StringBuilder sb = new StringBuilder();
+        for (JsonElement element : rewards)
+        {
+            sb.append(TypeRegistry.getByName(element.getAsJsonObject().get("type").getAsString()).getHTML(element.getAsJsonObject().getAsJsonObject("data")));
+        }
+        return sb.toString();
     }
 }
