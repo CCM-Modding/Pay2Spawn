@@ -104,49 +104,7 @@ public class RandomItemType extends TypeBase
     @Override
     public Collection<Node> getPermissionNodes()
     {
-        ArrayList<ItemStack> itemStacks = new ArrayList<>();
-        for (Item item : Item.itemsList)
-        {
-            if (item == null) continue;
-
-            // TODO: Fix.
-//            if (item.getHasSubtypes())
-//            {
-//                HashSet<String> names = new HashSet<>();
-//                for (short s = 0; s < Short.MAX_VALUE; s++)
-//                {
-//                    try
-//                    {
-//                        ItemStack is = new ItemStack(item, 1, s);
-//                        if (!names.contains(is.getUnlocalizedName()))
-//                        {
-//                            names.add(is.getUnlocalizedName());
-//                            itemStacks.add(is);
-//                        }
-//                    }
-//                    catch (Exception e)
-//                    {
-//                        // Ignore
-//                    }
-//                }
-//            }
-//            else
-                itemStacks.add(new ItemStack(item));
-        }
-
-        HashSet<Node> nodes = new HashSet<>();
-        for (ItemStack itemStack : itemStacks)
-        {
-            String name = itemStack.getUnlocalizedName();
-            if (name != null)
-            {
-                if (name.startsWith("item.")) name = name.substring("item.".length());
-                if (name.startsWith("tile.")) name = name.substring("tile.".length());
-                nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
-            }
-        }
-
-        return nodes;
+        return new ArrayList<>();
     }
 
     @Override

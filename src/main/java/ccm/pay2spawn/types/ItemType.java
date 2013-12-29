@@ -94,30 +94,39 @@ public class ItemType extends TypeBase
                 HashSet<String> names = new HashSet<>();
                 for (short s = 0; s < Short.MAX_VALUE; s++)
                 {
-                    ItemStack is = new ItemStack(item, 1, s);
-                    if (!names.contains(is.getUnlocalizedName()))
+                    try
                     {
-                        names.add(is.getUnlocalizedName());
-                        itemStacks.add(is);
+                        ItemStack is = new ItemStack(item, 1, s);
+                        if (!names.contains(is.getUnlocalizedName()))
+                        {
+                            names.add(is.getUnlocalizedName());
+                            itemStacks.add(is);
+                        }
                     }
-                }
-                for (short s = 0; s > Short.MIN_VALUE; s--)
-                {
-                    ItemStack is = new ItemStack(item, 1, s);
-                    if (!names.contains(is.getUnlocalizedName()))
+                    catch (Exception e)
                     {
-                        names.add(is.getUnlocalizedName());
-                        itemStacks.add(is);
+                        e.printStackTrace();
                     }
                 }
             }
-            else itemStacks.add(new ItemStack(item));
+            else
+            {
+                try
+                {
+                    itemStacks.add(new ItemStack(item));
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
 
         HashSet<Node> nodes = new HashSet<>();
         for (ItemStack itemStack : itemStacks)
         {
             String name = itemStack.getUnlocalizedName();
+            if (name == null) continue;
             if (name.startsWith("item.")) name = name.substring("item.".length());
             if (name.startsWith("tile.")) name = name.substring("tile.".length());
             nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
