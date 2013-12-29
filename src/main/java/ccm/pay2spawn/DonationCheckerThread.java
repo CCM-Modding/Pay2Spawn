@@ -157,7 +157,7 @@ public class DonationCheckerThread extends Thread
             if (hudSettings.top != 0)
             {
                 String header = hudSettings.top_header.trim();
-                if (!Strings.isNullOrEmpty(header)) EventHandler.TOP.add(header);
+                if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.TOP, header);
                 for (int i = 0; i < hudSettings.top_amount && i < root.getAsJsonArray("top").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
@@ -172,7 +172,7 @@ public class DonationCheckerThread extends Thread
             if (hudSettings.recent != 0)
             {
                 String header = hudSettings.recent_header.trim();
-                if (!Strings.isNullOrEmpty(header)) EventHandler.RECENT.add(header);
+                if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.RECENT, header);
                 for (int i = 0; i < hudSettings.recent_amount && i < root.getAsJsonArray("mostRecent").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();

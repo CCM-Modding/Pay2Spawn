@@ -33,6 +33,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -229,5 +230,11 @@ public class Helper
         {
             return false;
         }
+    }
+
+    public static void addWithEmptyLines(ArrayList<String> list, String header)
+    {
+        String[] lines = header.split("\\\\n");
+        for (String line : lines) list.add(line);
     }
 }

@@ -26,19 +26,11 @@ package ccm.pay2spawn.util;
 import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
 import com.google.common.base.Strings;
-import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraftforge.event.Event;
-import scala.tools.nsc.util.MultiHashMap;
 
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -62,7 +54,7 @@ public class TickHandler implements IScheduledTickHandler
         if (hudSettings.countdown != 0)
         {
             String header = hudSettings.countdown_header.trim();
-            if (!Strings.isNullOrEmpty(header)) EventHandler.COUNTDOWN.add(header);
+            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.COUNTDOWN, header);
         }
         Iterator<QueEntry> rewardIterator = entries.iterator();
         while (rewardIterator.hasNext())

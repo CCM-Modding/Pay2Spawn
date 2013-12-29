@@ -96,7 +96,7 @@ public class P2SConfig
             top_amount = configuration.get(HUD, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
             if (top_amount > 5) top_amount = 5;
             top_format = Helper.formatColors(configuration.get(HUD, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
-            top_header = Helper.formatColors(configuration.get(HUD, "top_header", top_header, "empty for no header.").getString());
+            top_header = Helper.formatColors(configuration.get(HUD, "top_header", top_header, "empty for no header. Use \\n for a blank line.").getString());
 
             recent = configuration.get(HUD,
                     "recent",
@@ -105,14 +105,14 @@ public class P2SConfig
             recent_amount = configuration.get(HUD, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
             if (recent_amount > 5) recent_amount = 5;
             recent_format = Helper.formatColors(configuration.get(HUD, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
-            recent_header = Helper.formatColors(configuration.get(HUD, "recent_header", recent_header, "empty for no header.").getString());
+            recent_header = Helper.formatColors(configuration.get(HUD, "recent_header", recent_header, "empty for no header. Use \\n for a blank line.").getString());
 
             countdown = configuration.get(HUD,
                     "countdown",
                     countdown,
                     "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
             countdown_format = Helper.formatColors(configuration.get(HUD, "countdown_format", countdown_format, "Vars: $name (of the group), $time (in seconds).").getString());
-            countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header.").getString());
+            countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header. Use \\n for a blank line.").getString());
         }
     }
 
