@@ -50,6 +50,7 @@ public class P2SConfig
 
     public HudSettings  hud;
     public FileSettings file;
+    public String       subMessage = "&e$name&f subscribed!";
 
 
     P2SConfig(File file)
@@ -64,6 +65,7 @@ public class P2SConfig
         twitchToken = configuration.get(MODID, "twitchToken", twitchToken, "Get it from http://dries007.net/ccm/p2s/").getString();
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
+        subMessage = Helper.formatColors(configuration.get(MODID, "subMessage", subMessage, "Message that gets send when someone subscribes to your channel. & for colors, $name for the twitch name").getString());
 
         this.hud = new HudSettings();
         this.file = new FileSettings();
@@ -92,28 +94,19 @@ public class P2SConfig
         {
             configuration.addCustomCategoryComment(HUD, "Donation lists on screen!");
 
-            top = configuration.get(HUD,
-                    "top",
-                    top,
-                    "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
+            top = configuration.get(HUD, "top", top, "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
             top_amount = configuration.get(HUD, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
             if (top_amount > 5) top_amount = 5;
             top_format = Helper.formatColors(configuration.get(HUD, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
             top_header = Helper.formatColors(configuration.get(HUD, "top_header", top_header, "empty for no header. Use \\n for a blank line.").getString());
 
-            recent = configuration.get(HUD,
-                    "recent",
-                    recent,
-                    "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
+            recent = configuration.get(HUD, "recent", recent, "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
             recent_amount = configuration.get(HUD, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
             if (recent_amount > 5) recent_amount = 5;
             recent_format = Helper.formatColors(configuration.get(HUD, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
             recent_header = Helper.formatColors(configuration.get(HUD, "recent_header", recent_header, "empty for no header. Use \\n for a blank line.").getString());
 
-            countdown = configuration.get(HUD,
-                    "countdown",
-                    countdown,
-                    "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
+            countdown = configuration.get(HUD, "countdown", countdown, "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
             countdown_format = Helper.formatColors(configuration.get(HUD, "countdown_format", countdown_format, "Vars: $name (of the group), $time (in seconds).").getString());
             countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header. Use \\n for a blank line.").getString());
         }

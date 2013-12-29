@@ -51,7 +51,7 @@ public class TickHandler implements IScheduledTickHandler
     {
         P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
         EventHandler.COUNTDOWN.clear();
-        if (hudSettings.countdown != 0)
+        if (hudSettings.countdown != 0 && !entries.isEmpty())
         {
             String header = hudSettings.countdown_header.trim();
             if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.COUNTDOWN, header);

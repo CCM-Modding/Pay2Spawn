@@ -118,19 +118,21 @@ public class DonationCheckerThread extends Thread
 
     private void doSubs() throws Exception
     {
+        HashSet<String> newSubs = new HashSet<>();
         JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl)).getAsJsonObject();
-        parseSubs(root);
+        parseSubs(newSubs, root);
         int total = root.getAsJsonPrimitive("_total").getAsInt();
         for(int offset = 100; offset < total; offset += 100)
         {
             root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl + "&offset=" + offset)).getAsJsonObject();
-            parseSubs(root);
+            parseSubs(newSubs, root);
         }
 
-        // System.out.println(Configurator.JOINER.join(subs));
+        for (String sub : newSubs) if (!subs.contains(sub)) Helper.msg(Pay2Spawn.getConfig().subMessage.replace("$name", sub));
+        subs = newSubs;
     }
 
-    private void parseSubs(JsonObject object)
+    private void parseSubs(HashSet<String> subs, JsonObject object)
     {
         for (JsonElement sub : object.getAsJsonArray("subscriptions"))
         {

@@ -109,27 +109,29 @@ public class RandomItemType extends TypeBase
         {
             if (item == null) continue;
 
-            if (item.getHasSubtypes())
-            {
-                HashSet<String> names = new HashSet<>();
-                for (short s = 0; s < Short.MAX_VALUE; s++)
-                {
-                    try
-                    {
-                        ItemStack is = new ItemStack(item, 1, s);
-                        if (!names.contains(is.getUnlocalizedName()))
-                        {
-                            names.add(is.getUnlocalizedName());
-                            itemStacks.add(is);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        // Ignore
-                    }
-                }
-            }
-            else itemStacks.add(new ItemStack(item));
+            // TODO: Fix.
+//            if (item.getHasSubtypes())
+//            {
+//                HashSet<String> names = new HashSet<>();
+//                for (short s = 0; s < Short.MAX_VALUE; s++)
+//                {
+//                    try
+//                    {
+//                        ItemStack is = new ItemStack(item, 1, s);
+//                        if (!names.contains(is.getUnlocalizedName()))
+//                        {
+//                            names.add(is.getUnlocalizedName());
+//                            itemStacks.add(is);
+//                        }
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        // Ignore
+//                    }
+//                }
+//            }
+//            else
+                itemStacks.add(new ItemStack(item));
         }
 
         HashSet<Node> nodes = new HashSet<>();
