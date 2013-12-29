@@ -181,7 +181,7 @@ public class Configurator implements IIHasCallback
                     nameField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[0]).getAsString());
                     amountField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[1]).getAsString());
                     messageField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[2]).getAsString());
-                    countdownTextField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[4]).getAsString());
+                    countdownTextField.setText(currentlyEditingData.getAsJsonPrimitive(COLUMN_KEYS[3]).getAsString());
                 }
             }
         });

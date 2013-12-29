@@ -46,6 +46,7 @@ public class P2SConfig
     public int     interval          = 10;
     public String  API_Key           = "";
     public String  channel           = "";
+
     public HudSettings  hud;
     public FileSettings file;
 

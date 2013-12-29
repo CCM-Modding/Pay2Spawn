@@ -106,6 +106,7 @@ public class DonationCheckerThread extends Thread
 
     private void process(JsonObject donation)
     {
+        if (firstrun) doneIDs.add(donation.get("transactionID").getAsString());
         if (Minecraft.getMinecraft().thePlayer == null || !Pay2Spawn.enable)
         {
             if (!backlog.contains(donation)) backlog.add(donation);
@@ -113,7 +114,7 @@ public class DonationCheckerThread extends Thread
         else if (Pay2Spawn.debug || !doneIDs.contains(donation.get("transactionID").getAsString()))
         {
             doneIDs.add(donation.get("transactionID").getAsString());
-            if (firstrun || donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
+            if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
             try
             {
                 Pay2Spawn.getRewardsDB().process(donation);

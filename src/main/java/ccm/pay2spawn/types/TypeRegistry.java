@@ -120,5 +120,6 @@ public class TypeRegistry
         TypeRegistry.register(new CustomEntityType());
         TypeRegistry.register(new RandomItemType());
         TypeRegistry.register(new DropItemType());
+        TypeRegistry.register(new CommandType());
     }
 }

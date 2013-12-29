@@ -31,6 +31,7 @@ import java.util.HashSet;
 
 public class BanList
 {
+    public static final String[] BAD_CMD = {"stop", "op", "deop", "ban", "ban-ip", "pardon", "pardon-ip", "save-on", "save-off", "save-all"};
     HashSet<Node> nodes = new HashSet<>();
 
     public void save()
@@ -81,6 +82,8 @@ public class BanList
                 pw.println("## Any and all nodes in this list are globally banned.");
                 pw.println("## 1 node per line.");
                 pw.println("## Nodes can end in .* to indicate a wildcard.");
+
+                for (String cmd : BAD_CMD) pw.println("command." + cmd);
 
                 pw.close();
             }

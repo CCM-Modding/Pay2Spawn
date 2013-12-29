@@ -50,7 +50,7 @@ public class TestPacket
 {
     public static void sendToServer(String name, JsonObject data)
     {
-        if (((MemoryConnection) Minecraft.getMinecraft().thePlayer.sendQueue.getNetManager()).isGamePaused()) Helper.msg(EnumChatFormatting.RED + "Some tests don't work while paused! Use your chat key.");
+        if (((MemoryConnection) Minecraft.getMinecraft().thePlayer.sendQueue.getNetManager()).isGamePaused()) Helper.msg(EnumChatFormatting.RED + "Some tests don't work while paused! Use your chat key to lose focus.");
         ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
         DataOutputStream stream = new DataOutputStream(streambyte);
         try
