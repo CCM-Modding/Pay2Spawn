@@ -32,8 +32,10 @@ import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import net.minecraft.command.NumberInvalidException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -56,8 +58,14 @@ public class Reward
         amount = json.get("amount").getAsDouble();
         message = Helper.formatColors(json.get("message").getAsString());
         rewards = json.getAsJsonArray("rewards");
-        if (json.has("countdown")) countdown = json.get("countdown").getAsInt();
-        else countdown = 0;
+        try
+        {
+            countdown = json.get("countdown").getAsInt();
+        }
+        catch (Exception e)
+        {
+            countdown = 0;
+        }
     }
 
     public Reward(String name, Double amount, JsonArray rewards)
