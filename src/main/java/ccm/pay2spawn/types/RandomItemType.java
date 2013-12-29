@@ -128,22 +128,6 @@ public class RandomItemType extends TypeBase
                         // Ignore
                     }
                 }
-                for (short s = 0; s > Short.MIN_VALUE; s--)
-                {
-                    try
-                    {
-                        ItemStack is = new ItemStack(item, 1, s);
-                        if (!names.contains(is.getUnlocalizedName()))
-                        {
-                            names.add(is.getUnlocalizedName());
-                            itemStacks.add(is);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        // Ignore
-                    }
-                }
             }
             else itemStacks.add(new ItemStack(item));
         }
@@ -152,9 +136,12 @@ public class RandomItemType extends TypeBase
         for (ItemStack itemStack : itemStacks)
         {
             String name = itemStack.getUnlocalizedName();
-            if (name.startsWith("item.")) name = name.substring("item.".length());
-            if (name.startsWith("tile.")) name = name.substring("tile.".length());
-            nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
+            if (name != null)
+            {
+                if (name.startsWith("item.")) name = name.substring("item.".length());
+                if (name.startsWith("tile.")) name = name.substring("tile.".length());
+                nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
+            }
         }
 
         return nodes;

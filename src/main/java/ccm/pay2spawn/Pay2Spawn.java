@@ -127,7 +127,7 @@ public class Pay2Spawn
 
         if (event.getSide().isClient())
         {
-            donationCheckerThread = new DonationCheckerThread(config.interval, config.channel, config.API_Key);
+            donationCheckerThread = new DonationCheckerThread();
             donationCheckerThread.start();
             new EventHandler();
         }

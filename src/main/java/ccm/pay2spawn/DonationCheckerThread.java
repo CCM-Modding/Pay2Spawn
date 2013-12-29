@@ -23,9 +23,11 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -36,6 +38,7 @@ import net.minecraft.client.Minecraft;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * The thread that does the actual checking with nightdevs donationtracker
@@ -46,18 +49,19 @@ public class DonationCheckerThread extends Thread
 {
     final int    interval;
     final String channel;
-    final String API_Key;
-    final String URL;
+    final String donationsUrl;
+    final String subsUrl;
     boolean firstrun = true;
     JsonArray latest;
+    HashSet<String> subs = new HashSet<>();
 
-    public DonationCheckerThread(int interval, String channel, String API_Key)
+    public DonationCheckerThread()
     {
         super(DonationCheckerThread.class.getSimpleName());
-        this.interval = interval;
-        this.channel = channel;
-        this.API_Key = API_Key;
-        this.URL = "http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + API_Key;
+        this.interval = Pay2Spawn.getConfig().interval;
+        this.channel = Pay2Spawn.getConfig().channel;
+        this.donationsUrl = "http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + Pay2Spawn.getConfig().API_Key;
+        this.subsUrl = "https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + Pay2Spawn.getConfig().twitchToken;
     }
 
     ArrayList<String>     doneIDs = new ArrayList<>();
@@ -75,32 +79,62 @@ public class DonationCheckerThread extends Thread
         {
             try
             {
-                for (JsonObject donation : backlog) process(donation);
-
-                JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(URL)).getAsJsonObject();
-
-                if (root.get("status").getAsString().equals("success"))
-                {
-                    doFileAndHud(root);
-                    latest = root.getAsJsonArray("mostRecent");
-                    for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());
-                }
-                else
-                {
-                    throw new IllegalArgumentException("Could not fetch recent donations.\n Message:" + root.get("error").getAsString());
-                }
-
-                firstrun = false;
-                doWait(interval);
-            }
-            catch (JsonSyntaxException e)
-            {
-                e.printStackTrace();
+                if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().API_Key)) doDonations();
             }
             catch (Exception e)
             {
                 if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
+            try
+            {
+                if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().twitchToken)) doSubs();
+            }
+            catch (Exception e)
+            {
+                if (Minecraft.getMinecraft().running) e.printStackTrace();
+            }
+            firstrun = false;
+            doWait(interval);
+        }
+    }
+
+    private void doDonations() throws Exception
+    {
+        for (JsonObject donation : backlog) process(donation);
+
+        JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(donationsUrl)).getAsJsonObject();
+
+        if (root.get("status").getAsString().equals("success"))
+        {
+            doFileAndHud(root);
+            latest = root.getAsJsonArray("mostRecent");
+            for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());
+        }
+        else
+        {
+            throw new IllegalArgumentException("Could not fetch recent donations.\n Message:" + root.get("error").getAsString());
+        }
+    }
+
+    private void doSubs() throws Exception
+    {
+        JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl)).getAsJsonObject();
+        parseSubs(root);
+        int total = root.getAsJsonPrimitive("_total").getAsInt();
+        for(int offset = 100; offset < total; offset += 100)
+        {
+            root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl + "&offset=" + offset)).getAsJsonObject();
+            parseSubs(root);
+        }
+
+        // System.out.println(Configurator.JOINER.join(subs));
+    }
+
+    private void parseSubs(JsonObject object)
+    {
+        for (JsonElement sub : object.getAsJsonArray("subscriptions"))
+        {
+            subs.add(sub.getAsJsonObject().getAsJsonObject("user").get("display_name").getAsString());
         }
     }
 

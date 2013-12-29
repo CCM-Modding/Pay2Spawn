@@ -46,9 +46,11 @@ public class P2SConfig
     public int     interval          = 10;
     public String  API_Key           = "";
     public String  channel           = "";
+    public String  twitchToken       = "";
 
     public HudSettings  hud;
     public FileSettings file;
+
 
     P2SConfig(File file)
     {
@@ -59,6 +61,7 @@ public class P2SConfig
         interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
         channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
         API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();
+        twitchToken = configuration.get(MODID, "twitchToken", twitchToken, "Get it from http://dries007.net/ccm/p2s/").getString();
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
 
