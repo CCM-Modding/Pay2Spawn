@@ -131,8 +131,7 @@ public class EntityType extends TypeBase
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        return new Node(NODENAME, EntityList.getEntityString(entity));
+        return new Node(NODENAME, dataFromClient.getString(ENTITYNAME_KEY));
     }
 
     @Override
