@@ -36,7 +36,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * The thread that does the actual checking with nightdevs donationtracker
@@ -65,7 +65,7 @@ public class DonationCheckerThread extends Thread
     ArrayList<String>     doneIDs = new ArrayList<>();
     ArrayList<JsonObject> backlog = new ArrayList<>();
 
-    public synchronized JsonObject getLatestById(int id)
+    public synchronized JsonObject getLatestById(int id) throws IndexOutOfBoundsException
     {
         return latest.get(id).getAsJsonObject();
     }
@@ -145,7 +145,7 @@ public class DonationCheckerThread extends Thread
         {
             if (!backlog.contains(donation)) backlog.add(donation);
         }
-        else if (Pay2Spawn.debug || !doneIDs.contains(donation.get("transactionID").getAsString()))
+        else if (!doneIDs.contains(donation.get("transactionID").getAsString()))
         {
             doneIDs.add(donation.get("transactionID").getAsString());
             if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
@@ -296,5 +296,22 @@ public class DonationCheckerThread extends Thread
             if (reader != null) reader.close();
         }
         return buffer.toString();
+    }
+
+    public static void fakeDonation(double amount)
+    {
+        JsonObject donation = new JsonObject();
+        donation.addProperty(DONATION_AMOUNT, amount);
+        donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
+        donation.addProperty(DONATION_NOTE, "");
+        Pay2Spawn.getRewardsDB().process(donation);
+        Helper.msg("[P2S] Faking donation of " + amount + ".");
+    }
+
+    public static void redonate(int id)
+    {
+        JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(id);
+        Pay2Spawn.getRewardsDB().process(donation);
+        Helper.msg("[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
     }
 }

@@ -49,15 +49,6 @@ public class HandshakePacket
 
     private static final String HANDSHAKE_SERVER_TO_CLIENT = "HsS2C";
     private static final String HANDSHAKE_CLIENT_TO_SERVER = "HsC2S";
-    private static final String HANDSHAKE_DEBUG            = "debug";
-    private static final String HANDSHAKE_OFF              = "off";
-    private static final String HANDSHAKE_ON               = "on";
-    private static final String HANDSHAKE_RELOAD           = "reload";
-
-    public static void sendDebugToPlayer(EntityPlayer player)
-    {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_DEBUG.getBytes()), (Player) player);
-    }
 
     public static void sendHandshakeToPlayer(Player player)
     {
@@ -73,40 +64,20 @@ public class HandshakePacket
     public static void handel(Packet250CustomPayload packet, Player player)
     {
         String message = new String(packet.data);
-        if (message.equals(HANDSHAKE_SERVER_TO_CLIENT))
+        switch (message)
         {
-            sendHandshakeToServer();
-            serverHasMod = true;
-        }
-        else if (message.equals(HANDSHAKE_CLIENT_TO_SERVER))
-        {
-            PermissionsHandler.getDB().newPlayer(((EntityPlayer) player).getEntityName());
-            playersWithHandshake.add(((EntityPlayer) player).getEntityName());
-            if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
-        }
-        else if (message.equals(HANDSHAKE_DEBUG))
-        {
-            Pay2Spawn.debug = !Pay2Spawn.debug;
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Debug now: " + Pay2Spawn.debug).setColor(EnumChatFormatting.RED));
-        }
-        else if (message.equals(HANDSHAKE_OFF))
-        {
-            Pay2Spawn.enable = false;
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Spawning off.").setColor(EnumChatFormatting.RED));
-        }
-        else if (message.equals(HANDSHAKE_ON))
-        {
-            Pay2Spawn.enable = true;
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Spawning on.").setColor(EnumChatFormatting.RED));
-        }
-        else if (message.equals(HANDSHAKE_RELOAD))
-        {
-            Pay2Spawn.reloadDB();
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("JSON file reloaded."));
-        }
-        else
-        {
-            Pay2Spawn.getLogger().severe("Invalid handshake received. Assuming no connection.");
+            case HANDSHAKE_SERVER_TO_CLIENT:
+                sendHandshakeToServer();
+                serverHasMod = true;
+                break;
+            case HANDSHAKE_CLIENT_TO_SERVER:
+                PermissionsHandler.getDB().newPlayer(((EntityPlayer) player).getEntityName());
+                playersWithHandshake.add(((EntityPlayer) player).getEntityName());
+                if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
+                break;
+            default:
+                Pay2Spawn.getLogger().severe("Invalid handshake received. Assuming no connection.");
+                break;
         }
     }
 
@@ -123,17 +94,6 @@ public class HandshakePacket
     public static void resetServerStatus()
     {
         Pay2Spawn.enable = true;
-        Pay2Spawn.debug = false;
         serverHasMod = false;
-    }
-
-    public static void toggle(EntityPlayer player, boolean enable)
-    {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, enable ? HANDSHAKE_ON.getBytes() : HANDSHAKE_OFF.getBytes()), (Player) player);
-    }
-
-    public static void reload(EntityPlayer player)
-    {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_RELOAD.getBytes()), (Player) player);
     }
 }

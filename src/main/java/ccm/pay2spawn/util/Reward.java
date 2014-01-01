@@ -44,6 +44,7 @@ import java.io.*;
 import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.CHANNEL_REWARD;
+import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class Reward
@@ -176,7 +177,7 @@ public class Reward
     {
         HashSet<String> types = new HashSet<>();
         for (JsonElement element : rewards) types.add(element.getAsJsonObject().get("type").getAsString());
-        return Helper.JOINER.join(types);
+        return JOINER_COMMA_SPACE.join(types);
     }
 
     public String getHTML() throws IOException

@@ -44,6 +44,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.ClientCommandHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -64,7 +66,6 @@ public class Pay2Spawn
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static boolean debug  = false;
     public static boolean enable = true;
 
     @Mod.Metadata(MODID)
@@ -130,6 +131,7 @@ public class Pay2Spawn
             donationCheckerThread = new DonationCheckerThread();
             donationCheckerThread.start();
             new EventHandler();
+            ClientCommandHandler.instance.registerCommand(new CommandP2S());
         }
 
         NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
@@ -166,7 +168,7 @@ public class Pay2Spawn
         {
             e.printStackTrace();
         }
-        event.registerServerCommand(new CommandP2S());
+        event.registerServerCommand(new CommandP2SPermissions());
 
         // for (String node : PermissionsHandler.getAllPermNodes()) logger.info(node);
     }

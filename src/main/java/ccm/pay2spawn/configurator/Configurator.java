@@ -43,6 +43,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class Configurator implements IIHasCallback
@@ -312,7 +313,7 @@ public class Configurator implements IIHasCallback
                     case 4:
                         HashSet<String> types = new HashSet<>();
                         for (JsonElement element : jsonObject.getAsJsonArray(COLUMN_KEYS[columnIndex])) types.add(element.getAsJsonObject().get("type").getAsString());
-                        return Helper.JOINER.join(types);
+                        return JOINER_COMMA_SPACE.join(types);
                 }
             }
 

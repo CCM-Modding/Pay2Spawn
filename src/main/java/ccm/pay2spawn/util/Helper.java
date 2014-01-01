@@ -51,8 +51,6 @@ import static ccm.pay2spawn.util.Constants.*;
  */
 public class Helper
 {
-    public static final Joiner JOINER = Joiner.on(", ").skipNulls();
-
     /**
      * NBT to byte[]
      * Use for packets

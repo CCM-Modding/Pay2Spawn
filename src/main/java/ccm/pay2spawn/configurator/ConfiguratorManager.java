@@ -32,30 +32,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.EnumChatFormatting;
 
-import static ccm.pay2spawn.util.Constants.CHANNEL_CONFIGURATOR;
-
 public class ConfiguratorManager
 {
-    private static String MESSAGE_CONFIGURATOR = "config";
-    private static String MESSAGE_NBTGRABBER   = "nbt";
-
-    public static void openConfigurator(EntityPlayer player)
-    {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_CONFIGURATOR.getBytes()), (Player) player);
-    }
-
-    public static void openNBTGrabber(EntityPlayer player)
-    {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_CONFIGURATOR, MESSAGE_NBTGRABBER.getBytes()), (Player) player);
-    }
-
-    public static void handelPacket(Packet250CustomPayload packet, Player player)
-    {
-        String message = new String(packet.data);
-        if (message.equals(MESSAGE_CONFIGURATOR)) openCfg();
-        if (message.equals(MESSAGE_NBTGRABBER)) openNbt();
-    }
-
     public static void openNbt()
     {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())

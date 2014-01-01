@@ -48,9 +48,9 @@ public class P2SConfig
     public  String   API_Key           = "";
     public  String   channel           = "";
     public  String   twitchToken       = "";
-    private String[] blacklist_Name    = {};
-    private String[] blacklist_Note    = {};
-    private String[] whitelist_Name    = {};
+    private String[] blacklist_Name    = {"fuck", "cunt", "dick", "shit"};
+    private String[] blacklist_Note    = {"fuck", "cunt", "dick", "shit"};
+    private String[] whitelist_Name    = {"\"[\\w-]*\""};
     private String[] whitelist_Note    = {};
 
     public Pattern[] blacklist_Name_p;
@@ -78,7 +78,7 @@ public class P2SConfig
         subMessage = Helper.formatColors(configuration.get(MODID, "subMessage", subMessage, "Message that gets send when someone subscribes to your channel. & for colors, $name for the twitch name").getString());
 
         String filterCat = MODID + ".filter";
-        configuration.addCustomCategoryComment(filterCat, "All filters use regex, very useful site: http://gskinner.com/RegExr/\nMatching happens case insensitive.\nUSE DOUBLE QUOTES (\") FOR EACH LINE!");
+        configuration.addCustomCategoryComment(filterCat, "All filters use regex, very useful site: http://gskinner.com/RegExr/\nMatching happens case insensitive.\nUSE DOUBLE QUOTES (\") AROUND EACH LINE!");
         blacklist_Name = configuration.get(filterCat, "blacklist_Name", blacklist_Name, "If matches, name gets changed to Anonymous. Overrules whitelist.").getStringList();
         blacklist_Name_p = new Pattern[blacklist_Name.length];
         for (int i = 0; i < blacklist_Name.length; i++) blacklist_Name_p[i] = Pattern.compile(Helper.removeQuotes(blacklist_Name[i]), Pattern.CASE_INSENSITIVE);
