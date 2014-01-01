@@ -24,7 +24,6 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.RandomItemTypeGui;
@@ -37,13 +36,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 
-import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
+import static ccm.pay2spawn.util.Constants.STRING;
 
 public class RandomItemType extends TypeBase
 {

@@ -25,7 +25,6 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.Node;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

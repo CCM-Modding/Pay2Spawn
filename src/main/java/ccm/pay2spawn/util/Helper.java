@@ -23,7 +23,10 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.P2SConfig;
+import ccm.pay2spawn.Pay2Spawn;
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -36,6 +39,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Static helper functions with no other home
@@ -180,11 +187,62 @@ public class Helper
      */
     public static String formatText(String format, JsonObject donation)
     {
-        if (donation.has("twitchUsername") && donation.get("twitchUsername").isJsonPrimitive()) format = format.replace("$name", donation.get("twitchUsername").getAsString());
-        if (donation.has("amount") && donation.get("amount").isJsonPrimitive()) format = format.replace("$amount", donation.get("amount").getAsString());
-        if (donation.has("note") && donation.get("note").isJsonPrimitive()) format = format.replace("$note", donation.get("note").getAsString());
+        donation = filter(donation);
+        if (donation.has(DONATION_USERNAME)) format = format.replace("$name", donation.get(DONATION_USERNAME).getAsString());
+        if (donation.has(DONATION_AMOUNT)) format = format.replace("$amount", donation.get(DONATION_AMOUNT).getAsString());
+        if (donation.has(DONATION_NOTE)) format = format.replace("$note", donation.get(DONATION_NOTE).getAsString());
         if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getEntityName());
         return format;
+    }
+
+    private static JsonObject filter(JsonObject donation)
+    {
+        P2SConfig config = Pay2Spawn.getConfig();
+        if (donation.has(DONATION_USERNAME) && !donation.get(DONATION_USERNAME).getAsString().equalsIgnoreCase(ANONYMOUS))
+        {
+            for (Pattern p : config.blacklist_Name_p)
+            {
+                if (p.matcher(donation.get(DONATION_USERNAME).getAsString()).matches())
+                {
+                    donation.addProperty(DONATION_USERNAME, ANONYMOUS);
+                    break;
+                }
+            }
+        }
+        if (donation.has(DONATION_USERNAME) && !donation.get(DONATION_USERNAME).getAsString().equalsIgnoreCase(ANONYMOUS))
+        {
+            for (Pattern p : config.whitelist_Name_p)
+            {
+                if (!p.matcher(donation.get(DONATION_USERNAME).getAsString()).matches())
+                {
+                    donation.addProperty(DONATION_USERNAME, ANONYMOUS);
+                    break;
+                }
+            }
+        }
+
+        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).toString()))
+        {
+            for (Pattern p : config.blacklist_Note_p)
+            {
+                Matcher m = p.matcher(donation.get(DONATION_NOTE).getAsString());
+                donation.addProperty(DONATION_NOTE, m.replaceAll(""));
+            }
+        }
+
+        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).toString()))
+        {
+            for (Pattern p : config.whitelist_Note_p)
+            {
+                if (!p.matcher(donation.get(DONATION_NOTE).getAsString()).matches())
+                {
+                    donation.addProperty(DONATION_NOTE, "");
+                    break;
+                }
+            }
+        }
+
+        return donation;
     }
 
     /**
@@ -239,5 +297,14 @@ public class Helper
     {
         String[] lines = header.split("\\\\n");
         for (String line : lines) list.add(line);
+    }
+
+    public static final Pattern DOUBLE_QUOTES = Pattern.compile("\"(.*)\"");
+
+    public static String removeQuotes(String s)
+    {
+        Matcher m = DOUBLE_QUOTES.matcher(s);
+        if (m.matches()) return m.group(1);
+        else return s;
     }
 }

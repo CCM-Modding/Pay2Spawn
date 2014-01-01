@@ -24,13 +24,15 @@
 package ccm.pay2spawn.permissions;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.HashMap;
+
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class PermissionsDB
 {
@@ -55,7 +57,7 @@ public class PermissionsDB
             rootObject.add("groups", groups);
 
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            bw.write(JsonNBTHelper.GSON.toJson(rootObject));
+            bw.write(GSON.toJson(rootObject));
             bw.close();
         }
         catch (IOException e)
@@ -69,7 +71,7 @@ public class PermissionsDB
         File file = getFile();
         if (file.exists())
         {
-            JsonObject rootObject = JsonNBTHelper.PARSER.parse(new FileReader(file)).getAsJsonObject();
+            JsonObject rootObject = JSON_PARSER.parse(new FileReader(file)).getAsJsonObject();
 
             for (JsonElement element : rootObject.getAsJsonArray("players"))
             {
@@ -91,7 +93,7 @@ public class PermissionsDB
             rootObject.add("players", new JsonArray());
             rootObject.add("groups", new JsonArray());
             BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-            bw.write(JsonNBTHelper.GSON.toJson(rootObject));
+            bw.write(GSON.toJson(rootObject));
             bw.close();
         }
     }

@@ -41,8 +41,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
-import static ccm.pay2spawn.util.JsonNBTHelper.INT;
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Strikes the world within 1 block of the player

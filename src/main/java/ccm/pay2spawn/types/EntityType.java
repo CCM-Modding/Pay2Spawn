@@ -46,10 +46,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
-import static ccm.pay2spawn.util.Constants.MODID;
-import static ccm.pay2spawn.util.JsonNBTHelper.BYTE;
-import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * A simple entity spawner, can handle:

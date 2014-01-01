@@ -25,30 +25,28 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
-import ccm.pay2spawn.types.CommandType;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 
-import static ccm.pay2spawn.types.CommandType.*;
+import static ccm.pay2spawn.types.CommandType.COMMAND_KEY;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class CommandTypeGui extends HelperGuiBase
 {
-    public JPanel            panel1;
-    public JTextField        cmdTextField;
-    public JScrollPane       scrollPane;
-    public JTextPane         jsonPane;
-    public JButton           parseFromJsonButton;
-    public JButton           saveButton;
-    public JButton           updateJsonButton;
-    public JButton           testButton;
+    public JPanel      panel1;
+    public JTextField  cmdTextField;
+    public JScrollPane scrollPane;
+    public JTextPane   jsonPane;
+    public JButton     parseFromJsonButton;
+    public JButton     saveButton;
+    public JButton     updateJsonButton;
+    public JButton     testButton;
 
     public CommandTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -62,7 +60,7 @@ public class CommandTypeGui extends HelperGuiBase
     {
         cmdTextField.setText(readValue(COMMAND_KEY, data));
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -70,7 +68,7 @@ public class CommandTypeGui extends HelperGuiBase
     {
         storeValue(COMMAND_KEY, data, cmdTextField.getText());
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -102,7 +100,7 @@ public class CommandTypeGui extends HelperGuiBase
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }

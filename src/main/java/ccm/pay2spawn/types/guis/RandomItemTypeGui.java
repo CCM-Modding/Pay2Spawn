@@ -25,7 +25,6 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
@@ -36,6 +35,8 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.RandomItemType.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class RandomItemTypeGui extends HelperGuiBase
 {
@@ -53,7 +54,6 @@ public class RandomItemTypeGui extends HelperGuiBase
         super(rewardID, name, inputData, typeMap);
 
 
-
         makeAndOpen();
     }
 
@@ -62,7 +62,7 @@ public class RandomItemTypeGui extends HelperGuiBase
     {
         if (data.has(TAG_KEY) && data.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) itemNameField.setText(readValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY)));
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -75,7 +75,7 @@ public class RandomItemTypeGui extends HelperGuiBase
             storeValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY), itemNameField.getText());
         }
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class RandomItemTypeGui extends HelperGuiBase
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }

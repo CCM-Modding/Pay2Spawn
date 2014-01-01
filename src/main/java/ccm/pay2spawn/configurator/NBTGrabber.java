@@ -25,19 +25,21 @@ package ccm.pay2spawn.configurator;
 
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.util.IIHasCallback;
-import ccm.pay2spawn.util.JsonNBTHelper;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+
 public class NBTGrabber implements IIHasCallback
 {
-    public        JButton   grabEntityButton;
-    public        JTextPane out;
-    public        JPanel    panel1;
-    public        JButton   grabItemButton;
+    public JButton   grabEntityButton;
+    public JTextPane out;
+    public JPanel    panel1;
+    public JButton   grabItemButton;
     private NBTGrabber instance = this;
 
     public NBTGrabber()
@@ -56,7 +58,7 @@ public class NBTGrabber implements IIHasCallback
     @Override
     public void callback(Object... data)
     {
-        out.setText(JsonNBTHelper.GSON.toJson(JsonNBTHelper.PARSER.parse((String) data[0])));
+        out.setText(GSON.toJson(JSON_PARSER.parse((String) data[0])));
     }
 
     private void setupListeners()

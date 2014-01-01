@@ -24,12 +24,13 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.EnumChatFormatting;
+
+import static ccm.pay2spawn.util.Constants.CHANNEL_SYNC;
 
 public class ConfigSyncPacket
 {
@@ -37,7 +38,7 @@ public class ConfigSyncPacket
 
     public static void sendToPlayer(Player player)
     {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(Constants.CHANNEL_SYNC, serverConfig), player);
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_SYNC, serverConfig), player);
     }
 
     public static void reconstruct(Packet250CustomPayload packet)

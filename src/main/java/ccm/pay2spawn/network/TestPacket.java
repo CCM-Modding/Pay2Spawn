@@ -45,6 +45,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.io.*;
 
 import static ccm.pay2spawn.util.Constants.CHANNEL_TEST;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class TestPacket
 {
@@ -82,7 +83,7 @@ public class TestPacket
         player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
         Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
         TypeBase type = TypeRegistry.getByName(name);
-        NBTTagCompound nbt = JsonNBTHelper.parseJSON(JsonNBTHelper.PARSER.parse(json).getAsJsonObject());
+        NBTTagCompound nbt = JsonNBTHelper.parseJSON(JSON_PARSER.parse(json).getAsJsonObject());
 
         Node node = type.getPermissionNode(player, nbt);
         if (BanHelper.isBanned(node))

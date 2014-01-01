@@ -37,7 +37,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 
-import static ccm.pay2spawn.util.Constants.CHANNEL_REDONATE;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class RedonatePacket
 {
@@ -61,9 +61,9 @@ public class RedonatePacket
     private static void fakeDonation(double amount)
     {
         JsonObject donation = new JsonObject();
-        donation.addProperty("amount", amount);
-        donation.addProperty("twitchUsername", Minecraft.getMinecraft().thePlayer.getDisplayName());
-        donation.addProperty("note", "");
+        donation.addProperty(DONATION_AMOUNT, amount);
+        donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
+        donation.addProperty(DONATION_NOTE, "");
         Pay2Spawn.getRewardsDB().process(donation);
         Helper.msg("[P2S] Faking donation of " + amount + ".");
     }
@@ -72,7 +72,7 @@ public class RedonatePacket
     {
         JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(i);
         Pay2Spawn.getRewardsDB().process(donation);
-        Helper.msg("[P2S] Redoing " + donation.get("twitchUsername").getAsString() + "'s donation of " + donation.get("amount").getAsString() + ".");
+        Helper.msg("[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
     }
 
     public static void send(EntityPlayer player, double amount)

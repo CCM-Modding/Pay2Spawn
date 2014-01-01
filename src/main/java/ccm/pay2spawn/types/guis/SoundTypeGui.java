@@ -28,7 +28,6 @@ import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.random.RndSound;
 import ccm.pay2spawn.types.SoundType;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -40,6 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.SoundType.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class SoundTypeGui extends HelperGuiBase
 {
@@ -97,7 +98,7 @@ public class SoundTypeGui extends HelperGuiBase
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }
@@ -131,7 +132,7 @@ public class SoundTypeGui extends HelperGuiBase
         volumeTextField.setText(readValue(VOLUME_KEY, data));
         pitchTextField.setText(readValue(PITCH_KEY, data));
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -141,7 +142,7 @@ public class SoundTypeGui extends HelperGuiBase
         storeValue(VOLUME_KEY, data, volumeTextField.getText());
         storeValue(PITCH_KEY, data, pitchTextField.getText());
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     {

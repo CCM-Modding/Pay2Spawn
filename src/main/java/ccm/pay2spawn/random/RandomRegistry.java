@@ -25,7 +25,8 @@ package ccm.pay2spawn.random;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Random;
+
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Handles random tags placed inside the NBT data from the JSON.
@@ -35,7 +36,6 @@ import java.util.Random;
  */
 public class RandomRegistry
 {
-    public static final  Random                                                     RANDOM           = new Random();
     private static final HashMap<Class<? extends IRandomResolver>, IRandomResolver> RANDOM_RESOLVERS = new HashMap<>();
 
     /**

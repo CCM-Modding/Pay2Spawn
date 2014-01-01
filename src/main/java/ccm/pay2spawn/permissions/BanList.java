@@ -65,7 +65,7 @@ public class BanList
         if (file.exists())
         {
             BufferedReader br = new BufferedReader(new FileReader(file));
-            for(String line; (line = br.readLine()) != null; )
+            for (String line; (line = br.readLine()) != null; )
             {
                 line = line.trim();
                 if (!Strings.isNullOrEmpty(line) && !line.startsWith("#")) nodes.add(new Node(line));
@@ -102,8 +102,7 @@ public class BanList
     public boolean contains(Node node)
     {
         for (Node bannedNode : nodes)
-            if (bannedNode.matches(node))
-                return true;
+            if (bannedNode.matches(node)) return true;
         return false;
     }
 }

@@ -25,7 +25,6 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -37,6 +36,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PotionEffectType.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class PotionEffectTypeGui extends HelperGuiBase
 {
@@ -80,7 +81,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         amplifierTextField.setText(readValue(AMPLIFIER_KEY, data));
         durationTextField.setText(readValue(DURATION_KEY, data));
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         storeValue(AMPLIFIER_KEY, data, amplifierTextField.getText());
         storeValue(DURATION_KEY, data, durationTextField.getText());
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -125,7 +126,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }

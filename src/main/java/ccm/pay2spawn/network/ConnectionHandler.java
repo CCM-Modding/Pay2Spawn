@@ -24,7 +24,6 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IConnectionHandler;
@@ -38,6 +37,8 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static ccm.pay2spawn.util.Constants.NAME;
 
 public class ConnectionHandler implements IConnectionHandler
 {
@@ -81,7 +82,7 @@ public class ConnectionHandler implements IConnectionHandler
             @Override
             public void run()
             {
-                if (!HandshakePacket.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + Constants.NAME + " isn't on the server. No rewards will spawn!");
+                if (!HandshakePacket.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
             }
         }, 5 * 1000);
     }

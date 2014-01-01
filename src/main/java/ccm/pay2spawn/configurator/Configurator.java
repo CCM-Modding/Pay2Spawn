@@ -28,7 +28,6 @@ import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
-import com.google.common.base.Joiner;
 import com.google.gson.*;
 
 import javax.swing.*;
@@ -44,9 +43,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+
 public class Configurator implements IIHasCallback
 {
-
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};
     public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Countdown", "Types of rewards"};
     public static Configurator instance;
@@ -80,7 +80,7 @@ public class Configurator implements IIHasCallback
     {
         $$$setupUI$$$();
 
-        rootArray = JsonNBTHelper.PARSER.parse(new FileReader(Pay2Spawn.getRewardDBFile())).getAsJsonArray();
+        rootArray = JSON_PARSER.parse(new FileReader(Pay2Spawn.getRewardDBFile())).getAsJsonArray();
 
         frame = new JFrame("Configurator");
         frame.setContentPane(panel1);

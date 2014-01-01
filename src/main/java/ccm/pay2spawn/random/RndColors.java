@@ -29,7 +29,7 @@ import com.google.gson.JsonPrimitive;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Produces a random color array

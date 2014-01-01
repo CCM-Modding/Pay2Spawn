@@ -48,8 +48,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static ccm.pay2spawn.util.JsonNBTHelper.FLOAT;
-import static ccm.pay2spawn.util.JsonNBTHelper.STRING;
+import static ccm.pay2spawn.util.Constants.FLOAT;
+import static ccm.pay2spawn.util.Constants.STRING;
 
 /**
  * Play a sound based on name

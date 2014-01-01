@@ -40,7 +40,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.JsonNBTHelper.*;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class FireworksType extends TypeBase
 {

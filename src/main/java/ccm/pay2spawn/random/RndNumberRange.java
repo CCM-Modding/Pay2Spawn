@@ -26,7 +26,7 @@ package ccm.pay2spawn.random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Picks a random number in between 2 given numbers, int or double

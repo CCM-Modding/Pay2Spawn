@@ -37,7 +37,7 @@ import static ccm.pay2spawn.util.Constants.CHANNEL_CONFIGURATOR;
 public class ConfiguratorManager
 {
     private static String MESSAGE_CONFIGURATOR = "config";
-    private static String MESSAGE_NBTGRABBER = "nbt";
+    private static String MESSAGE_NBTGRABBER   = "nbt";
 
     public static void openConfigurator(EntityPlayer player)
     {

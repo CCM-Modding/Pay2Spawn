@@ -28,7 +28,6 @@ import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.random.RndEntity;
 import ccm.pay2spawn.types.EntityType;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -40,6 +39,8 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.EntityType.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class EntityTypeGui extends HelperGuiBase
 {
@@ -126,7 +127,7 @@ public class EntityTypeGui extends HelperGuiBase
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }
@@ -187,7 +188,7 @@ public class EntityTypeGui extends HelperGuiBase
         randomizeMobRadioButton.setSelected(random.equals("1"));
         randomlyRandomizeMobRadioButton.setSelected(random.startsWith("$random"));
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -199,7 +200,7 @@ public class EntityTypeGui extends HelperGuiBase
         storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? "$random" : agroRadioButton.isSelected() ? "1" : "0");
         storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? "$random" : randomizeMobRadioButton.isSelected() ? "1" : "0");
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     {

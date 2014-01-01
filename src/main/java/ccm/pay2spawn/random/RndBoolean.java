@@ -25,7 +25,7 @@ package ccm.pay2spawn.random;
 
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Makes a boolean random

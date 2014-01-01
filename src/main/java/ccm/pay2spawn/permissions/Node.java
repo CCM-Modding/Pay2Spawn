@@ -23,13 +23,12 @@
 
 package ccm.pay2spawn.permissions;
 
-import com.google.common.base.Joiner;
-
 import java.util.Arrays;
+
+import static ccm.pay2spawn.util.Constants.JOINER_DOT;
 
 public class Node
 {
-    public static final Joiner JOINER = Joiner.on(".").skipNulls();
     final String[] parts;
 
     public Node(String parts)
@@ -56,7 +55,7 @@ public class Node
     @Override
     public String toString()
     {
-        return JOINER.join(parts);
+        return JOINER_DOT.join(parts);
     }
 
     @Override

@@ -36,6 +36,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+
 /**
  * The rewards database
  *
@@ -50,7 +53,7 @@ public class RewardsDB
     RewardsDB(String input)
     {
         editable = false;
-        JsonArray rootArray = JsonNBTHelper.PARSER.parse(input).getAsJsonArray();
+        JsonArray rootArray = JSON_PARSER.parse(input).getAsJsonArray();
 
         for (JsonElement element : rootArray)
         {
@@ -66,7 +69,7 @@ public class RewardsDB
         {
             if (file.exists())
             {
-                JsonArray rootArray = JsonNBTHelper.PARSER.parse(new FileReader(file)).getAsJsonArray();
+                JsonArray rootArray = JSON_PARSER.parse(new FileReader(file)).getAsJsonArray();
 
                 for (JsonElement element : rootArray)
                 {
@@ -97,7 +100,7 @@ public class RewardsDB
                 rootArray.add(group);
 
                 BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-                bw.write(JsonNBTHelper.GSON.toJson(rootArray));
+                bw.write(GSON.toJson(rootArray));
                 bw.close();
             }
         }

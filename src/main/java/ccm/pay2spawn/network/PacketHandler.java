@@ -23,10 +23,8 @@
 
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.util.Reward;
-import ccm.pay2spawn.util.TickHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;

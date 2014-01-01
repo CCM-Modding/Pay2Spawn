@@ -27,7 +27,7 @@ import java.io.IOException;
 
 public class BanHelper
 {
-    private static BanList   banList = new BanList();
+    private static BanList banList = new BanList();
 
     public static boolean isBanned(Node node)
     {

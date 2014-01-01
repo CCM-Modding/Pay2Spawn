@@ -48,7 +48,7 @@ public class HTMLGenerator
     private static File templateIndex;
 
     static final String LOOP_START = "<!-- BEGIN REWARDS -->";
-    static final String LOOP_END = "<!-- END REWARDS -->";
+    static final String LOOP_END   = "<!-- END REWARDS -->";
 
     static final Pattern VAR = Pattern.compile("\\$\\{([\\w.]*?)\\}");
 

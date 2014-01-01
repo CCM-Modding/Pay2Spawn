@@ -35,8 +35,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
-import static ccm.pay2spawn.util.JsonNBTHelper.INT;
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 public class XPOrbsType extends TypeBase
 {

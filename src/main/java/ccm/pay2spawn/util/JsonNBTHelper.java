@@ -24,10 +24,16 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.random.RandomRegistry;
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import net.minecraft.nbt.*;
 
 import java.util.Map;
+
+import static ccm.pay2spawn.util.Constants.*;
+import static net.minecraft.nbt.NBTBase.NBTTypes;
 
 /**
  * This is nearly full Json (gson) to NBT converter.
@@ -39,10 +45,6 @@ import java.util.Map;
  */
 public class JsonNBTHelper
 {
-    public static final int END = 0, BYTE = 1, SHORT = 2, INT = 3, LONG = 4, FLOAT = 5, DOUBLE = 6, BYTE_ARRAY = 7, STRING = 8, LIST = 9, COMPOUND = 10, INT_ARRAY = 11;
-    public static final JsonParser PARSER = new JsonParser();
-    public static final Gson       GSON   = new GsonBuilder().setPrettyPrinting().create();
-
     /**
      * To avoid idiocy later we need to store all things as a string with the type in the string. :(
      * Please tell your users about this!
@@ -55,21 +57,21 @@ public class JsonNBTHelper
         {
             // 0 = END
             case BYTE:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagByte) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagByte) element).data);
             case SHORT:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagShort) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagShort) element).data);
             case INT:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagInt) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagInt) element).data);
             case LONG:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagLong) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagLong) element).data);
             case FLOAT:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagFloat) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagFloat) element).data);
             case DOUBLE:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagDouble) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagDouble) element).data);
             case BYTE_ARRAY:
                 return parseNBT((NBTTagByteArray) element);
             case STRING:
-                return new JsonPrimitive(NBTBase.NBTTypes[element.getId()] + ":" + ((NBTTagString) element).data);
+                return new JsonPrimitive(NBTTypes[element.getId()] + ":" + ((NBTTagString) element).data);
             case LIST:
                 return parseNBT((NBTTagList) element);
             case COMPOUND:
@@ -85,14 +87,14 @@ public class JsonNBTHelper
     {
         JsonArray jsonArray = new JsonArray();
         for (int i : nbtArray.intArray) jsonArray.add(new JsonPrimitive(i));
-        return new JsonPrimitive(NBTBase.NBTTypes[nbtArray.getId()] + ":" + jsonArray.toString());
+        return new JsonPrimitive(NBTTypes[nbtArray.getId()] + ":" + jsonArray.toString());
     }
 
     public static JsonPrimitive parseNBT(NBTTagByteArray nbtArray)
     {
         JsonArray jsonArray = new JsonArray();
         for (int i : nbtArray.byteArray) jsonArray.add(new JsonPrimitive(i));
-        return new JsonPrimitive(NBTBase.NBTTypes[nbtArray.getId()] + jsonArray.toString());
+        return new JsonPrimitive(NBTTypes[nbtArray.getId()] + jsonArray.toString());
     }
 
     public static JsonArray parseNBT(NBTTagList nbtArray)
@@ -130,11 +132,11 @@ public class JsonNBTHelper
         String string = element.getAsString();
         if (string.contains(":"))
         {
-            for (int id = 0; id < NBTBase.NBTTypes.length; id++)
+            for (int id = 0; id < NBTTypes.length; id++)
             {
-                if (string.startsWith(NBTBase.NBTTypes[id] + ":"))
+                if (string.startsWith(NBTTypes[id] + ":"))
                 {
-                    String value = string.replace(NBTBase.NBTTypes[id] + ":", "");
+                    String value = string.replace(NBTTypes[id] + ":", "");
                     value = RandomRegistry.solveRandom(id, value);
                     switch (id)
                     {
@@ -181,7 +183,7 @@ public class JsonNBTHelper
 
     public static NBTTagByteArray parseJSONByteArray(String value)
     {
-        JsonArray in = PARSER.parse(value).getAsJsonArray();
+        JsonArray in = JSON_PARSER.parse(value).getAsJsonArray();
         byte[] out = new byte[in.size()];
         for (int i = 0; i < in.size(); i++) out[i] = in.get(i).getAsByte();
         return new NBTTagByteArray("", out);
@@ -189,7 +191,7 @@ public class JsonNBTHelper
 
     public static NBTTagIntArray parseJSONIntArray(String value)
     {
-        JsonArray in = PARSER.parse(value).getAsJsonArray();
+        JsonArray in = JSON_PARSER.parse(value).getAsJsonArray();
         int[] out = new int[in.size()];
         for (int i = 0; i < in.size(); i++) out[i] = in.get(i).getAsInt();
         return new NBTTagIntArray("", out);
@@ -211,6 +213,6 @@ public class JsonNBTHelper
 
     public static JsonElement cloneJSON(JsonElement toClone)
     {
-        return PARSER.parse(toClone.toString());
+        return JSON_PARSER.parse(toClone.toString());
     }
 }

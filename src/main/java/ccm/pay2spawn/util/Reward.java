@@ -30,13 +30,10 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import com.google.common.base.Joiner;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonIOException;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.command.NumberInvalidException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -45,6 +42,9 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 import java.util.HashSet;
+
+import static ccm.pay2spawn.util.Constants.CHANNEL_REWARD;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class Reward
 {
@@ -119,7 +119,7 @@ public class Reward
         DataInputStream stream = new DataInputStream(streambyte);
         String name = stream.readUTF();
         Double amount = stream.readDouble();
-        JsonArray rewards = JsonNBTHelper.PARSER.parse(stream.readUTF()).getAsJsonArray();
+        JsonArray rewards = JSON_PARSER.parse(stream.readUTF()).getAsJsonArray();
         stream.close();
         streambyte.close();
 
@@ -159,7 +159,7 @@ public class Reward
 
     public void send(JsonObject donation)
     {
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(Constants.CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
     }
 
     public Integer getCountdown()

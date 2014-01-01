@@ -25,11 +25,9 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.BanHelper;
-import ccm.pay2spawn.permissions.BanList;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -43,8 +41,8 @@ import net.minecraftforge.common.Configuration;
 import java.util.Collection;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.random.RandomRegistry.RANDOM;
 import static ccm.pay2spawn.util.Constants.MODID;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * A reward for complex custom entities

@@ -33,7 +33,6 @@ import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.EventHandler;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;
 import ccm.pay2spawn.util.TickHandler;
 import cpw.mods.fml.common.Mod;
@@ -161,7 +160,7 @@ public class Pay2Spawn
         PermissionsHandler.init();
         try
         {
-            ConfigSyncPacket.serverConfig = JsonNBTHelper.PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
+            ConfigSyncPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
         }
         catch (FileNotFoundException e)
         {

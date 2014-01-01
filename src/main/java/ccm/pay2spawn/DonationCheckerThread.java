@@ -23,22 +23,20 @@
 
 package ccm.pay2spawn;
 
-import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
-import ccm.pay2spawn.util.JsonNBTHelper;
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
+
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 /**
  * The thread that does the actual checking with nightdevs donationtracker
@@ -102,7 +100,7 @@ public class DonationCheckerThread extends Thread
     {
         for (JsonObject donation : backlog) process(donation);
 
-        JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(donationsUrl)).getAsJsonObject();
+        JsonObject root = JSON_PARSER.parse(readUrl(donationsUrl)).getAsJsonObject();
 
         if (root.get("status").getAsString().equals("success"))
         {
@@ -119,12 +117,12 @@ public class DonationCheckerThread extends Thread
     private void doSubs() throws Exception
     {
         HashSet<String> newSubs = new HashSet<>();
-        JsonObject root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl)).getAsJsonObject();
+        JsonObject root = JSON_PARSER.parse(readUrl(subsUrl)).getAsJsonObject();
         parseSubs(newSubs, root);
         int total = root.getAsJsonPrimitive("_total").getAsInt();
-        for(int offset = 100; offset < total; offset += 100)
+        for (int offset = 100; offset < total; offset += 100)
         {
-            root = JsonNBTHelper.PARSER.parse(readUrl(subsUrl + "&offset=" + offset)).getAsJsonObject();
+            root = JSON_PARSER.parse(readUrl(subsUrl + "&offset=" + offset)).getAsJsonObject();
             parseSubs(newSubs, root);
         }
 

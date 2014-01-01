@@ -34,6 +34,8 @@ import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
+import static ccm.pay2spawn.util.Constants.MODID;
+
 public class TickHandler implements IScheduledTickHandler
 {
     HashSet<QueEntry> entries = new HashSet<>();
@@ -68,7 +70,7 @@ public class TickHandler implements IScheduledTickHandler
             else
             {
                 if (hudSettings.countdown != 0) EventHandler.COUNTDOWN.add(hudSettings.countdown_format.replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
-                queEntry.remaining --;
+                queEntry.remaining--;
             }
         }
     }
@@ -88,7 +90,7 @@ public class TickHandler implements IScheduledTickHandler
     @Override
     public String getLabel()
     {
-        return Constants.MODID + "_Countdown";
+        return MODID + "_Countdown";
     }
 
     public void add(Reward reward, JsonObject donation)
@@ -98,9 +100,9 @@ public class TickHandler implements IScheduledTickHandler
 
     public class QueEntry
     {
-        int remaining;
+        int        remaining;
         JsonObject donation;
-        Reward reward;
+        Reward     reward;
 
         public QueEntry(Reward reward, JsonObject donation)
         {

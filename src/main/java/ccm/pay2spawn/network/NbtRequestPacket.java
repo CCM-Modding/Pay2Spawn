@@ -23,9 +23,6 @@
 
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
-import ccm.pay2spawn.types.guis.FireworksTypeGui;
-import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;

@@ -27,7 +27,6 @@ import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.IIHasCallback;
-import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -37,6 +36,8 @@ import java.awt.event.*;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.FireworksType.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 {
@@ -102,7 +103,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 
         explosionList.updateUI();
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
@@ -114,7 +115,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 
         explosionList.updateUI();
 
-        jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
+        jsonPane.setText(GSON.toJson(data));
     }
 
     public void callback(int id, JsonObject data)
@@ -159,7 +160,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
             {
                 try
                 {
-                    data = JsonNBTHelper.PARSER.parse(jsonPane.getText()).getAsJsonObject();
+                    data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
                 }
@@ -219,7 +220,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void callback(Object... data)
     {
-        this.data = JsonNBTHelper.PARSER.parse((String) data[0]).getAsJsonObject();
+        this.data = JSON_PARSER.parse((String) data[0]).getAsJsonObject();
         this.fireworks = this.data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
         this.data.addProperty(AMOUNT_KEY, "INT:5");
         this.data.addProperty(RADIUS_KEY, "INT:5");
