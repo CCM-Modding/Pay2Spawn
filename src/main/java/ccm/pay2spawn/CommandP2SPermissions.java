@@ -34,6 +34,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class CommandP2SPermissions extends CommandBase
@@ -43,7 +44,13 @@ public class CommandP2SPermissions extends CommandBase
     @Override
     public String getCommandName()
     {
-        return "P2SPermissions";
+        return "p2spermissions";
+    }
+
+    @Override
+    public List getCommandAliases()
+    {
+        return Arrays.asList("p2sperm");
     }
 
     @Override
