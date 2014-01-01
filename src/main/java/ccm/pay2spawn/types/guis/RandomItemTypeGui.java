@@ -26,6 +26,7 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -51,8 +52,7 @@ public class RandomItemTypeGui extends HelperGuiBase
     {
         super(rewardID, name, inputData, typeMap);
 
-        if (!inputData.has(TAG_KEY)) inputData.add(TAG_KEY, new JsonObject());
-        if (!inputData.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) inputData.getAsJsonObject(TAG_KEY).add(DISPLAY_KEY, new JsonObject());
+
 
         makeAndOpen();
     }
@@ -60,7 +60,7 @@ public class RandomItemTypeGui extends HelperGuiBase
     @Override
     public void readJson()
     {
-        itemNameField.setText(readValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY)));
+        if (data.has(TAG_KEY) && data.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) itemNameField.setText(readValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY)));
 
         jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
     }
@@ -68,7 +68,12 @@ public class RandomItemTypeGui extends HelperGuiBase
     @Override
     public void updateJson()
     {
-        storeValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY), itemNameField.getText());
+        if (!Strings.isNullOrEmpty(itemNameField.getText()))
+        {
+            if (!data.has(TAG_KEY)) data.add(TAG_KEY, new JsonObject());
+            if (!data.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) data.getAsJsonObject(TAG_KEY).add(DISPLAY_KEY, new JsonObject());
+            storeValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY), itemNameField.getText());
+        }
 
         jsonPane.setText(JsonNBTHelper.GSON.toJson(data));
     }

@@ -81,14 +81,7 @@ public class RandomItemType extends TypeBase
     {
         try
         {
-            ItemStack is = pickRandomItemStack();
-            NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
-            for (Object o : dataFromClient.getTags())
-            {
-                NBTBase tag = (NBTBase) o;
-                nbtTagCompound.setTag(tag.getName(), tag);
-            }
-            is.readFromNBT(nbtTagCompound);
+            ItemStack is = ItemStack.loadItemStackFromNBT(dataFromClient);
             player.dropPlayerItem(is).delayBeforeCanPickup = 0;
         }
         catch (Exception e)
@@ -112,8 +105,16 @@ public class RandomItemType extends TypeBase
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
-        String name = itemStack.getUnlocalizedName();
+        ItemStack is = pickRandomItemStack();
+        NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
+        for (Object o : dataFromClient.getTags())
+        {
+            NBTBase tag = (NBTBase) o;
+            nbtTagCompound.setTag(tag.getName(), tag);
+        }
+        is.readFromNBT(nbtTagCompound);
+        is.writeToNBT(dataFromClient);
+        String name = is.getUnlocalizedName();
         if (name.startsWith("item.")) name = name.substring("item.".length());
         if (name.startsWith("tile.")) name = name.substring("tile.".length());
         return new Node(ItemType.NAME, name.replace(".", "_"));
