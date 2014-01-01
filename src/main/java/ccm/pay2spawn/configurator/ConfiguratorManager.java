@@ -100,12 +100,6 @@ public class ConfiguratorManager
 
     public static void reload()
     {
-        boolean wasthere = false;
-        if (Configurator.instance != null)
-        {
-            wasthere = Configurator.instance.frame.isVisible();
-            Configurator.instance.frame.dispose();
-        }
-        if (wasthere) openCfg();
+        if (Configurator.instance != null) Configurator.instance.update();
     }
 }
