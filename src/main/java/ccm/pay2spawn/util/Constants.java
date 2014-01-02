@@ -43,12 +43,12 @@ public class Constants
     /**
      * Network related
      */
-    public static final String   CHANNEL_HANDSHAKE    = MODID + "_hs";
-    public static final String   CHANNEL_REWARD       = MODID + "_r";
-    public static final String   CHANNEL_TEST         = MODID + "_t";
-    public static final String   CHANNEL_SYNC         = MODID + "_sync";
-    public static final String   CHANNEL_NBT_REQUEST  = MODID + "_req";
-    public static final String[] CHANNELS             = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_SYNC, CHANNEL_NBT_REQUEST};
+    public static final String   CHANNEL_HANDSHAKE   = MODID + "_hs";
+    public static final String   CHANNEL_REWARD      = MODID + "_r";
+    public static final String   CHANNEL_TEST        = MODID + "_t";
+    public static final String   CHANNEL_SYNC        = MODID + "_sync";
+    public static final String   CHANNEL_NBT_REQUEST = MODID + "_req";
+    public static final String[] CHANNELS            = {CHANNEL_HANDSHAKE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_SYNC, CHANNEL_NBT_REQUEST};
 
     /**
      * Donation data
@@ -61,11 +61,11 @@ public class Constants
     /**
      * Global helpers
      */
-    public static final Joiner     JOINER_DOT  = Joiner.on(".").skipNulls();
-    public static final Joiner     JOINER_SPACE  = Joiner.on(" ").skipNulls();
-    public static final Random     RANDOM      = new Random();
-    public static final JsonParser JSON_PARSER = new JsonParser();
-    public static final Gson       GSON        = new GsonBuilder().setPrettyPrinting().create();
+    public static final Joiner     JOINER_DOT         = Joiner.on(".").skipNulls();
+    public static final Joiner     JOINER_SPACE       = Joiner.on(" ").skipNulls();
+    public static final Random     RANDOM             = new Random();
+    public static final JsonParser JSON_PARSER        = new JsonParser();
+    public static final Gson       GSON               = new GsonBuilder().setPrettyPrinting().create();
     public static final Joiner     JOINER_COMMA_SPACE = Joiner.on(", ").skipNulls();
 
     /**

@@ -25,7 +25,6 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
-import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -33,11 +32,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -294,7 +295,7 @@ public class Helper
     public static void addWithEmptyLines(ArrayList<String> list, String header)
     {
         String[] lines = header.split("\\\\n");
-        for (String line : lines) list.add(line);
+        Collections.addAll(list, lines);
     }
 
     public static final Pattern DOUBLE_QUOTES = Pattern.compile("\"(.*)\"");
@@ -304,5 +305,20 @@ public class Helper
         Matcher m = DOUBLE_QUOTES.matcher(s);
         if (m.matches()) return m.group(1);
         else return s;
+    }
+
+    public static boolean rndSpawnPoint(ArrayList<Point> points, Entity entity)
+    {
+        Collections.shuffle(points, RANDOM);
+        for (Point p : points)
+        {
+            Collections.shuffle(points, RANDOM);
+            if (p.canSpawn(entity))
+            {
+                p.setPosition(entity);
+                return true;
+            }
+        }
+        return false;
     }
 }

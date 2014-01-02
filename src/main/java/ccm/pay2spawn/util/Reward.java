@@ -43,9 +43,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.io.*;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.Constants.CHANNEL_REWARD;
-import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class Reward
 {

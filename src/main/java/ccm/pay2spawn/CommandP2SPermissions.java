@@ -189,6 +189,7 @@ public class CommandP2SPermissions extends CommandBase
         }
         PermissionsHandler.getDB().save();
     }
+
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
@@ -277,7 +278,7 @@ public class CommandP2SPermissions extends CommandBase
                         break;
                 }
                 break;
-            }
+        }
         return null;
     }
 }

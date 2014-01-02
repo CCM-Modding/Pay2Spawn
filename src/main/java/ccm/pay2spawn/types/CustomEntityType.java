@@ -28,6 +28,8 @@ import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
+import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.Point;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -38,11 +40,12 @@ import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.Configuration;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.types.EntityType.*;
 import static ccm.pay2spawn.util.Constants.MODID;
-import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * A reward for complex custom entities
@@ -53,18 +56,11 @@ import static ccm.pay2spawn.util.Constants.RANDOM;
 public class CustomEntityType extends TypeBase
 {
     private static final String NAME   = "customeentity";
-    private static       int    radius = 10;
 
     @Override
     public String getName()
     {
         return NAME;
-    }
-
-    @Override
-    public void doConfig(Configuration configuration)
-    {
-        radius = configuration.get(MODID + "." + NAME, "radius", radius, "The radius in wich the entity is randomly spawed").getInt();
     }
 
     @Override
@@ -77,7 +73,7 @@ public class CustomEntityType extends TypeBase
     public Collection<Node> getPermissionNodes()
     {
         HashSet<Node> nodes = new HashSet<>();
-        for (String s : EntityType.NAMES) nodes.add(new Node(EntityType.NODENAME, s));
+        for (String s : NAMES) nodes.add(new Node(NODENAME, s));
         return nodes;
     }
 
@@ -85,7 +81,7 @@ public class CustomEntityType extends TypeBase
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        return new Node(EntityType.NODENAME, EntityList.getEntityString(entity));
+        return new Node(NODENAME, EntityList.getEntityString(entity));
     }
 
     @Override
@@ -96,9 +92,9 @@ public class CustomEntityType extends TypeBase
             case "entity":
                 StringBuilder sb = new StringBuilder();
                 sb.append(jsonObject.get("id").getAsString().replace("STRING:", ""));
-                while (jsonObject.has(EntityType.RIDING_KEY))
+                while (jsonObject.has(RIDING_KEY))
                 {
-                    jsonObject = jsonObject.getAsJsonObject(EntityType.RIDING_KEY);
+                    jsonObject = jsonObject.getAsJsonObject(RIDING_KEY);
                     sb.append(" riding a ").append(jsonObject.get("id").getAsString().replace("STRING:", ""));
                 }
                 return sb.toString();
@@ -112,33 +108,33 @@ public class CustomEntityType extends TypeBase
         NBTTagCompound tag = new NBTTagCompound();
         Entity entity = EntityList.createEntityByName("Wolf", null);
         entity.writeMountToNBT(tag);
-        tag.setBoolean(EntityType.AGRO_KEY, true);
+        tag.setBoolean(AGRO_KEY, true);
         return tag;
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
+        if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
+        ArrayList<Point> points = new Point(player).getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
+
         Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        double x, y, z;
-
-        y = player.posY + 1;
-
-        x = player.posX + (radius / 2 - RANDOM.nextInt(radius));
-        z = player.posZ + (radius / 2 - RANDOM.nextInt(radius));
 
         if (entity != null)
         {
-            if (dataFromClient.getBoolean(EntityType.AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
-            entity.setPosition(x, y, z);
+            entity.setPosition(player.posX, player.posY, player.posZ);
+            Helper.rndSpawnPoint(points, entity);
+
+            if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
+
             player.worldObj.spawnEntityInWorld(entity);
 
             Entity entity1 = entity;
-            for (NBTTagCompound tag = dataFromClient; tag.hasKey(EntityType.RIDING_KEY); tag = tag.getCompoundTag(EntityType.RIDING_KEY))
+            for (NBTTagCompound tag = dataFromClient; tag.hasKey(RIDING_KEY); tag = tag.getCompoundTag(RIDING_KEY))
             {
-                Entity entity2 = EntityList.createEntityFromNBT(tag.getCompoundTag(EntityType.RIDING_KEY), player.getEntityWorld());
+                Entity entity2 = EntityList.createEntityFromNBT(tag.getCompoundTag(RIDING_KEY), player.getEntityWorld());
 
-                Node node = this.getPermissionNode(player, tag.getCompoundTag(EntityType.RIDING_KEY));
+                Node node = this.getPermissionNode(player, tag.getCompoundTag(RIDING_KEY));
                 if (BanHelper.isBanned(node))
                 {
                     player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
@@ -153,9 +149,9 @@ public class CustomEntityType extends TypeBase
 
                 if (entity2 != null)
                 {
-                    if (tag.getCompoundTag(EntityType.RIDING_KEY).getBoolean(EntityType.AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
+                    if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
 
-                    entity2.setPosition(x, y, z);
+                    entity2.setPosition(entity.posX, entity.posY, entity.posZ);
                     player.worldObj.spawnEntityInWorld(entity2);
                     entity1.mountEntity(entity2);
                 }

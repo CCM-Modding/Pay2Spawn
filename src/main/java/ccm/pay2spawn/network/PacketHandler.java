@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn.network;
 
-import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.util.Reward;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;

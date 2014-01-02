@@ -60,6 +60,7 @@ public class EntityTypeGui extends HelperGuiBase
     public JRadioButton      donTRandomizeMobRadioButton;
     public JButton           addMobThisEntityButton;
     public JRadioButton      randomlyRandomizeMobRadioButton;
+    public JTextField        spawnRadiusTextField;
     public EntityTypeGui     superGui;
     public EntityTypeGui instance = this;
     public EntityTypeGui clientGui;
@@ -74,6 +75,8 @@ public class EntityTypeGui extends HelperGuiBase
         Collections.sort(list);
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
 
+        if (!data.has(EntityType.SPAWNRADIUS_KEY)) data.addProperty(EntityType.SPAWNRADIUS_KEY, 10);
+
         makeAndOpen();
     }
 
@@ -87,6 +90,8 @@ public class EntityTypeGui extends HelperGuiBase
         list.add(RandomRegistry.getInstanceFromClass(RndEntity.class).getIdentifier());
         Collections.sort(list);
         entityNameComboBox.setModel(new DefaultComboBoxModel<>(list.toArray(new String[list.size()])));
+
+        if (!data.has(EntityType.SPAWNRADIUS_KEY)) data.addProperty(EntityType.SPAWNRADIUS_KEY, 10);
 
         makeAndOpen();
     }
@@ -177,6 +182,8 @@ public class EntityTypeGui extends HelperGuiBase
     {
         entityNameComboBox.setSelectedItem(readValue(ENTITYNAME_KEY, data));
         customNameTextField.setText(readValue(CUSTOMNAME_KEY, data));
+        spawnRadiusTextField.setText(readValue(EntityType.SPAWNRADIUS_KEY, data));
+
 
         String agro = readValue(AGRO_KEY, data);
         notAgroRadioButton.setSelected(agro.equals("0") || agro.equals(""));
@@ -196,6 +203,7 @@ public class EntityTypeGui extends HelperGuiBase
     {
         storeValue(ENTITYNAME_KEY, data, entityNameComboBox.getSelectedItem());
         storeValue(CUSTOMNAME_KEY, data, customNameTextField.getText());
+        storeValue(EntityType.SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
 
         storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? "$random" : agroRadioButton.isSelected() ? "1" : "0");
         storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? "$random" : randomizeMobRadioButton.isSelected() ? "1" : "0");
@@ -336,6 +344,27 @@ public class EntityTypeGui extends HelperGuiBase
         gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(donTRandomizeMobRadioButton, gbc);
+        final JLabel label7 = new JLabel();
+        label7.setText("Spawn radius:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label7, gbc);
+        spawnRadiusTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(spawnRadiusTextField, gbc);
+        final JLabel label8 = new JLabel();
+        label8.setText("INT");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 5;
+        panel2.add(label8, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -345,13 +374,13 @@ public class EntityTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label7 = new JLabel();
-        label7.setText("Json:");
+        final JLabel label9 = new JLabel();
+        label9.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label7, gbc);
+        panel3.add(label9, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -419,6 +448,7 @@ public class EntityTypeGui extends HelperGuiBase
         panel4.add(testButton, gbc);
         label3.setLabelFor(entityNameComboBox);
         label5.setLabelFor(customNameTextField);
+        label7.setLabelFor(spawnRadiusTextField);
         ButtonGroup buttonGroup;
         buttonGroup = new ButtonGroup();
         buttonGroup.add(agroRadioButton);

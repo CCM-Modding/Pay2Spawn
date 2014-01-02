@@ -24,15 +24,10 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.permissions.Group;
-import ccm.pay2spawn.permissions.Node;
-import ccm.pay2spawn.permissions.PermissionsHandler;
-import ccm.pay2spawn.permissions.Player;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 

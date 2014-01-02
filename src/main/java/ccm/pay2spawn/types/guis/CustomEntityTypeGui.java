@@ -26,6 +26,7 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.types.EntityType;
 import ccm.pay2spawn.util.IIHasCallback;
 import com.google.gson.JsonObject;
 
@@ -48,11 +49,14 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     public JButton     updateJsonButton;
     public JButton     testButton;
     public JPanel      panel1;
+    public JTextField  spawnRadiusTextField;
     public CustomEntityTypeGui instance = this;
 
     public CustomEntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
+
+        if (!data.has(EntityType.SPAWNRADIUS_KEY)) data.addProperty(EntityType.SPAWNRADIUS_KEY, 10);
 
         makeAndOpen();
     }
@@ -60,12 +64,16 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void readJson()
     {
+        spawnRadiusTextField.setText(readValue(EntityType.SPAWNRADIUS_KEY, data));
+
         jsonPane.setText(GSON.toJson(data));
     }
 
     @Override
     public void updateJson()
     {
+        storeValue(EntityType.SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
+
         jsonPane.setText(GSON.toJson(data));
     }
 
@@ -173,6 +181,7 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 3;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel2.add(importItemYouAreButton, gbc);
@@ -181,10 +190,34 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         label1.setHorizontalTextPosition(0);
         label1.setText("For mobs riding other mobs: You must right click the top one.");
         gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridx = 1;
+        gbc.gridy = 2;
         gbc.weightx = 1.0;
         panel2.add(label1, gbc);
+        spawnRadiusTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.ipadx = 5;
+        panel2.add(spawnRadiusTextField, gbc);
+        final JLabel label2 = new JLabel();
+        label2.setText("Spawn radius:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.ipadx = 5;
+        panel2.add(label2, gbc);
+        final JLabel label3 = new JLabel();
+        label3.setText("INT");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.ipadx = 5;
+        panel2.add(label3, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -194,13 +227,13 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label2 = new JLabel();
-        label2.setText("Json:");
+        final JLabel label4 = new JLabel();
+        label4.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label2, gbc);
+        panel3.add(label4, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -258,6 +291,7 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel4.add(testButton, gbc);
+        label2.setLabelFor(spawnRadiusTextField);
     }
 
     /**

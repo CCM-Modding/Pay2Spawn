@@ -28,6 +28,8 @@ import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.EntityTypeGui;
+import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.Point;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -42,6 +44,7 @@ import net.minecraftforge.common.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -60,17 +63,16 @@ public class EntityType extends TypeBase
 {
     private static final String NAME = "entity";
 
-    public static final String ENTITYNAME_KEY = "name";
-    public static final String AGRO_KEY       = "agro";
-    public static final String CUSTOMNAME_KEY = "CustomName";
-    public static final String RIDING_KEY     = "Riding";
-    public static final String RANDOM_KEY     = "random";
+    public static final String ENTITYNAME_KEY  = "name";
+    public static final String SPAWNRADIUS_KEY = "SPAWNRADIUS";
+    public static final String AGRO_KEY        = "agro";
+    public static final String CUSTOMNAME_KEY  = "CustomName";
+    public static final String RIDING_KEY      = "Riding";
+    public static final String RANDOM_KEY      = "random";
 
     public static final HashSet<String>         NAMES    = new HashSet<>();
     public static final HashMap<String, String> typeMap  = new HashMap<>();
     public static final String                  NODENAME = NAME;
-
-    private static int radius = 10;
 
     static
     {
@@ -78,18 +80,13 @@ public class EntityType extends TypeBase
         typeMap.put(AGRO_KEY, NBTBase.NBTTypes[BYTE]);
         typeMap.put(CUSTOMNAME_KEY, NBTBase.NBTTypes[STRING]);
         typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(SPAWNRADIUS_KEY, NBTBase.NBTTypes[INT]);
     }
 
     @Override
     public String getName()
     {
         return NAME;
-    }
-
-    @Override
-    public void doConfig(Configuration configuration)
-    {
-        radius = configuration.get(MODID + "." + NAME, "radius", radius, "The radius in wich the entity is randomly spawed").getInt();
     }
 
     @Override
@@ -107,6 +104,7 @@ public class EntityType extends TypeBase
         tag2.setString(CUSTOMNAME_KEY, "$name");
 
         tag.setCompoundTag(RIDING_KEY, tag2);
+        tag.setInteger(SPAWNRADIUS_KEY, 10);
 
         return tag;
     }
@@ -152,22 +150,20 @@ public class EntityType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        double x, y, z;
-
-        y = player.posY + 1;
-
-        x = player.posX + (radius / 2 - RANDOM.nextInt(radius));
-        z = player.posZ + (radius / 2 - RANDOM.nextInt(radius));
+        if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
+        ArrayList<Point> points = new Point(player).makeNiceForBlock().getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
 
         Entity entity = EntityList.createEntityByName(dataFromClient.getString(ENTITYNAME_KEY), player.getEntityWorld());
 
         if (entity != null)
         {
+            entity.setPosition(player.posX, player.posY, player.posZ);
+            Helper.rndSpawnPoint(points, entity);
+
             if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
             if (dataFromClient.hasKey(CUSTOMNAME_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString(CUSTOMNAME_KEY));
             if (dataFromClient.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
 
-            entity.setPosition(x, y, z);
             player.getEntityWorld().spawnEntityInWorld(entity);
 
             Entity entity1 = entity;
@@ -194,7 +190,7 @@ public class EntityType extends TypeBase
                     if (tag.getCompoundTag(RIDING_KEY).hasKey(CUSTOMNAME_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag(RIDING_KEY).getString(CUSTOMNAME_KEY));
                     if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
 
-                    entity2.setPosition(x, y, z);
+                    entity2.setPosition(entity.posX, entity.posY, entity.posZ);
                     player.worldObj.spawnEntityInWorld(entity2);
                     entity1.mountEntity(entity2);
                 }
