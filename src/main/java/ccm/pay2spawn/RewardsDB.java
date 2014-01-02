@@ -23,10 +23,12 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
+import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -47,7 +49,7 @@ import static ccm.pay2spawn.util.Constants.JSON_PARSER;
  */
 public class RewardsDB
 {
-    private final HashMap<Double, Reward> map = new HashMap<>();
+    private final HashMultimap<Double, Reward> map = HashMultimap.create();
     public boolean editable;
 
     RewardsDB(String input)
@@ -114,13 +116,13 @@ public class RewardsDB
     {
         double highestmatch = 0d;
         double amount = donation.get("amount").getAsDouble();
-        if (map.containsKey(amount)) map.get(amount).addToCountdown(donation);
+        if (map.containsKey(amount)) RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation);
         else
         {
             for (double key : map.keySet())
                 if (key < amount && highestmatch < key) highestmatch = key;
 
-            if (map.containsKey(highestmatch)) map.get(highestmatch).addToCountdown(donation);
+            if (map.containsKey(highestmatch)) RandomRegistry.getRandomFromSet(map.get(highestmatch)).addToCountdown(donation);
         }
     }
 

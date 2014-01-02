@@ -24,6 +24,7 @@
 package ccm.pay2spawn.random;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.util.Constants.RANDOM;
@@ -87,6 +88,8 @@ public class RandomRegistry
     public static <T> T getRandomFromSet(Collection<T> collection)
     {
         if (collection.isEmpty()) return null;
+        if (collection.size() == 1) //noinspection unchecked
+            return (T) collection.toArray()[0];
         int item = RANDOM.nextInt(collection.size());
         int i = 0;
         for (T obj : collection)
