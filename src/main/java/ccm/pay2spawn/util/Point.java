@@ -101,7 +101,6 @@ public class Point
                 if (distanceTo(p) < rad) points.add(p);
             }
         }
-        System.out.println("getCircle" + rad + ": " + points.size());
         return points;
     }
 
@@ -116,7 +115,6 @@ public class Point
                 points.add(new Point(p.x, p.y + dy, p.z));
             }
         }
-        System.out.println("getCylinder" + rad + ", " + height + ": " + points.size());
         return points;
     }
 
@@ -124,7 +122,6 @@ public class Point
     {
         ArrayList<Point> points = new ArrayList<>();
         for (Point p : getCylinder(rad, rad)) if (distanceTo(p) < rad) points.add(p);
-        System.out.println("getSphere" + rad + ": " + points.size());
         return points;
     }
 

@@ -295,7 +295,9 @@ public class Helper
     public static void addWithEmptyLines(ArrayList<String> list, String header)
     {
         String[] lines = header.split("\\\\n");
-        Collections.addAll(list, lines);
+        int i = 0;
+        for (String s : lines)
+            list.add(i ++, s);
     }
 
     public static final Pattern DOUBLE_QUOTES = Pattern.compile("\"(.*)\"");

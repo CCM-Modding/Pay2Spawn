@@ -35,7 +35,6 @@ import com.google.gson.JsonObject;
 
 import java.io.*;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Set;
 
 import static ccm.pay2spawn.util.Constants.GSON;
@@ -116,13 +115,21 @@ public class RewardsDB
     {
         double highestmatch = 0d;
         double amount = donation.get("amount").getAsDouble();
-        if (map.containsKey(amount)) RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation);
+        if (map.containsKey(amount)) RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation, true);
         else
         {
             for (double key : map.keySet())
                 if (key < amount && highestmatch < key) highestmatch = key;
 
-            if (map.containsKey(highestmatch)) RandomRegistry.getRandomFromSet(map.get(highestmatch)).addToCountdown(donation);
+            if (map.containsKey(highestmatch)) RandomRegistry.getRandomFromSet(map.get(highestmatch)).addToCountdown(donation, true);
+        }
+
+        /**
+         * -1 will always spawn
+         */
+        if (map.containsKey(-1))
+        {
+            RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation, false);
         }
     }
 

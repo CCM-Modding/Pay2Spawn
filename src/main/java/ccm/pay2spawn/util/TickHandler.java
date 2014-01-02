@@ -53,11 +53,6 @@ public class TickHandler implements IScheduledTickHandler
     {
         P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
         EventHandler.COUNTDOWN.clear();
-        if (hudSettings.countdown != 0 && !entries.isEmpty())
-        {
-            String header = hudSettings.countdown_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.COUNTDOWN, header);
-        }
         Iterator<QueEntry> rewardIterator = entries.iterator();
         while (rewardIterator.hasNext())
         {
@@ -69,9 +64,14 @@ public class TickHandler implements IScheduledTickHandler
             }
             else
             {
-                if (hudSettings.countdown != 0) EventHandler.COUNTDOWN.add(hudSettings.countdown_format.replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
+                if (hudSettings.countdown != 0 && queEntry.addToHUD) EventHandler.COUNTDOWN.add(hudSettings.countdown_format.replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
                 queEntry.remaining--;
             }
+        }
+        if (hudSettings.countdown != 0 && !EventHandler.COUNTDOWN.isEmpty())
+        {
+            String header = hudSettings.countdown_header.trim();
+            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.COUNTDOWN, header);
         }
     }
 
@@ -93,9 +93,9 @@ public class TickHandler implements IScheduledTickHandler
         return MODID + "_Countdown";
     }
 
-    public void add(Reward reward, JsonObject donation)
+    public void add(Reward reward, JsonObject donation, boolean addToHUD)
     {
-        entries.add(new QueEntry(reward, donation));
+        entries.add(new QueEntry(reward, donation, addToHUD));
     }
 
     public class QueEntry
@@ -103,12 +103,14 @@ public class TickHandler implements IScheduledTickHandler
         int        remaining;
         JsonObject donation;
         Reward     reward;
+        boolean    addToHUD;
 
-        public QueEntry(Reward reward, JsonObject donation)
+        public QueEntry(Reward reward, JsonObject donation, boolean addToHUD)
         {
             this.remaining = reward.getCountdown();
             this.donation = donation;
             this.reward = reward;
+            this.addToHUD = addToHUD;
         }
 
         public void send()

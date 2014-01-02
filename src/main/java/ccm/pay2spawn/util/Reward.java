@@ -30,6 +30,7 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -86,10 +87,10 @@ public class Reward
         return amount;
     }
 
-    public void addToCountdown(JsonObject donation)
+    public void addToCountdown(JsonObject donation, boolean addToHUD)
     {
-        Helper.msg(Helper.formatText(message, donation));
-        if (HandshakePacket.doesServerHaveMod()) TickHandler.INSTANCE.add(this, donation);
+        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation));
+        if (HandshakePacket.doesServerHaveMod()) TickHandler.INSTANCE.add(this, donation, addToHUD);
     }
 
     private byte[] toBytes(String formattedData)
