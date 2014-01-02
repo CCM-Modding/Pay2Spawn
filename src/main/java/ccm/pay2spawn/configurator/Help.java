@@ -23,13 +23,16 @@
 
 package ccm.pay2spawn.configurator;
 
+import ccm.pay2spawn.util.Helper;
+
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Help
 {
     public  JPanel    panel1;
-    public  JTextPane textPane1;
+    public  JTextPane textPane;
     private JFrame    frame;
 
     private static Help instance;
@@ -43,8 +46,17 @@ public class Help
             instance.frame.setContentPane(instance.panel1);
             instance.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
             instance.frame.setPreferredSize(new Dimension(500, 750));
-            instance.frame.setSize(500, 750);
+            instance.frame.setSize(600, 800);
             instance.frame.pack();
+
+            try
+            {
+                instance.textPane.setText(Helper.readUrl(instance.getClass().getResource("/p2s/helptext.html")));
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
         if (!instance.frame.isVisible()) instance.frame.setVisible(true);
     }
@@ -68,6 +80,7 @@ public class Help
         panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
         final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setHorizontalScrollBarPolicy(31);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -76,9 +89,11 @@ public class Help
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(scrollPane1, gbc);
-        textPane1 = new JTextPane();
-        textPane1.setEditable(false);
-        scrollPane1.setViewportView(textPane1);
+        textPane = new JTextPane();
+        textPane.setContentType("text/html");
+        textPane.setEditable(false);
+        textPane.setEnabled(true);
+        scrollPane1.setViewportView(textPane);
     }
 
     /**

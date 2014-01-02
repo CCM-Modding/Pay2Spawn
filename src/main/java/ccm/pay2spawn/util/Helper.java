@@ -37,6 +37,7 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.io.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -322,5 +323,25 @@ public class Helper
             }
         }
         return false;
+    }
+
+    public static String readUrl(URL url) throws IOException
+    {
+        BufferedReader reader = null;
+        StringBuilder buffer = new StringBuilder();
+
+        try
+        {
+            reader = new BufferedReader(new InputStreamReader(url.openStream()));
+
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);
+        }
+        finally
+        {
+            if (reader != null) reader.close();
+        }
+        return buffer.toString();
     }
 }

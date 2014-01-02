@@ -50,6 +50,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -117,7 +118,7 @@ public class Pay2Spawn
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event)
+    public void init(FMLInitializationEvent event) throws MalformedURLException
     {
         TickRegistry.registerScheduledTickHandler(TickHandler.INSTANCE, Side.CLIENT);
         TypeRegistry.doConfig(config.configuration);

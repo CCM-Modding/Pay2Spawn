@@ -32,6 +32,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 
 import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -47,19 +48,19 @@ public class DonationCheckerThread extends Thread
 {
     final int    interval;
     final String channel;
-    final String donationsUrl;
-    final String subsUrl;
+    final URL    donationsUrl;
+    final URL subsUrl;
     boolean firstrun = true;
     JsonArray latest;
     HashSet<String> subs = new HashSet<>();
 
-    public DonationCheckerThread()
+    public DonationCheckerThread() throws MalformedURLException
     {
         super(DonationCheckerThread.class.getSimpleName());
         this.interval = Pay2Spawn.getConfig().interval;
         this.channel = Pay2Spawn.getConfig().channel;
-        this.donationsUrl = "http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + Pay2Spawn.getConfig().API_Key;
-        this.subsUrl = "https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + Pay2Spawn.getConfig().twitchToken;
+        this.donationsUrl = new URL("http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + Pay2Spawn.getConfig().API_Key);
+        this.subsUrl = new URL("https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + Pay2Spawn.getConfig().twitchToken);
     }
 
     ArrayList<String>     doneIDs = new ArrayList<>();
@@ -100,7 +101,7 @@ public class DonationCheckerThread extends Thread
     {
         for (JsonObject donation : backlog) process(donation);
 
-        JsonObject root = JSON_PARSER.parse(readUrl(donationsUrl)).getAsJsonObject();
+        JsonObject root = JSON_PARSER.parse(Helper.readUrl(donationsUrl)).getAsJsonObject();
 
         if (root.get("status").getAsString().equals("success"))
         {
@@ -117,12 +118,12 @@ public class DonationCheckerThread extends Thread
     private void doSubs() throws Exception
     {
         HashSet<String> newSubs = new HashSet<>();
-        JsonObject root = JSON_PARSER.parse(readUrl(subsUrl)).getAsJsonObject();
+        JsonObject root = JSON_PARSER.parse(Helper.readUrl(subsUrl)).getAsJsonObject();
         parseSubs(newSubs, root);
         int total = root.getAsJsonPrimitive("_total").getAsInt();
         for (int offset = 100; offset < total; offset += 100)
         {
-            root = JSON_PARSER.parse(readUrl(subsUrl + "&offset=" + offset)).getAsJsonObject();
+            root = JSON_PARSER.parse(Helper.readUrl(new URL(subsUrl.toString() + "&offset=" + offset))).getAsJsonObject();
             parseSubs(newSubs, root);
         }
 
@@ -275,27 +276,6 @@ public class DonationCheckerThread extends Thread
                 }
             }
         }
-    }
-
-    private String readUrl(String urlString) throws IOException
-    {
-        BufferedReader reader = null;
-        StringBuilder buffer = new StringBuilder();
-
-        try
-        {
-            URL url = new URL(urlString);
-            reader = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            int read;
-            char[] chars = new char[1024];
-            while ((read = reader.read(chars)) != -1) buffer.append(chars, 0, read);
-        }
-        finally
-        {
-            if (reader != null) reader.close();
-        }
-        return buffer.toString();
     }
 
     public static void fakeDonation(double amount)
