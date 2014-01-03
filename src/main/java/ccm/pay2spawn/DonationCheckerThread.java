@@ -25,6 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -110,6 +111,7 @@ public class DonationCheckerThread extends Thread
 
         if (root.get("status").getAsString().equals("success"))
         {
+            root = JsonNBTHelper.fixNulls(root);
             doFileAndHud(root);
             latest = root.getAsJsonArray("mostRecent");
             for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());

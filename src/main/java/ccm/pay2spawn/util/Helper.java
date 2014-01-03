@@ -221,7 +221,7 @@ public class Helper
             }
         }
 
-        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).toString()))
+        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).getAsString()))
         {
             for (Pattern p : config.blacklist_Note_p)
             {
@@ -230,7 +230,7 @@ public class Helper
             }
         }
 
-        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).toString()))
+        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).getAsString()))
         {
             for (Pattern p : config.whitelist_Note_p)
             {

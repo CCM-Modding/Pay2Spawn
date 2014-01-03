@@ -215,4 +215,35 @@ public class JsonNBTHelper
     {
         return JSON_PARSER.parse(toClone.toString());
     }
+
+    public static JsonElement fixNulls(JsonElement element)
+    {
+        if (element.isJsonNull()) return new JsonPrimitive("");
+        if (element.isJsonObject()) return fixNulls(element.getAsJsonObject());
+        if (element.isJsonArray()) return fixNulls(element.getAsJsonArray());
+        if (element.isJsonPrimitive()) return fixNulls(element.getAsJsonPrimitive());
+        return null;
+    }
+
+    public static JsonPrimitive fixNulls(JsonPrimitive primitive)
+    {
+        if (primitive.isBoolean()) return new JsonPrimitive(primitive.getAsBoolean());
+        if (primitive.isNumber()) return new JsonPrimitive(primitive.getAsNumber());
+        if (primitive.isString()) return new JsonPrimitive(primitive.getAsString());
+        return JSON_PARSER.parse(primitive.toString()).getAsJsonPrimitive();
+    }
+
+    public static JsonArray fixNulls(JsonArray array)
+    {
+        JsonArray newArray = new JsonArray();
+        for (JsonElement element : array) newArray.add(fixNulls(element));
+        return newArray;
+    }
+
+    public static JsonObject fixNulls(JsonObject object)
+    {
+        JsonObject newObject = new JsonObject();
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) newObject.add(entry.getKey(), fixNulls(entry.getValue()));
+        return newObject;
+    }
 }
