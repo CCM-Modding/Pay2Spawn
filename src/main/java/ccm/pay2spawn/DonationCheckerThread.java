@@ -30,6 +30,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.File;
 import java.io.IOException;
@@ -287,13 +288,13 @@ public class DonationCheckerThread extends Thread
         donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
         donation.addProperty(DONATION_NOTE, "");
         Pay2Spawn.getRewardsDB().process(donation);
-        Helper.msg("[P2S] Faking donation of " + amount + ".");
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
     }
 
     public static void redonate(int id)
     {
         JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(id);
         Pay2Spawn.getRewardsDB().process(donation);
-        Helper.msg("[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
     }
 }

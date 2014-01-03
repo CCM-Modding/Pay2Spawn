@@ -70,7 +70,7 @@ public class CommandP2SPermissions extends CommandBase
         }
         if (args.length == 0)
         {
-            player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group|groups|player' for more info."));
+            player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group|groups|player' for more info.").setColor(EnumChatFormatting.RED));
             return;
         }
         switch (args[0])
@@ -78,7 +78,7 @@ public class CommandP2SPermissions extends CommandBase
             case "groups":
                 if (args.length < 3)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm groups add|remove <name> [parent group]' to add or remove a group."));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm groups add|remove <name> [parent group]' to add or remove a group.").setColor(EnumChatFormatting.RED));
                     break;
                 }
                 else
@@ -89,11 +89,11 @@ public class CommandP2SPermissions extends CommandBase
                         case "add":
                             String parent = args.length == 4 ? args[3] : null;
                             PermissionsHandler.getDB().newGroup(name, parent);
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Added new group named '" + name + (parent != null ? "' with parent group '" + parent : "") + "'."));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Added new group named '" + name + (parent != null ? "' with parent group '" + parent : "") + "'.").setColor(EnumChatFormatting.GOLD));
                             break;
                         case "remove":
                             PermissionsHandler.getDB().remove(name);
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group named '" + name + "'"));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group named '" + name + "'").setColor(EnumChatFormatting.GOLD));
                             break;
                     }
                 }
@@ -101,7 +101,7 @@ public class CommandP2SPermissions extends CommandBase
             case "group":
                 if (args.length < 4)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group <name> add|remove <node>' OR '<name> parent set|clear [name]'"));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm group <name> add|remove <node>' OR '<name> parent set|clear [name]'").setColor(EnumChatFormatting.RED));
                     break;
                 }
                 else
@@ -109,7 +109,7 @@ public class CommandP2SPermissions extends CommandBase
                     Group group = PermissionsHandler.getDB().getGroup(args[1]);
                     if (group == null)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("The group doesn't exitst."));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("The group doesn't exitst.").setColor(EnumChatFormatting.RED));
                         break;
                     }
                     switch (args[2])
@@ -120,25 +120,25 @@ public class CommandP2SPermissions extends CommandBase
                                 case "set":
                                     if (args.length != 5)
                                     {
-                                        player.sendChatToPlayer(ChatMessageComponent.createFromText("Use 'parent set <name>."));
+                                        player.sendChatToPlayer(ChatMessageComponent.createFromText("Use 'parent set <name>.").setColor(EnumChatFormatting.RED));
                                         return;
                                     }
                                     group.setParent(args[4]);
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Set parent to: " + args[4]));
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Set parent to: " + args[4]).setColor(EnumChatFormatting.GOLD));
                                     break;
                                 case "clear":
                                     group.setParent(null);
-                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Cleared parent group."));
+                                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Cleared parent group.").setColor(EnumChatFormatting.GOLD));
                                     break;
                             }
                             break;
                         case "add":
                             group.addNode(args[3]);
-                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Added node: " + args[3]));
+                            player.sendChatToPlayer(ChatMessageComponent.createFromText("Added node: " + args[3]).setColor(EnumChatFormatting.GOLD));
                             break;
                         case "remove":
-                            if (group.removeNode(args[3])) player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed node: " + args[3]));
-                            else player.sendChatToPlayer(ChatMessageComponent.createFromText("Node not removed, it wasn't there in the first place..."));
+                            if (group.removeNode(args[3])) player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed node: " + args[3]).setColor(EnumChatFormatting.GOLD));
+                            else player.sendChatToPlayer(ChatMessageComponent.createFromText("Node not removed, it wasn't there in the first place...").setColor(EnumChatFormatting.RED));
                             break;
                     }
                 }
@@ -146,7 +146,7 @@ public class CommandP2SPermissions extends CommandBase
             case "player":
                 if (args.length < 5)
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm player <name> group add|remove <group>' OR '<name> perm add|remove <node>'"));
+                    player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s perm player <name> group add|remove <group>' OR '<name> perm add|remove <node>'").setColor(EnumChatFormatting.RED));
                     break;
                 }
                 else
@@ -154,7 +154,7 @@ public class CommandP2SPermissions extends CommandBase
                     Player playero = PermissionsHandler.getDB().getPlayer(args[1]);
                     if (playero == null)
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("That player doesn't exist."));
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("That player doesn't exist.").setColor(EnumChatFormatting.RED));
                         break;
                     }
                     switch (args[2])
@@ -166,8 +166,8 @@ public class CommandP2SPermissions extends CommandBase
                                     playero.addGroup(args[4]);
                                     break;
                                 case "remove":
-                                    if (playero.removeGroup(args[4])) player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group: " + args[4]));
-                                    else player.sendChatToPlayer(ChatMessageComponent.createFromText("Group not removed, it wasn't there in the first place..."));
+                                    if (playero.removeGroup(args[4])) player.sendChatToPlayer(ChatMessageComponent.createFromText("Removed group: " + args[4]).setColor(EnumChatFormatting.GOLD));
+                                    else player.sendChatToPlayer(ChatMessageComponent.createFromText("Group not removed, it wasn't there in the first place...").setColor(EnumChatFormatting.RED));
                                     break;
                             }
                             break;
@@ -178,8 +178,8 @@ public class CommandP2SPermissions extends CommandBase
                                     playero.addNode(new Node(args[4]));
                                     break;
                                 case "remove":
-                                    if (playero.removeNode(new Node(args[4]))) player.sendChatToPlayer(ChatMessageComponent.createFromText("Added per node: " + args[4]));
-                                    else player.sendChatToPlayer(ChatMessageComponent.createFromText("Perm node not removed, it wasn't there in the first place..."));
+                                    if (playero.removeNode(new Node(args[4]))) player.sendChatToPlayer(ChatMessageComponent.createFromText("Added per node: " + args[4]).setColor(EnumChatFormatting.GOLD));
+                                    else player.sendChatToPlayer(ChatMessageComponent.createFromText("Perm node not removed, it wasn't there in the first place...").setColor(EnumChatFormatting.RED));
                                     break;
                             }
                             break;

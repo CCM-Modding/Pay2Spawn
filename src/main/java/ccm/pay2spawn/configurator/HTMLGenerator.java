@@ -38,8 +38,11 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Currency;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static ccm.pay2spawn.util.Constants.*;
 
 public class HTMLGenerator
 {
@@ -123,7 +126,7 @@ public class HTMLGenerator
                     case "name":
                         return reward.getName();
                     case "amount":
-                        return reward.getAmount().toString();
+                        return CURRENCY_FORMATTER.format(reward.getAmount());
                     case "countdown":
                         return reward.getCountdown().toString();
                     case "message":

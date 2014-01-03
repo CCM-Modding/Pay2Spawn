@@ -72,12 +72,11 @@ public class CommandP2S extends CommandBase
     @Override
     public void processCommand(ICommandSender sender, String[] args)
     {
-        EntityPlayer player = (EntityPlayer) sender;
         if (args.length == 0)
         {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(HELP));
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!"));
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Use serverside command 'P2SPermissions' for all things related to permissions."));
+            Helper.msg(EnumChatFormatting.AQUA + HELP);
+            Helper.msg(EnumChatFormatting.AQUA + "Protip: Use tab completion!");
+            Helper.msg(EnumChatFormatting.AQUA + "Use serverside command 'P2SPermissions' for all things related to permissions.");
             return;
         }
         switch (args[0])
@@ -95,12 +94,14 @@ public class CommandP2S extends CommandBase
                 break;
             case "off":
                 Pay2Spawn.enable = false;
+                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
                 break;
             case "on":
                 Pay2Spawn.enable = true;
+                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
                 break;
             case "donate":
-                if (args.length == 1) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s donate <amount>'."));
+                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s donate <amount>'.");
                 else
                 {
                     double amount = CommandBase.parseDouble(sender, args[1]);
@@ -108,7 +109,7 @@ public class CommandP2S extends CommandBase
                 }
                 break;
             case "redonate":
-                if (args.length == 1) player.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2s redonate <1-5>' to redo one of the last 5 donations."));
+                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s redonate <1-5>' to redo one of the last 5 donations.");
                 else
                 {
                     int id = CommandBase.parseIntBounded(sender, args[1], 1, 5) - 1;
@@ -117,7 +118,7 @@ public class CommandP2S extends CommandBase
                 break;
 
             default:
-                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown command. Protip: Use tab completion!"));
+                Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;
         }
     }
