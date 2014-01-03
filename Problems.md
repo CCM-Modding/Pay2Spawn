@@ -7,10 +7,10 @@ In all bugreports, include a stacktrace (or crash report) and if requested your 
 
 If you are dealing with a crash report, look above the section from FML for helpfull [P2S] lines:
 >    [SEVERE] [ForgeModLoader] Fatal errors were detected during the transition from ... to .... Loading cannot continue
->    [SEVERE] [ForgeModLoader] 
->    	mcp{8.09} [Minecraft Coder Pack] (minecraft.jar) Unloaded->...
->    	FML{6.4.45.953} [Forge Mod Loader] (Pay2Spawn) Unloaded->...
->    	Forge{9.11.1.953} [Minecraft Forge] (Pay2Spawn) Unloaded->...
+>    [SEVERE] [ForgeModLoader] <br>
+>    	mcp{8.09} [Minecraft Coder Pack] (minecraft.jar) Unloaded->...<br>
+>    	FML{6.4.45.953} [Forge Mod Loader] (Pay2Spawn) Unloaded->...<br>
+>    	Forge{9.11.1.953} [Minecraft Forge] (Pay2Spawn) Unloaded->...<br>
 If that isn't anywhere in the log, copy the 5 to 10 lines above and below the stacktrace, and keep an eye out for [P2S] in the console.
 
 ## Type 0: Errors that you don't need to worry about
