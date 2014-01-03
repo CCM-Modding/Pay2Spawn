@@ -1,0 +1,6 @@
+# If anyone on this list wants anything changed, feel free to message me. Github or IRC should do.
+# ~~Dries007
+Dries007=http://dries007.net/capes/matrix.png
+Dries007=dries007
+Claycorp=http://i.imgur.com/GFQIJMe.png
+Claycorp=claycorp

@@ -38,14 +38,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import static ccm.pay2spawn.types.EntityType.*;
-import static ccm.pay2spawn.util.Constants.MODID;
 
 /**
  * A reward for complex custom entities
@@ -55,7 +53,7 @@ import static ccm.pay2spawn.util.Constants.MODID;
  */
 public class CustomEntityType extends TypeBase
 {
-    private static final String NAME   = "customeentity";
+    private static final String NAME = "customeentity";
 
     @Override
     public String getName()

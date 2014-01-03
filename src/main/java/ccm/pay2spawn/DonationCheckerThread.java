@@ -31,7 +31,9 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -49,7 +51,7 @@ public class DonationCheckerThread extends Thread
     final int    interval;
     final String channel;
     final URL    donationsUrl;
-    final URL subsUrl;
+    final URL    subsUrl;
     boolean firstrun = true;
     JsonArray latest;
     HashSet<String> subs = new HashSet<>();

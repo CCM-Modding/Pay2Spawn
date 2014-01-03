@@ -39,7 +39,6 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 import java.io.IOException;

@@ -24,7 +24,6 @@
 package ccm.pay2spawn.random;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.util.Constants.RANDOM;

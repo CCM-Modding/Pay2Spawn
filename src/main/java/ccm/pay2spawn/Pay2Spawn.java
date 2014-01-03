@@ -32,9 +32,11 @@ import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.MetricsHelper;
 import ccm.pay2spawn.util.TickHandler;
+import com.jadarstudios.developercapes.DevCapesUtil;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -133,6 +135,8 @@ public class Pay2Spawn
             new EventHandler();
             ClientCommandHandler.instance.registerCommand(new CommandP2S());
         }
+
+        DevCapesUtil.addFileUrl(Constants.CAPEURL);
 
         NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
         PacketHandler packetHandler = new PacketHandler();

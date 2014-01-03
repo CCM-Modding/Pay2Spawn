@@ -298,7 +298,7 @@ public class Helper
         String[] lines = header.split("\\\\n");
         int i = 0;
         for (String s : lines)
-            list.add(i ++, s);
+            list.add(i++, s);
     }
 
     public static final Pattern DOUBLE_QUOTES = Pattern.compile("\"(.*)\"");

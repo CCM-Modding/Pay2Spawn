@@ -40,6 +40,8 @@ public class Constants
     public static final String NAME  = "Pay2Spawn";
     public static final String MODID = "P2S";
 
+    public static final String CAPEURL = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/capes.txt";
+
     /**
      * Network related
      */
