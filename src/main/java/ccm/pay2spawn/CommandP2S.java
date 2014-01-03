@@ -24,6 +24,7 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
+import ccm.pay2spawn.network.HandshakePacket;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -82,7 +83,7 @@ public class CommandP2S extends CommandBase
         {
             case "reload":
                 if (Pay2Spawn.getRewardsDB().editable) Pay2Spawn.reloadDB();
-                else Helper.msg(EnumChatFormatting.RED + "[P2S] You can't do that with a server side config.");
+                else HandshakePacket.sendReloadToServer();
                 break;
             case "configure":
                 if (Pay2Spawn.getRewardsDB().editable) ConfiguratorManager.openCfg();
@@ -93,11 +94,11 @@ public class CommandP2S extends CommandBase
                 break;
             case "off":
                 Pay2Spawn.enable = false;
-                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
+                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
                 break;
             case "on":
                 Pay2Spawn.enable = true;
-                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
+                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
                 break;
             case "donate":
                 if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s donate <amount>'.");
@@ -115,7 +116,6 @@ public class CommandP2S extends CommandBase
                     DonationCheckerThread.redonate(id);
                 }
                 break;
-
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;

@@ -30,6 +30,8 @@ import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashSet;
 
@@ -47,6 +49,8 @@ public class HandshakePacket
 
     private static final String HANDSHAKE_SERVER_TO_CLIENT = "HsS2C";
     private static final String HANDSHAKE_CLIENT_TO_SERVER = "HsC2S";
+    private static final String HANDSHAKE_RELOAD = "reload";
+
 
     public static void sendHandshakeToPlayer(Player player)
     {
@@ -73,6 +77,20 @@ public class HandshakePacket
                 playersWithHandshake.add(((EntityPlayer) player).getEntityName());
                 if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) ConfigSyncPacket.sendToPlayer(player);
                 break;
+            case HANDSHAKE_RELOAD:
+                if (MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(((EntityPlayer) player).getEntityName()))
+                {
+                    try
+                    {
+                        Pay2Spawn.reloadDB_Server();
+                    }
+                    catch (Exception e)
+                    {
+                        ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] RELOAD FAILED.").setColor(EnumChatFormatting.RED));
+                        e.printStackTrace();
+                    }
+                }
+                else ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Only ops can do that on servers.").setColor(EnumChatFormatting.RED));
             default:
                 Pay2Spawn.getLogger().severe("Invalid handshake received. Assuming no connection.");
                 break;
@@ -93,5 +111,10 @@ public class HandshakePacket
     {
         Pay2Spawn.enable = true;
         serverHasMod = false;
+    }
+
+    public static void sendReloadToServer()
+    {
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_HANDSHAKE, HANDSHAKE_RELOAD.getBytes()));
     }
 }

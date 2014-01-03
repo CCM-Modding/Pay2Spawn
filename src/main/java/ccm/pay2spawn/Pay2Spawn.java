@@ -37,6 +37,7 @@ import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.MetricsHelper;
 import ccm.pay2spawn.util.TickHandler;
 import com.jadarstudios.developercapes.DevCapesUtil;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -189,6 +190,12 @@ public class Pay2Spawn
         {
             e.printStackTrace();
         }
+    }
+
+    public static void reloadDB_Server() throws Exception
+    {
+        ConfigSyncPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
+        ConfigSyncPacket.sendToAllPlayers();
     }
 
     public static void reloadDBFromServer(String input)

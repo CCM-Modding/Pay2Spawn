@@ -36,6 +36,11 @@ public class ConfigSyncPacket
 {
     public static byte[] serverConfig;
 
+    public static void sendToAllPlayers()
+    {
+        PacketDispatcher.sendPacketToAllPlayers(PacketDispatcher.getPacket(CHANNEL_SYNC, serverConfig));
+    }
+
     public static void sendToPlayer(Player player)
     {
         PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_SYNC, serverConfig), player);
