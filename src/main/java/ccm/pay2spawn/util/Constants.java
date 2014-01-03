@@ -28,7 +28,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonParser;
 
-import javax.swing.text.NumberFormatter;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Random;
@@ -66,13 +65,13 @@ public class Constants
     /**
      * Global helpers
      */
-    public static final Random       RANDOM             = new Random();
+    public static final Random RANDOM = new Random();
 
-    public static final Joiner       JOINER_COMMA_SPACE = Joiner.on(", ").skipNulls();
-    public static final Joiner       JOINER_DOT         = Joiner.on(".").skipNulls();
+    public static final Joiner JOINER_COMMA_SPACE = Joiner.on(", ").skipNulls();
+    public static final Joiner JOINER_DOT         = Joiner.on(".").skipNulls();
 
-    public static final JsonParser   JSON_PARSER        = new JsonParser();
-    public static final Gson         GSON               = new GsonBuilder().setPrettyPrinting().create();
+    public static final JsonParser JSON_PARSER = new JsonParser();
+    public static final Gson       GSON        = new GsonBuilder().setPrettyPrinting().create();
 
     public static final NumberFormat CURRENCY_FORMATTER = new DecimalFormat("0.00");
 

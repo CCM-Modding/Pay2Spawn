@@ -38,11 +38,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Currency;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.CURRENCY_FORMATTER;
 
 public class HTMLGenerator
 {
