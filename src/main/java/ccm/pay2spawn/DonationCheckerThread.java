@@ -82,6 +82,7 @@ public class DonationCheckerThread extends Thread
             try
             {
                 if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().API_Key)) doDonations();
+                firstrun = false;
             }
             catch (Exception e)
             {
@@ -97,7 +98,6 @@ public class DonationCheckerThread extends Thread
                 Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Twitch api.");
                 if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
-            firstrun = false;
             doWait(interval);
         }
     }
