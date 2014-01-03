@@ -43,7 +43,7 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.*;
 
 /**
- * The thread that does the actual checking with nightdevs donationtracker
+ * The thread that does the actual checking with nightdevs Streamdonations
  *
  * @author Dries007
  */
@@ -85,6 +85,7 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
+                Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Streamdonations.");
                 if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
             try
@@ -93,6 +94,7 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
+                Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Twitch api.");
                 if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
             firstrun = false;
@@ -114,7 +116,7 @@ public class DonationCheckerThread extends Thread
         }
         else
         {
-            throw new IllegalArgumentException("Could not fetch recent donations.\n Message:" + root.get("error").getAsString());
+            throw new IllegalArgumentException(root.get("error").getAsString());
         }
     }
 

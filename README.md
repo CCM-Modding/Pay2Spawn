@@ -29,11 +29,14 @@ You'll need the API key and channel name from there to enter in your config file
 You can customise the rewards in the .json file in the config folder.<br>
 Use this config file to make a nice webpage so your viewers can see what they can donate for.
 
+Problems guide
+-------------
+[If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/Problems.md)
 
 BETA Downloads
 --------------
 You can use the beta on 1 condition. You report bugs!
-[Link!](http://dries007.net:8080/job/Pay2Spawn/)
+[Link!](http://jenkins.dries007.net/job/Pay2Spawn/)
 
 The idea & proper credit
 ------------------------

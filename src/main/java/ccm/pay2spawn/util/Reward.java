@@ -31,6 +31,7 @@ import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.common.base.Strings;
+import com.google.common.base.Throwables;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -67,6 +68,18 @@ public class Reward
         catch (Exception e)
         {
             countdown = 0;
+        }
+        /**
+         * To try and catch errors in the config file ASAP
+         */
+        try
+        {
+            JsonNBTHelper.parseJSON(rewards);
+        }
+        catch (Exception e)
+        {
+            Pay2Spawn.getLogger().severe("ERROR TYPE 2: Error in reward " + name + "'s NBT data.");
+            throw e;
         }
     }
 
@@ -130,9 +143,9 @@ public class Reward
     {
         for (JsonElement element : rewards)
         {
+            JsonObject reward = element.getAsJsonObject();
             try
             {
-                JsonObject reward = element.getAsJsonObject();
                 TypeBase type = TypeRegistry.getByName(reward.get("type").getAsString().toLowerCase());
                 NBTTagCompound nbt = JsonNBTHelper.parseJSON(reward.getAsJsonObject("data"));
                 Node node = type.getPermissionNode(player, nbt);
@@ -151,7 +164,9 @@ public class Reward
             }
             catch (Exception e)
             {
-                Pay2Spawn.getLogger().warning("Error spawning a reward on the server.");
+                Pay2Spawn.getLogger().severe("ERROR TYPE 3: Error spawning a reward on the server.");
+                Pay2Spawn.getLogger().severe("Type: " + reward.get("type").getAsString().toLowerCase());
+                Pay2Spawn.getLogger().severe("Data: " + reward.getAsJsonObject("data"));
                 e.printStackTrace();
             }
         }
