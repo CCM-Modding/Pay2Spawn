@@ -27,14 +27,17 @@ Errors that spam every time the mod tries to connect to Twitch or Streamdonation
 
 ### Common errors:
 * Wrong channel id or Streamdonations API-key:
+
 >    [SEVERE] [P2S] ERROR TYPE 1: Error while contacting Streamdonations.
 >    [INFO] [STDERR] java.lang.IllegalArgumentException: Not a valid channel and/or key
 
 * Error in Twitch auth token:
+
 >    [SEVERE] [P2S] ERROR TYPE 1: Error while contacting Twitch api.
 >    [INFO] [STDERR] java.io.IOException: Server returned HTTP response code: 401 for URL: https://api.twitch.tv/kraken/...
 
 * You aren't a twitch partner/you have no sub button:
+
 >    [SEVERE] [P2S] ERROR TYPE 1: Error while contacting Twitch api.
 >    [INFO] [STDERR] java.io.IOException: Server returned HTTP response code: 422 for URL: https://api.twitch.tv/kraken/...
 
@@ -42,20 +45,24 @@ Errors that spam every time the mod tries to connect to Twitch or Streamdonation
 We try to crash here if there is an issue with the configs. We try not to have it happen in a later stage where you might be live, but we can't guarantee that everything will work. (Especially with random tags, they only get solved once at the startup. Not all possibilities are tested.)
 
 ### Common errors:
-* Your JSON is invalid. (Please use our build in GUI, or for experts an actual JSON editor.)
+* Your JSON is invalid. (Please use our build in GUI, or for experts an actual JSON editor.):
+
 >    [INFO] [STDOUT] java.lang.IllegalStateException: This is not a JSON Array.
 >    [INFO] [STDOUT] 	at com.google.gson.JsonElement.getAsJsonArray(JsonElement.java:100)
 >    [INFO] [STDOUT] 	at ccm.pay2spawn.RewardsDB.<init>(RewardsDB.java:73)
 
-* One of your rewards is invalid. (Please use our build in GUI, or for experts an actual JSON editor.)
+* One of your rewards is invalid. (Please use our build in GUI, or for experts an actual JSON editor.):
+
 >    [INFO] [STDOUT] java.lang.NullPointerException
 >    [INFO] [STDOUT] 	at ccm.pay2spawn.util.Reward.<init>(Reward.java:59)
 >    [INFO] [STDOUT] 	at ccm.pay2spawn.RewardsDB.<init>(RewardsDB.java:77)
 
-* One of your rewards NBT data is invalid. (Please use our build in GUI, or for experts an actual JSON editor.) I know the NBT to JSON thing is weard but it is the best solution apart from saving our data as actual NBT. (Witch is not human readable without an editor)
+* One of your rewards NBT data is invalid. (Please use our build in GUI, or for experts an actual JSON editor.) I know the NBT to JSON thing is weard but it is the best solution apart from saving our data as actual NBT. (Witch is not human readable without an editor):
+
 >    [SEVERE] [P2S] ERROR TYPE 2: Error in reward ...'s NBT data.
 
-* You forgot to add double quotes around a line in the black- or whitelist.
+* You forgot to add double quotes around a line in the black- or whitelist:
+
 >    java.lang.RuntimeException: Unknown character '...' in '/config/Pay2Spawn/Pay2Spawn.cfg:...'
 
 ## Type 3: Errors on donation
@@ -66,4 +73,7 @@ These errors might also crash the server or potentially (by spawning an invalid 
 
 ### Common errors:
 * There was an error with the spawning of a reward. Look at the stacktrace for more info. The type and data associalted with the reward will be printed, make sure to include them in your issue, if you think its our fault.
+
 >    [SEVERE] [P2S] ERROR TYPE 3: Error spawning a reward on the server.
+
+~~Dries007
