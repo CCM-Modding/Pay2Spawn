@@ -25,16 +25,36 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.permissions.Node;
+import ccm.pay2spawn.types.guis.DropItemTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import scala.annotation.varargs;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+
+import static ccm.pay2spawn.util.Constants.FLOAT;
+import static ccm.pay2spawn.util.Constants.INT;
 
 public class DropItemType extends TypeBase
 {
-    public static final String NODENAME = "dropitem";
+    public static final String TYPE_KEY      = "type";
+    public static final String NODENAME      = "dropitems";
+
+    public static final int HOLDING_1   = 0;
+    public static final int HOLDING_ALL = 1;
+    public static final int ALL         = 2;
+    public static final int ARMOR       = 3;
+
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+
+    static
+    {
+        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[INT]);
+    }
 
     @Override
     public String getName()
@@ -45,19 +65,42 @@ public class DropItemType extends TypeBase
     @Override
     public NBTTagCompound getExample()
     {
-        return new NBTTagCompound();
+        NBTTagCompound compound = new NBTTagCompound();
+        compound.setInteger(TYPE_KEY, ALL);
+        return compound;
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        player.dropOneItem(true);
+        switch (dataFromClient.getInteger(TYPE_KEY))
+        {
+            case HOLDING_1:
+                player.dropOneItem(false);
+                break;
+            case HOLDING_ALL:
+                player.dropOneItem(true);
+                break;
+            case ALL:
+                player.inventory.dropAllItems();
+                break;
+            case ARMOR:
+                for (int i = 0; i < player.inventory.armorInventory.length; ++i)
+                {
+                    if (player.inventory.armorInventory[i] != null)
+                    {
+                        player.dropPlayerItemWithRandomChoice(player.inventory.armorInventory[i], true);
+                        player.inventory.armorInventory[i] = null;
+                    }
+                }
+                break;
+        }
     }
 
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-        Configurator.instance.callback(rewardID, getName(), data);
+        new DropItemTypeGui(rewardID, getName(), data, typeMap);
     }
 
     @Override
@@ -77,6 +120,22 @@ public class DropItemType extends TypeBase
     @Override
     public String replaceInTemplate(String id, JsonObject jsonObject)
     {
+        switch (id)
+        {
+            case "type":
+                int i = Integer.getInteger(jsonObject.get(TYPE_KEY).getAsString().replace("INT:", ""));
+                switch (i)
+                {
+                    case HOLDING_1:
+                        return "one of the selected items";
+                    case HOLDING_ALL:
+                        return "all of the selected items";
+                    case ALL:
+                        return "all items";
+                    case ARMOR:
+                        return "all the armor worn";
+                }
+        }
         return id;
     }
 }

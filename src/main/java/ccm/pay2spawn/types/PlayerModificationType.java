@@ -106,9 +106,11 @@ public class PlayerModificationType extends TypeBase
         switch (id)
         {
             case "type":
-                return Type.values()[jsonObject.get(TYPE_KEY).getAsInt()].name().toLowerCase();
+                int i = Integer.getInteger(jsonObject.get(TYPE_KEY).getAsString().replace("INT:", ""));
+                return Type.values()[i].name().toLowerCase();
             case "operation":
-                switch (jsonObject.get(OPERATION_KEY).getAsInt())
+                int j = Integer.getInteger(jsonObject.get(OPERATION_KEY).getAsString().replace("INT:", ""));
+                switch (j)
                 {
                     case ADD:
                         return "adding";
@@ -122,7 +124,7 @@ public class PlayerModificationType extends TypeBase
                         return "disabling it" + (jsonObject.has(AMOUNT_KEY) ? " for" : "");
                 }
             case "amount":
-                if (jsonObject.has(AMOUNT_KEY)) return NUMBER_FORMATTER.format(jsonObject.get(AMOUNT_KEY));
+                if (jsonObject.has(AMOUNT_KEY)) return NUMBER_FORMATTER.format(jsonObject.get(AMOUNT_KEY).getAsString().replace("FLOAT:", ""));
                 else return "";
         }
         return id;
