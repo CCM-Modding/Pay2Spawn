@@ -67,6 +67,7 @@ public class EntityType extends TypeBase
     public static final String AGRO_KEY        = "agro";
     public static final String CUSTOMNAME_KEY  = "CustomName";
     public static final String RIDING_KEY      = "Riding";
+    public static final String RIDETHISMOB_KEY = "RideThisMob";
     public static final String RANDOM_KEY      = "random";
 
     public static final HashSet<String>         NAMES    = new HashSet<>();
@@ -80,6 +81,7 @@ public class EntityType extends TypeBase
         typeMap.put(CUSTOMNAME_KEY, NBTBase.NBTTypes[STRING]);
         typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
         typeMap.put(SPAWNRADIUS_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(RIDETHISMOB_KEY, NBTBase.NBTTypes[BYTE]);
     }
 
     @Override
@@ -101,6 +103,7 @@ public class EntityType extends TypeBase
         tag2.setString(ENTITYNAME_KEY, "$randomEntity");
         tag2.setBoolean(AGRO_KEY, true);
         tag2.setString(CUSTOMNAME_KEY, "$name");
+        tag2.setBoolean(RIDETHISMOB_KEY, true);
 
         tag.setCompoundTag(RIDING_KEY, tag2);
         tag.setInteger(SPAWNRADIUS_KEY, 10);
@@ -192,10 +195,13 @@ public class EntityType extends TypeBase
                     entity2.setPosition(entity.posX, entity.posY, entity.posZ);
                     player.worldObj.spawnEntityInWorld(entity2);
                     entity1.mountEntity(entity2);
+
+                    if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);
                 }
 
                 entity1 = entity2;
             }
+            if (dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity);
         }
     }
 

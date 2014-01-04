@@ -32,12 +32,8 @@ import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.util.Constants;
-import ccm.pay2spawn.util.EventHandler;
-import ccm.pay2spawn.util.MetricsHelper;
-import ccm.pay2spawn.util.TickHandler;
+import ccm.pay2spawn.util.*;
 import com.jadarstudios.developercapes.DevCapesUtil;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -123,7 +119,8 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws MalformedURLException
     {
-        TickRegistry.registerScheduledTickHandler(TickHandler.INSTANCE, Side.CLIENT);
+        TickRegistry.registerScheduledTickHandler(ClientTickHandler.INSTANCE, Side.CLIENT);
+        TickRegistry.registerTickHandler(ServerTickHandler.INSTANCE, Side.SERVER);
         TypeRegistry.doConfig(config.configuration);
         config.configuration.save();
         rewardsDB = new RewardsDB(getRewardDBFile());

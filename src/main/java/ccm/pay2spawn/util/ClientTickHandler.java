@@ -36,11 +36,11 @@ import java.util.Iterator;
 
 import static ccm.pay2spawn.util.Constants.MODID;
 
-public class TickHandler implements IScheduledTickHandler
+public class ClientTickHandler implements IScheduledTickHandler
 {
     HashSet<QueEntry> entries = new HashSet<>();
 
-    public static final TickHandler INSTANCE = new TickHandler();
+    public static final ClientTickHandler INSTANCE = new ClientTickHandler();
 
     @Override
     public int nextTickSpacing()
@@ -90,7 +90,7 @@ public class TickHandler implements IScheduledTickHandler
     @Override
     public String getLabel()
     {
-        return MODID + "_Countdown";
+        return MODID + "_ClientTicker";
     }
 
     public void add(Reward reward, JsonObject donation, boolean addToHUD)

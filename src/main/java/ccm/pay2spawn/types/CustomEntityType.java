@@ -64,7 +64,7 @@ public class CustomEntityType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-        new CustomEntityTypeGui(rewardID, getName(), data, null);
+        new CustomEntityTypeGui(rewardID, getName(), data, EntityType.typeMap);
     }
 
     @Override
@@ -152,10 +152,12 @@ public class CustomEntityType extends TypeBase
                     entity2.setPosition(entity.posX, entity.posY, entity.posZ);
                     player.worldObj.spawnEntityInWorld(entity2);
                     entity1.mountEntity(entity2);
+                    if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);
                 }
 
                 entity1 = entity2;
             }
+            if (dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity);
         }
     }
 }

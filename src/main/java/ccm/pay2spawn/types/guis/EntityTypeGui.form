@@ -64,7 +64,7 @@
           </component>
           <component id="f5ce3" class="javax.swing.JLabel">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -74,7 +74,7 @@
           </component>
           <component id="8d2a7" class="javax.swing.JTextField" binding="customNameTextField" default-binding="true">
             <constraints>
-              <grid row="4" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <gridbag weightx="0.0" weighty="0.0"/>
@@ -85,7 +85,7 @@
           </component>
           <component id="c271" class="javax.swing.JLabel">
             <constraints>
-              <grid row="4" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -154,7 +154,7 @@
           </component>
           <component id="c077" class="javax.swing.JLabel">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -164,7 +164,7 @@
           </component>
           <component id="31593" class="javax.swing.JTextField" binding="spawnRadiusTextField" default-binding="true">
             <constraints>
-              <grid row="5" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+              <grid row="6" column="1" row-span="1" col-span="3" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
                 <preferred-size width="150" height="-1"/>
               </grid>
               <gridbag weightx="0.0" weighty="0.0"/>
@@ -173,11 +173,38 @@
           </component>
           <component id="eb8b8" class="javax.swing.JLabel">
             <constraints>
-              <grid row="5" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
               <text value="INT"/>
+            </properties>
+          </component>
+          <component id="b6c71" class="javax.swing.JRadioButton" binding="rideThisMobRadioButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Ride this mob"/>
+            </properties>
+          </component>
+          <component id="c5762" class="javax.swing.JRadioButton" binding="dontRidemob">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Don't ride this mob"/>
+            </properties>
+          </component>
+          <component id="75bc1" class="javax.swing.JRadioButton" binding="randomlyRideMob">
+            <constraints>
+              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Randomly ride this mob"/>
             </properties>
           </component>
         </children>
@@ -292,6 +319,11 @@
       <member id="2a736"/>
       <member id="ca6ee"/>
       <member id="1fa53"/>
+    </group>
+    <group name="rideMobGroup">
+      <member id="b6c71"/>
+      <member id="c5762"/>
+      <member id="75bc1"/>
     </group>
   </buttonGroups>
 </form>

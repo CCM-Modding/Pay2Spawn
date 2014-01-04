@@ -33,8 +33,10 @@ import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import sun.net.www.content.text.plain;
 
 import java.io.*;
 import java.net.URL;
@@ -343,5 +345,19 @@ public class Helper
             if (reader != null) reader.close();
         }
         return buffer.toString();
+    }
+
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    public static boolean isInt(String text)
+    {
+        try
+        {
+            Integer.parseInt(text);
+            return true;
+        }
+        catch (NumberFormatException e)
+        {
+            return false;
+        }
     }
 }

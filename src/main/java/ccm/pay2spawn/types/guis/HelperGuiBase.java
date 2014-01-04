@@ -23,6 +23,8 @@
 
 package ccm.pay2spawn.types.guis;
 
+import com.google.common.base.Strings;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -76,7 +78,14 @@ public abstract class HelperGuiBase
 
     public void storeValue(String key, JsonObject jsonObject, Object value)
     {
-        jsonObject.addProperty(key, typeMap.containsKey(key) ? typeMap.get(key) + ":" + value.toString() : value.toString());
+        if (key == null || jsonObject == null) return;
+        if (value == null)
+        {
+            jsonObject.add(key, JsonNull.INSTANCE);
+            return;
+        }
+        if (Strings.isNullOrEmpty(value.toString())) jsonObject.remove(key);
+        else jsonObject.addProperty(key, typeMap != null && typeMap.containsKey(key) ? typeMap.get(key) + ":" + value.toString() : value.toString());
     }
 
     public void close()

@@ -131,5 +131,6 @@ public class TypeRegistry
         TypeRegistry.register(new RandomItemType());
         TypeRegistry.register(new DropItemType());
         TypeRegistry.register(new CommandType());
+        TypeRegistry.register(new PlayerModificationType());
     }
 }

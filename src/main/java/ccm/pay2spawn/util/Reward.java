@@ -102,7 +102,7 @@ public class Reward
     public void addToCountdown(JsonObject donation, boolean addToHUD)
     {
         if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation));
-        if (HandshakePacket.doesServerHaveMod()) TickHandler.INSTANCE.add(this, donation, addToHUD);
+        if (HandshakePacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD);
     }
 
     private byte[] toBytes(String formattedData)

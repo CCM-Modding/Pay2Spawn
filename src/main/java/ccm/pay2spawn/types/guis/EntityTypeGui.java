@@ -61,6 +61,9 @@ public class EntityTypeGui extends HelperGuiBase
     public JButton           addMobThisEntityButton;
     public JRadioButton      randomlyRandomizeMobRadioButton;
     public JTextField        spawnRadiusTextField;
+    public JRadioButton      rideThisMobRadioButton;
+    public JRadioButton      dontRidemob;
+    public JRadioButton      randomlyRideMob;
     public EntityTypeGui     superGui;
     public EntityTypeGui instance = this;
     public EntityTypeGui clientGui;
@@ -195,6 +198,11 @@ public class EntityTypeGui extends HelperGuiBase
         randomizeMobRadioButton.setSelected(random.equals("1"));
         randomlyRandomizeMobRadioButton.setSelected(random.startsWith("$random"));
 
+        String ride = readValue(RIDETHISMOB_KEY, data);
+        dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
+        rideThisMobRadioButton.setSelected(ride.equals("1"));
+        randomlyRideMob.setSelected(ride.startsWith("$random"));
+
         jsonPane.setText(GSON.toJson(data));
     }
 
@@ -207,6 +215,7 @@ public class EntityTypeGui extends HelperGuiBase
 
         storeValue(AGRO_KEY, data, randomAgroRadioButton.isSelected() ? "$random" : agroRadioButton.isSelected() ? "1" : "0");
         storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? "$random" : randomizeMobRadioButton.isSelected() ? "1" : "0");
+        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisMobRadioButton.isSelected() ? "1" : "0");
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -278,14 +287,14 @@ public class EntityTypeGui extends HelperGuiBase
         label5.setText("CustomName:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label5, gbc);
         customNameTextField = new JTextField();
         customNameTextField.setToolTipText("Nametag of entity");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -294,7 +303,7 @@ public class EntityTypeGui extends HelperGuiBase
         label6.setText("STRING");
         gbc = new GridBagConstraints();
         gbc.gridx = 4;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         panel2.add(label6, gbc);
         notAgroRadioButton = new JRadioButton();
         notAgroRadioButton.setText("Not agro");
@@ -348,13 +357,13 @@ public class EntityTypeGui extends HelperGuiBase
         label7.setText("Spawn radius:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label7, gbc);
         spawnRadiusTextField = new JTextField();
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 3;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -363,8 +372,29 @@ public class EntityTypeGui extends HelperGuiBase
         label8.setText("INT");
         gbc = new GridBagConstraints();
         gbc.gridx = 4;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         panel2.add(label8, gbc);
+        rideThisMobRadioButton = new JRadioButton();
+        rideThisMobRadioButton.setText("Ride this mob");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(rideThisMobRadioButton, gbc);
+        dontRidemob = new JRadioButton();
+        dontRidemob.setText("Don't ride this mob");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(dontRidemob, gbc);
+        randomlyRideMob = new JRadioButton();
+        randomlyRideMob.setText("Randomly ride this mob");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(randomlyRideMob, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -458,6 +488,10 @@ public class EntityTypeGui extends HelperGuiBase
         buttonGroup.add(randomizeMobRadioButton);
         buttonGroup.add(donTRandomizeMobRadioButton);
         buttonGroup.add(randomlyRandomizeMobRadioButton);
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(rideThisMobRadioButton);
+        buttonGroup.add(dontRidemob);
+        buttonGroup.add(randomlyRideMob);
     }
 
     /**

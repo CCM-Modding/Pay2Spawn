@@ -27,10 +27,14 @@ import ccm.pay2spawn.permissions.Group;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.permissions.Player;
+import ccm.pay2spawn.util.JsonNBTHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -75,6 +79,19 @@ public class CommandP2SPermissions extends CommandBase
         }
         switch (args[0])
         {
+            case "test":
+                double X = player.posX, Y = player.posY, Z = player.posZ, spread = 25;
+                AxisAlignedBB AABB = AxisAlignedBB.getAABBPool().getAABB(X - spread, Y - spread, Z - spread, X + spread, Y + spread, Z + spread);
+                Entity entity = player.getEntityWorld().findNearestEntityWithinAABB(Entity.class, AABB, player);
+
+                NBTTagCompound nbt = new NBTTagCompound();
+                entity.writeToNBT(nbt);
+                entity.writeToNBTOptional(nbt);
+                System.out.println(JsonNBTHelper.parseNBT(nbt).toString());
+
+                player.mountEntity(entity);
+                player.addChatMessage("test");
+                return;
             case "groups":
                 if (args.length < 3)
                 {
