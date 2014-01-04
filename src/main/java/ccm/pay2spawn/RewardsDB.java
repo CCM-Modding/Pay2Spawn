@@ -127,9 +127,9 @@ public class RewardsDB
         /**
          * -1 will always spawn
          */
-        if (map.containsKey(-1))
+        if (map.containsKey(-1D))
         {
-            RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation, false);
+            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false);
         }
     }
 
