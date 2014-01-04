@@ -73,7 +73,7 @@ public class Constants
     public static final JsonParser JSON_PARSER = new JsonParser();
     public static final Gson       GSON        = new GsonBuilder().setPrettyPrinting().create();
 
-    public static final NumberFormat NUMBER_FORMATTER = new DecimalFormat("#.##");
+    public static final NumberFormat NUMBER_FORMATTER   = new DecimalFormat("#.##");
     public static final NumberFormat CURRENCY_FORMATTER = new DecimalFormat("0.00");
 
     /**

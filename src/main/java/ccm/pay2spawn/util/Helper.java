@@ -33,10 +33,8 @@ import com.google.gson.JsonPrimitive;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import sun.net.www.content.text.plain;
 
 import java.io.*;
 import java.net.URL;

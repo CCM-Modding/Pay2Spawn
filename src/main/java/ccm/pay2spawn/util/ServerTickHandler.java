@@ -23,15 +23,15 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.types.PlayerModificationType;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import static ccm.pay2spawn.util.Constants.*;
-import static ccm.pay2spawn.types.PlayerModificationType.Type;
 
 import java.util.EnumSet;
+
+import static ccm.pay2spawn.types.PlayerModificationType.Type;
+import static ccm.pay2spawn.util.Constants.MODID;
 
 public class ServerTickHandler implements ITickHandler
 {

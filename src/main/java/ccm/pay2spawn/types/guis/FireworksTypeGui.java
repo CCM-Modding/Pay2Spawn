@@ -32,7 +32,10 @@ import com.google.gson.JsonObject;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.FireworksType.*;
@@ -66,12 +69,6 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         data.addProperty("Damage", "SHORT:0");
         data.addProperty("Count", "BYTE:1");
 
-        if (!data.has("tag")) data.add("tag", new JsonObject());
-        if (!data.getAsJsonObject("tag").has(FIREWORKS_KEY)) data.getAsJsonObject("tag").add(FIREWORKS_KEY, new JsonObject());
-        if (!data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY).has(EXPLOSIONS_KEY)) data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY).add(EXPLOSIONS_KEY, new JsonArray());
-
-        fireworks = data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
-
         setupModels();
         makeAndOpen();
     }
@@ -97,9 +94,15 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void readJson()
     {
-        flightMultiplierTextField.setText(readValue(FLIGHT_KEY, fireworks));
         amountTextField.setText(readValue(AMOUNT_KEY, data));
         radiusTextField.setText(readValue(RADIUS_KEY, data));
+
+        if (!data.has("tag")) data.add("tag", new JsonObject());
+        if (!data.getAsJsonObject("tag").has(FIREWORKS_KEY)) data.getAsJsonObject("tag").add(FIREWORKS_KEY, new JsonObject());
+        if (!data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY).has(EXPLOSIONS_KEY)) data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY).add(EXPLOSIONS_KEY, new JsonArray());
+
+        fireworks = data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
+        flightMultiplierTextField.setText(readValue(FLIGHT_KEY, fireworks));
 
         explosionList.updateUI();
 
@@ -177,14 +180,6 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
-            }
-        });
-        jsonPane.addKeyListener(new KeyAdapter()
-        {
-            @Override
-            public void keyTyped(KeyEvent e)
-            {
-                readJson();
             }
         });
         importFireworkStartButton.addActionListener(new ActionListener()

@@ -70,18 +70,18 @@ public class ExplosionGui extends HelperGuiBase
     @Override
     public void readJson()
     {
-        typeComboBox.setSelectedItem(readValue(TRAIL_KEY, data));
+        typeComboBox.setSelectedItem(readValue(TYPE_KEY, data));
 
         colorsTextField.setText(readValue(COLORS_KEY, data));
 
         String flicker = readValue(FLICKER_KEY, data);
-        flickerRadioButton.setSelected(flicker.equals("0") || flicker.equals(""));
-        noFlickerRadioButton.setSelected(flicker.equals("1"));
+        noFlickerRadioButton.setSelected(flicker.equals("0") || flicker.equals(""));
+        flickerRadioButton.setSelected(flicker.equals("1"));
         randomFlickerRadioButton.setSelected(flicker.startsWith("$random"));
 
         String trail = readValue(TRAIL_KEY, data);
-        trailRadioButton.setSelected(trail.equals("0") || trail.equals(""));
-        noTrailRadioButton.setSelected(trail.equals("1"));
+        noTrailRadioButton.setSelected(trail.equals("0") || trail.equals(""));
+        trailRadioButton.setSelected(trail.equals("1"));
         randomTrailRadioButton.setSelected(trail.startsWith("$random"));
     }
 
@@ -89,9 +89,9 @@ public class ExplosionGui extends HelperGuiBase
     public void updateJson()
     {
         String type = typeComboBox.getSelectedItem().toString();
-        if (Helper.isDouble(type)) storeValue(TRAIL_KEY, data, type);
-        else if (type.contains(":")) storeValue(TRAIL_KEY, data, type.substring(type.indexOf(":")));
-        else storeValue(TRAIL_KEY, data, "$random");
+        if (Helper.isDouble(type)) storeValue(TYPE_KEY, data, type);
+        else if (type.contains(":")) storeValue(TYPE_KEY, data, type.substring(0, type.indexOf(":")));
+        else storeValue(TYPE_KEY, data, "$random(0,5)");
 
         storeValue(COLORS_KEY, data, colorsTextField.getText());
 

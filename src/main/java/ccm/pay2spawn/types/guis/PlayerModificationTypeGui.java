@@ -24,7 +24,6 @@
 package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
@@ -36,9 +35,8 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PlayerModificationType.*;
-import static ccm.pay2spawn.types.PlayerModificationType.Type.FLIGHT;
-import static ccm.pay2spawn.types.PlayerModificationType.Type.XP_LEVEL;
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.GSON;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class PlayerModificationTypeGui extends HelperGuiBase
 {
@@ -81,7 +79,7 @@ public class PlayerModificationTypeGui extends HelperGuiBase
             {
                 case 0:
                     healthRadioButton.setSelected(true);
-                break;
+                    break;
                 case 1:
                     hungerRadioButton.setSelected(true);
                     break;
@@ -210,49 +208,56 @@ public class PlayerModificationTypeGui extends HelperGuiBase
             }
         });
 
-        healthRadioButton.addActionListener(new ActionListener() {
+        healthRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(0);
             }
         });
-        hungerRadioButton.addActionListener(new ActionListener() {
+        hungerRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(1);
             }
         });
-        saturationRadioButton.addActionListener(new ActionListener() {
+        saturationRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(2);
             }
         });
-        XPRadioButton.addActionListener(new ActionListener() {
+        XPRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(3);
             }
         });
-        XPLevelsRadioButton.addActionListener(new ActionListener() {
+        XPLevelsRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(4);
             }
         });
-        flightRadioButton.addActionListener(new ActionListener() {
+        flightRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {
                 checkOperation(5);
             }
         });
-        invulnerabilityRadioButton.addActionListener(new ActionListener() {
+        invulnerabilityRadioButton.addActionListener(new ActionListener()
+        {
             @Override
             public void actionPerformed(ActionEvent e)
             {

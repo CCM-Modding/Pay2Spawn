@@ -49,7 +49,7 @@ public class HandshakePacket
 
     private static final String HANDSHAKE_SERVER_TO_CLIENT = "HsS2C";
     private static final String HANDSHAKE_CLIENT_TO_SERVER = "HsC2S";
-    private static final String HANDSHAKE_RELOAD = "reload";
+    private static final String HANDSHAKE_RELOAD           = "reload";
 
 
     public static void sendHandshakeToPlayer(Player player)

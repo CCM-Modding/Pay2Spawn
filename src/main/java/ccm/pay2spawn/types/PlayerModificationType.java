@@ -25,12 +25,10 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PlayerModificationTypeGui;
-import ccm.pay2spawn.util.Constants;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.FoodStats;
 
 import java.util.Collection;
@@ -41,9 +39,9 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class PlayerModificationType extends TypeBase
 {
-    public static final String TYPE_KEY   = "type";
+    public static final String TYPE_KEY      = "type";
     public static final String OPERATION_KEY = "operation";
-    public static final String AMOUNT_KEY = "amount";
+    public static final String AMOUNT_KEY    = "amount";
 
     public static final int SET      = 0;
     public static final int ADD      = 1;
