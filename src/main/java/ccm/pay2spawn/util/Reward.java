@@ -24,7 +24,7 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
@@ -102,7 +102,7 @@ public class Reward
     public void addToCountdown(JsonObject donation, boolean addToHUD)
     {
         if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation));
-        if (HandshakePacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD);
+        if (StatusPacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD);
     }
 
     private byte[] toBytes(String formattedData)

@@ -38,6 +38,7 @@ import static ccm.pay2spawn.util.Constants.NAME;
 public class MetricsHelper
 {
     private static Metrics metrics;
+    public static  double  totalMoney;
 
     public static void init()
     {
@@ -45,6 +46,14 @@ public class MetricsHelper
         try
         {
             metrics = new Metrics(NAME, Pay2Spawn.getVersion());
+            metrics.createGraph("Money").addPlotter(new Metrics.Plotter()
+            {
+                @Override
+                public int getValue()
+                {
+                    return (int) totalMoney;
+                }
+            });
             metrics.start();
         }
         catch (IOException e)

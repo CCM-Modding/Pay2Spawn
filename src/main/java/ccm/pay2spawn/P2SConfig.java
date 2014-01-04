@@ -43,6 +43,7 @@ public class P2SConfig
     Configuration configuration;
 
     public  boolean  forceServerconfig = true;
+    public  boolean  forceP2S          = false;
     public  double   min_donation      = 1;
     public  int      interval          = 10;
     public  String   API_Key           = "";
@@ -75,6 +76,7 @@ public class P2SConfig
         twitchToken = configuration.get(MODID, "twitchToken", twitchToken, "Get it from http://dries007.net/ccm/p2s/ ONLY WORKS IF YOU HAVE A SUB BUTTON.").getString();
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
+        forceP2S = configuration.get(MODID, "forceP2S", forceP2S, "If a client connects, kick it if there is no P2S. If there is, p2s will be locked in ON mode.").getBoolean(forceP2S);
         subMessage = Helper.formatColors(configuration.get(MODID, "subMessage", subMessage, "Message that gets send when someone subscribes to your channel. & for colors, $name for the twitch name").getString());
 
         String filterCat = MODID + ".filter";

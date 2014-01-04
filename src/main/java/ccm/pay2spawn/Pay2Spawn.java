@@ -25,14 +25,15 @@ package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.configurator.HTMLGenerator;
-import ccm.pay2spawn.network.ConfigSyncPacket;
 import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
+import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.*;
+import com.google.common.base.Strings;
 import com.jadarstudios.developercapes.DevCapesUtil;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
@@ -65,7 +66,8 @@ public class Pay2Spawn
 {
     @Mod.Instance(MODID)
     public static Pay2Spawn instance;
-    public static boolean enable = true;
+    public static boolean enable  = true;
+    public static boolean forceOn = false;
 
     @Mod.Metadata(MODID)
     private ModMetadata           metadata;
@@ -97,6 +99,11 @@ public class Pay2Spawn
     public static File getRewardDBFile() { return new File(instance.configFolder, NAME + ".json"); }
 
     public static DonationCheckerThread getDonationCheckerThread() { return instance.donationCheckerThread; }
+
+    public static boolean isConfiguredProperly()
+    {
+        return !Strings.isNullOrEmpty(getConfig().channel) && !Strings.isNullOrEmpty(getConfig().API_Key) && !getDonationCheckerThread().firstrun;
+    }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event)
@@ -164,7 +171,7 @@ public class Pay2Spawn
         PermissionsHandler.init();
         try
         {
-            ConfigSyncPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
+            StatusPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
         }
         catch (FileNotFoundException e)
         {
@@ -191,8 +198,8 @@ public class Pay2Spawn
 
     public static void reloadDB_Server() throws Exception
     {
-        ConfigSyncPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString().getBytes();
-        ConfigSyncPacket.sendToAllPlayers();
+        StatusPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
+        StatusPacket.sendConfigToAllPlayers();
     }
 
     public static void reloadDBFromServer(String input)

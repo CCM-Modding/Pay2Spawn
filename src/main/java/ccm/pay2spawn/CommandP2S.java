@@ -24,7 +24,7 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.network.HandshakePacket;
+import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class CommandP2S extends CommandBase
 {
-    static final String HELP = "Use command to control P2S.";
+    static final String HELP = "Use command to control P2S Client side.";
 
     @Override
     public String getCommandName()
@@ -76,14 +76,13 @@ public class CommandP2S extends CommandBase
         {
             Helper.msg(EnumChatFormatting.AQUA + HELP);
             Helper.msg(EnumChatFormatting.AQUA + "Protip: Use tab completion!");
-            Helper.msg(EnumChatFormatting.AQUA + "Use serverside command 'P2SPermissions' for all things related to permissions.");
             return;
         }
         switch (args[0])
         {
             case "reload":
                 if (Pay2Spawn.getRewardsDB().editable) Pay2Spawn.reloadDB();
-                else HandshakePacket.sendReloadToServer();
+                else Helper.msg(EnumChatFormatting.RED + "[P2S] If you are OP, use the server side command for this.");
                 break;
             case "configure":
                 if (Pay2Spawn.getRewardsDB().editable) ConfiguratorManager.openCfg();
@@ -93,12 +92,20 @@ public class CommandP2S extends CommandBase
                 ConfiguratorManager.openNbt();
                 break;
             case "off":
-                Pay2Spawn.enable = false;
-                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
+                if (Pay2Spawn.forceOn) Helper.msg(EnumChatFormatting.RED + "Forced on by server.");
+                else
+                {
+                    Pay2Spawn.enable = false;
+                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
+                }
                 break;
             case "on":
-                Pay2Spawn.enable = true;
-                Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
+                if (Pay2Spawn.forceOn) Helper.msg(EnumChatFormatting.RED + "Forced on by server.");
+                else
+                {
+                    Pay2Spawn.enable = true;
+                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
+                }
                 break;
             case "donate":
                 if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s donate <amount>'.");
@@ -127,7 +134,5 @@ public class CommandP2S extends CommandBase
     {
         if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "redonate", "permissions");
         return null;
-
-
     }
 }

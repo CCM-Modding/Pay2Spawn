@@ -26,6 +26,7 @@ package ccm.pay2spawn;
 import ccm.pay2spawn.util.EventHandler;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import ccm.pay2spawn.util.MetricsHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -156,6 +157,7 @@ public class DonationCheckerThread extends Thread
         else if (!doneIDs.contains(donation.get("transactionID").getAsString()))
         {
             doneIDs.add(donation.get("transactionID").getAsString());
+            MetricsHelper.totalMoney += donation.get("amount").getAsDouble();
             if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
             try
             {

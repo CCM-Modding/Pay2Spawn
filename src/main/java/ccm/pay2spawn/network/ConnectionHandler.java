@@ -45,12 +45,25 @@ public class ConnectionHandler implements IConnectionHandler
     @Override
     public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager)
     {
-        HandshakePacket.sendHandshakeToPlayer(player);
+        StatusPacket.sendHandshakeToPlayer(player);
     }
 
     @Override
     public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager)
     {
+        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S)
+        {
+            final String username = netHandler.clientUsername;
+            new Timer().schedule(new TimerTask()
+            {
+                @Override
+                public void run()
+                {
+                    if (!StatusPacket.doesPlayerHaveValidConfig(username))
+                        MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
+                }
+            }, 5 * 1000);
+        }
         return null;
     }
 
@@ -76,13 +89,13 @@ public class ConnectionHandler implements IConnectionHandler
     public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login)
     {
         Pay2Spawn.reloadDB();
-        HandshakePacket.resetServerStatus();
+        StatusPacket.resetServerStatus();
         new Timer().schedule(new TimerTask()
         {
             @Override
             public void run()
             {
-                if (!HandshakePacket.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
+                if (!StatusPacket.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
             }
         }, 5 * 1000);
     }

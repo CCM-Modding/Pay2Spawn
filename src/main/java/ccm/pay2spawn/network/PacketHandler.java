@@ -44,11 +44,21 @@ public class PacketHandler implements IPacketHandler
     {
         try
         {
-            if (packet.channel.equals(CHANNEL_HANDSHAKE)) HandshakePacket.handel(packet, player);
-            if (packet.channel.equals(CHANNEL_REWARD)) Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
-            if (packet.channel.equals(CHANNEL_TEST)) TestPacket.reconstruct(packet, player);
-            if (packet.channel.equals(CHANNEL_SYNC)) ConfigSyncPacket.reconstruct(packet);
-            if (packet.channel.equals(CHANNEL_NBT_REQUEST)) NbtRequestPacket.reconstruct(packet, player);
+            switch (packet.channel)
+            {
+                case CHANNEL_STATUS:
+                    StatusPacket.reconstruct(packet, player);
+                    break;
+                case CHANNEL_REWARD:
+                    Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
+                    break;
+                case CHANNEL_TEST:
+                    TestPacket.reconstruct(packet, player);
+                    break;
+                case CHANNEL_NBT_REQUEST:
+                    NbtRequestPacket.reconstruct(packet, player);
+                    break;
+            }
         }
         catch (Exception e)
         {
