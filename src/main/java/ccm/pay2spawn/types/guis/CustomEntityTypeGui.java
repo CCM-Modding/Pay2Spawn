@@ -36,7 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
-import static ccm.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
+import static ccm.pay2spawn.types.EntityType.*;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -54,13 +54,18 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     public JRadioButton rideThisMobRadioButton;
     public JRadioButton dontRidemob;
     public JRadioButton randomlyRideMob;
+    public JRadioButton thrown;
+    public JRadioButton dontThrown;
+    public JRadioButton RndThrown;
+    public JTextField   amountTextField;
     public CustomEntityTypeGui instance = this;
 
     public CustomEntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
 
-        if (!data.has(EntityType.SPAWNRADIUS_KEY)) data.addProperty(EntityType.SPAWNRADIUS_KEY, 10);
+        if (!data.has(SPAWNRADIUS_KEY)) data.addProperty(SPAWNRADIUS_KEY, 10);
+        if (!data.has(AMOUNT_KEY)) data.addProperty(AMOUNT_KEY, 1);
 
         makeAndOpen();
     }
@@ -68,12 +73,18 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void readJson()
     {
-        spawnRadiusTextField.setText(readValue(EntityType.SPAWNRADIUS_KEY, data));
+        spawnRadiusTextField.setText(readValue(SPAWNRADIUS_KEY, data));
+        amountTextField.setText(readValue(AMOUNT_KEY, data));
 
         String ride = readValue(RIDETHISMOB_KEY, data);
         dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
         rideThisMobRadioButton.setSelected(ride.equals("1"));
         randomlyRideMob.setSelected(ride.startsWith("$random"));
+
+        String thrownS = readValue(THROWTOWARDSPLAYER_KEY, data);
+        dontThrown.setSelected(thrownS.equals("0") || thrownS.equals(""));
+        thrown.setSelected(thrownS.equals("1"));
+        RndThrown.setSelected(thrownS.startsWith("$random"));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -81,8 +92,11 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     @Override
     public void updateJson()
     {
-        storeValue(EntityType.SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
+        storeValue(SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
+        storeValue(AMOUNT_KEY, data, amountTextField.getText());
+
         storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisMobRadioButton.isSelected() ? "1" : "0");
+        storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? "$random" : thrown.isSelected() ? "1" : "0");
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -156,6 +170,11 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     public JPanel getPanel()
     {
         return panel1;
+    }
+
+    private void createUIComponents()
+    {
+        // TODO: place custom component creation code here
     }
 
     {
@@ -248,10 +267,54 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         label3.setText("For mobs riding other mobs: You must right click the top one.");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 5;
         gbc.gridwidth = 4;
         gbc.weightx = 1.0;
         panel2.add(label3, gbc);
+        thrown = new JRadioButton();
+        thrown.setEnabled(true);
+        thrown.setText("Trow towards you");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(thrown, gbc);
+        dontThrown = new JRadioButton();
+        dontThrown.setText("Don't throw towards you");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(dontThrown, gbc);
+        RndThrown = new JRadioButton();
+        RndThrown.setText("Randomly throw towards you");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(RndThrown, gbc);
+        amountTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(amountTextField, gbc);
+        final JLabel label4 = new JLabel();
+        label4.setText("Amount:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label4, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("INT");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label5, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -261,13 +324,13 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("Json:");
+        final JLabel label6 = new JLabel();
+        label6.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label4, gbc);
+        panel3.add(label6, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -331,6 +394,10 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         buttonGroup.add(rideThisMobRadioButton);
         buttonGroup.add(dontRidemob);
         buttonGroup.add(randomlyRideMob);
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(thrown);
+        buttonGroup.add(dontThrown);
+        buttonGroup.add(RndThrown);
     }
 
     /**

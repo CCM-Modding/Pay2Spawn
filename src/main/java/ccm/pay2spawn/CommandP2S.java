@@ -24,7 +24,6 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

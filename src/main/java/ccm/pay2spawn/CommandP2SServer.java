@@ -27,7 +27,6 @@ import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
@@ -100,7 +99,7 @@ public class CommandP2SServer extends CommandBase
     {
         switch (args.length)
         {
-            case  1:
+            case 1:
                 return getListOfStringsMatchingLastWord(args, "reload", "hasmod");
             case 2:
                 switch (args[1])

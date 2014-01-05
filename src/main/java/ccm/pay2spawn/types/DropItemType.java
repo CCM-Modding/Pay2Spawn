@@ -23,26 +23,23 @@
 
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.DropItemTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import scala.annotation.varargs;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.Constants.FLOAT;
 import static ccm.pay2spawn.util.Constants.INT;
 
 public class DropItemType extends TypeBase
 {
-    public static final String TYPE_KEY      = "type";
-    public static final String NODENAME      = "dropitems";
+    public static final String TYPE_KEY = "type";
+    public static final String NODENAME = "dropitems";
 
     public static final int HOLDING_1   = 0;
     public static final int HOLDING_ALL = 1;

@@ -44,7 +44,7 @@ public class StatusPacket
 {
     public static String serverConfig;
     private static final HashSet<String> playersWithValidConfig = new HashSet<>();
-    private static       boolean         serverHasMod         = false;
+    private static       boolean         serverHasMod           = false;
 
     private static final byte HANDSHAKE  = 0;
     private static final byte CONFIGSYNC = 1;

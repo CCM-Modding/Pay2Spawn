@@ -30,6 +30,7 @@ import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.EntityTypeGui;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.Point;
+import ccm.pay2spawn.util.Vector3;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -64,11 +65,13 @@ public class EntityType extends TypeBase
 
     public static final String ENTITYNAME_KEY  = "name";
     public static final String SPAWNRADIUS_KEY = "SPAWNRADIUS";
+    public static final String AMOUNT_KEY      = "AMOUNT";
     public static final String AGRO_KEY        = "agro";
     public static final String CUSTOMNAME_KEY  = "CustomName";
     public static final String RIDING_KEY      = "Riding";
     public static final String RIDETHISMOB_KEY = "RideThisMob";
     public static final String RANDOM_KEY      = "random";
+    public static final String THROWTOWARDSPLAYER_KEY = "throwTowardsPlayer";
 
     public static final HashSet<String>         NAMES    = new HashSet<>();
     public static final HashMap<String, String> typeMap  = new HashMap<>();
@@ -77,11 +80,13 @@ public class EntityType extends TypeBase
     static
     {
         typeMap.put(ENTITYNAME_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(SPAWNRADIUS_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[INT]);
         typeMap.put(AGRO_KEY, NBTBase.NBTTypes[BYTE]);
         typeMap.put(CUSTOMNAME_KEY, NBTBase.NBTTypes[STRING]);
-        typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(SPAWNRADIUS_KEY, NBTBase.NBTTypes[INT]);
         typeMap.put(RIDETHISMOB_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(THROWTOWARDSPLAYER_KEY, NBTBase.NBTTypes[BYTE]);
     }
 
     @Override
@@ -107,6 +112,7 @@ public class EntityType extends TypeBase
 
         tag.setCompoundTag(RIDING_KEY, tag2);
         tag.setInteger(SPAWNRADIUS_KEY, 10);
+        tag.setInteger(AMOUNT_KEY, 2);
 
         return tag;
     }
@@ -155,53 +161,61 @@ public class EntityType extends TypeBase
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
         ArrayList<Point> points = new Point(player).makeNiceForBlock().getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
 
-        Entity entity = EntityList.createEntityByName(dataFromClient.getString(ENTITYNAME_KEY), player.getEntityWorld());
-
-        if (entity != null)
+        if (!dataFromClient.hasKey(AMOUNT_KEY)) dataFromClient.setInteger(AMOUNT_KEY, 1);
+        for (int i = 0; i < dataFromClient.getInteger(AMOUNT_KEY); i++)
         {
-            entity.setPosition(player.posX, player.posY, player.posZ);
-            Helper.rndSpawnPoint(points, entity);
+            Entity entity = EntityList.createEntityByName(dataFromClient.getString(ENTITYNAME_KEY), player.getEntityWorld());
 
-            if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
-            if (dataFromClient.hasKey(CUSTOMNAME_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString(CUSTOMNAME_KEY));
-            if (dataFromClient.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
-
-            player.getEntityWorld().spawnEntityInWorld(entity);
-
-            Entity entity1 = entity;
-            for (NBTTagCompound tag = dataFromClient; tag.hasKey(RIDING_KEY); tag = tag.getCompoundTag(RIDING_KEY))
+            if (entity != null)
             {
-                Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag(RIDING_KEY).getString(ENTITYNAME_KEY), player.getEntityWorld());
+                entity.setPosition(player.posX, player.posY, player.posZ);
+                Helper.rndSpawnPoint(points, entity);
 
-                Node node = this.getPermissionNode(player, tag.getCompoundTag(EntityType.RIDING_KEY));
-                if (BanHelper.isBanned(node))
+                if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
+                if (dataFromClient.hasKey(CUSTOMNAME_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString(CUSTOMNAME_KEY));
+                if (dataFromClient.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
+
+                player.getEntityWorld().spawnEntityInWorld(entity);
+
+                Entity entity1 = entity;
+                for (NBTTagCompound tag = dataFromClient; tag.hasKey(RIDING_KEY); tag = tag.getCompoundTag(RIDING_KEY))
                 {
-                    player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
-                    Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
-                    continue;
+                    Entity entity2 = EntityList.createEntityByName(tag.getCompoundTag(RIDING_KEY).getString(ENTITYNAME_KEY), player.getEntityWorld());
+
+                    Node node = this.getPermissionNode(player, tag.getCompoundTag(EntityType.RIDING_KEY));
+                    if (BanHelper.isBanned(node))
+                    {
+                        player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
+                        Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+                        continue;
+                    }
+                    if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
+                    {
+                        Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                        continue;
+                    }
+
+                    if (entity2 != null)
+                    {
+                        if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
+                        if (tag.getCompoundTag(RIDING_KEY).hasKey(CUSTOMNAME_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag(RIDING_KEY).getString(CUSTOMNAME_KEY));
+                        if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
+
+                        entity2.setPosition(entity.posX, entity.posY, entity.posZ);
+                        player.worldObj.spawnEntityInWorld(entity2);
+                        entity1.mountEntity(entity2);
+
+                        if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);
+                    }
+
+                    entity1 = entity2;
                 }
-                if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
+                if (dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity);
+                if (dataFromClient.hasKey(THROWTOWARDSPLAYER_KEY) && dataFromClient.getBoolean(THROWTOWARDSPLAYER_KEY))
                 {
-                    Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
-                    continue;
+                    new Vector3(entity, player).normalize().setAsVelocity(entity, 2);
                 }
-
-                if (entity2 != null)
-                {
-                    if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
-                    if (tag.getCompoundTag(RIDING_KEY).hasKey(CUSTOMNAME_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag(RIDING_KEY).getString(CUSTOMNAME_KEY));
-                    if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
-
-                    entity2.setPosition(entity.posX, entity.posY, entity.posZ);
-                    player.worldObj.spawnEntityInWorld(entity2);
-                    entity1.mountEntity(entity2);
-
-                    if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);
-                }
-
-                entity1 = entity2;
             }
-            if (dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity);
         }
     }
 

@@ -83,13 +83,68 @@
           </component>
           <component id="4e013" class="javax.swing.JLabel">
             <constraints>
-              <grid row="3" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="0.0"/>
             </constraints>
             <properties>
               <horizontalAlignment value="0"/>
               <horizontalTextPosition value="0"/>
               <text value="For mobs riding other mobs: You must right click the top one."/>
+            </properties>
+          </component>
+          <component id="46fd0" class="javax.swing.JRadioButton" binding="thrown">
+            <constraints>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+              <text value="Trow towards you"/>
+            </properties>
+          </component>
+          <component id="d792f" class="javax.swing.JRadioButton" binding="dontThrown">
+            <constraints>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Don't throw towards you"/>
+            </properties>
+          </component>
+          <component id="831b1" class="javax.swing.JRadioButton" binding="RndThrown">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Randomly throw towards you"/>
+            </properties>
+          </component>
+          <component id="c53ee" class="javax.swing.JTextField" binding="amountTextField">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="4" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="57817" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Amount:"/>
+            </properties>
+          </component>
+          <component id="6d17c" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="INT"/>
             </properties>
           </component>
         </children>
@@ -189,6 +244,11 @@
       <member id="181d4"/>
       <member id="406a6"/>
       <member id="b1299"/>
+    </group>
+    <group name="throwngroup">
+      <member id="46fd0"/>
+      <member id="d792f"/>
+      <member id="831b1"/>
     </group>
   </buttonGroups>
 </form>
