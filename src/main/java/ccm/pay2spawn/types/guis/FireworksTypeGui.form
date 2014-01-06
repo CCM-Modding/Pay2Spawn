@@ -2,7 +2,7 @@
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ccm.pay2spawn.types.guis.FireworksTypeGui">
   <grid id="27dc6" binding="panel1" layout-manager="GridBagLayout">
     <constraints>
-      <xy x="20" y="20" width="500" height="528"/>
+      <xy x="20" y="20" width="880" height="528"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -123,6 +123,43 @@
               <text value="BYTE"/>
             </properties>
           </component>
+          <grid id="5657" layout-manager="GridBagLayout">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e0952" class="javax.swing.JRadioButton" binding="rideThisFireworkRadioButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Ride this firework"/>
+                </properties>
+              </component>
+              <component id="a146b" class="javax.swing.JRadioButton" binding="dontRidemob">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Don't ride this firework"/>
+                </properties>
+              </component>
+              <component id="a1d88" class="javax.swing.JRadioButton" binding="randomlyRideMob">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                  <gridbag weightx="0.0" weighty="0.0"/>
+                </constraints>
+                <properties>
+                  <text value="Randomly ride this firework"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
         </children>
       </grid>
       <grid id="87569" layout-manager="GridBagLayout">
@@ -271,4 +308,11 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="rideGroup">
+      <member id="e0952"/>
+      <member id="a146b"/>
+      <member id="a1d88"/>
+    </group>
+  </buttonGroups>
 </form>

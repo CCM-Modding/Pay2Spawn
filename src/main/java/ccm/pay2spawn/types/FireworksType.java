@@ -25,6 +25,7 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.FireworksTypeGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityFireworkRocket;
@@ -55,6 +56,8 @@ public class FireworksType extends TypeBase
     public static final String EXPLOSIONS_KEY = "Explosions";
     public static final String FIREWORKS_KEY  = "Fireworks";
 
+    public static final String RIDETHISMOB_KEY = "RideThisMob";
+
     public static final String RADIUS_KEY = "RADIUS";
     public static final String AMOUNT_KEY = "AMOUNT";
 
@@ -68,6 +71,7 @@ public class FireworksType extends TypeBase
         typeMap.put(TRAIL_KEY, NBTBase.NBTTypes[BYTE]);
         typeMap.put(COLORS_KEY, NBTBase.NBTTypes[INT_ARRAY]);
 
+        typeMap.put(RIDETHISMOB_KEY, NBTBase.NBTTypes[BYTE]);
         typeMap.put(RADIUS_KEY, NBTBase.NBTTypes[INT]);
         typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[INT]);
     }
@@ -119,19 +123,22 @@ public class FireworksType extends TypeBase
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
-        int i = 0;
+        int flight = 0;
         NBTTagCompound nbttagcompound1 = itemStack.getTagCompound().getCompoundTag(FIREWORKS_KEY);
-        if (nbttagcompound1 != null) i += nbttagcompound1.getByte(FLIGHT_KEY);
+        if (nbttagcompound1 != null) flight += nbttagcompound1.getByte(FLIGHT_KEY);
 
         try
         {
+            int rndFirework = RANDOM.nextInt(dataFromClient.getInteger(AMOUNT_KEY));
             int rad = dataFromClient.getInteger(RADIUS_KEY);
-            for (double dgr = 0; dgr < 2 * Math.PI; dgr += (2 * Math.PI / dataFromClient.getInteger(AMOUNT_KEY)))
+            double angle = 2 * Math.PI / dataFromClient.getInteger(AMOUNT_KEY);
+            for (int i = 0; i < dataFromClient.getInteger(AMOUNT_KEY); i++)
             {
-                EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX + rad * Math.cos(dgr), player.posY, player.posZ + rad * Math.sin(dgr), itemStack.copy());
+                EntityFireworkRocket entityfireworkrocket = new EntityFireworkRocket(player.worldObj, player.posX + rad * Math.cos(angle * i), player.posY, player.posZ + rad * Math.sin(angle * i), itemStack.copy());
                 fireworkAgeField.set(entityfireworkrocket, 1);
-                lifetimeField.set(entityfireworkrocket, 10 + 10 * i);
+                lifetimeField.set(entityfireworkrocket, 10 + 10 * flight);
                 player.worldObj.spawnEntityInWorld(entityfireworkrocket);
+                if (i == rndFirework && dataFromClient.hasKey(RIDETHISMOB_KEY) && dataFromClient.getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entityfireworkrocket);
             }
         }
         catch (IllegalAccessException e)

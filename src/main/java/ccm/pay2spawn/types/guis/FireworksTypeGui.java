@@ -38,6 +38,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
+import static ccm.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
 import static ccm.pay2spawn.types.FireworksType.*;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
@@ -57,6 +58,9 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     public JButton       addExplosionManuallyButton;
     public JTextField    amountTextField;
     public JTextField    radiusTextField;
+    public JRadioButton  rideThisFireworkRadioButton;
+    public JRadioButton  dontRidemob;
+    public JRadioButton  randomlyRideMob;
     public FireworksTypeGui instance = this;
 
     public JsonObject fireworks;
@@ -104,6 +108,11 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         fireworks = data.getAsJsonObject("tag").getAsJsonObject(FIREWORKS_KEY);
         flightMultiplierTextField.setText(readValue(FLIGHT_KEY, fireworks));
 
+        String ride = readValue(RIDETHISMOB_KEY, data);
+        dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
+        rideThisFireworkRadioButton.setSelected(ride.equals("1"));
+        randomlyRideMob.setSelected(ride.startsWith("$random"));
+
         explosionList.updateUI();
 
         jsonPane.setText(GSON.toJson(data));
@@ -115,6 +124,8 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         storeValue(FLIGHT_KEY, fireworks, flightMultiplierTextField.getText());
         storeValue(AMOUNT_KEY, data, amountTextField.getText());
         storeValue(RADIUS_KEY, data, radiusTextField.getText());
+
+        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisFireworkRadioButton.isSelected() ? "1" : "0");
 
         explosionList.updateUI();
 
@@ -335,19 +346,47 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel2.add(panel3, gbc);
+        rideThisFireworkRadioButton = new JRadioButton();
+        rideThisFireworkRadioButton.setText("Ride this firework");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(rideThisFireworkRadioButton, gbc);
+        dontRidemob = new JRadioButton();
+        dontRidemob.setText("Don't ride this firework");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(dontRidemob, gbc);
+        randomlyRideMob = new JRadioButton();
+        randomlyRideMob.setText("Randomly ride this firework");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(randomlyRideMob, gbc);
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.weightx = 1.0;
         gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(panel3, gbc);
+        panel1.add(panel4, gbc);
         final JLabel label9 = new JLabel();
         label9.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label9, gbc);
+        panel4.add(label9, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -355,20 +394,20 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel3.add(scrollPane, gbc);
+        panel4.add(scrollPane, gbc);
         jsonPane = new JTextPane();
         jsonPane.setEnabled(true);
         jsonPane.setText("");
         jsonPane.setToolTipText("Make sure you hit \"Parse from JSON\" after editing this!");
         scrollPane.setViewportView(jsonPane);
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridBagLayout());
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 3;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(panel4, gbc);
+        panel1.add(panel5, gbc);
         parseFromJsonButton = new JButton();
         parseFromJsonButton.setText("Parse from Json");
         parseFromJsonButton.setToolTipText("Push the button!");
@@ -377,7 +416,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel4.add(parseFromJsonButton, gbc);
+        panel5.add(parseFromJsonButton, gbc);
         saveButton = new JButton();
         saveButton.setText("Save");
         saveButton.setToolTipText("Push the button!");
@@ -386,7 +425,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel4.add(saveButton, gbc);
+        panel5.add(saveButton, gbc);
         updateJsonButton = new JButton();
         updateJsonButton.setText("Update Json");
         updateJsonButton.setToolTipText("Push the button!");
@@ -395,7 +434,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel4.add(updateJsonButton, gbc);
+        panel5.add(updateJsonButton, gbc);
         testButton = new JButton();
         testButton.setText("Test");
         testButton.setToolTipText("Push the button!");
@@ -404,24 +443,24 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel4.add(testButton, gbc);
-        final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridBagLayout());
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.weightx = 1.0;
-        gbc.weighty = 0.5;
-        gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(panel5, gbc);
+        panel5.add(testButton, gbc);
         final JPanel panel6 = new JPanel();
         panel6.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 1.0;
+        gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
-        panel5.add(panel6, gbc);
+        panel1.add(panel6, gbc);
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.fill = GridBagConstraints.BOTH;
+        panel6.add(panel7, gbc);
         addExplosionManuallyButton = new JButton();
         addExplosionManuallyButton.setText("Add explosion manually");
         addExplosionManuallyButton.setToolTipText("Push the button!");
@@ -430,7 +469,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel6.add(addExplosionManuallyButton, gbc);
+        panel7.add(addExplosionManuallyButton, gbc);
         importFireworkStartButton = new JButton();
         importFireworkStartButton.setText("Import firework start");
         importFireworkStartButton.setToolTipText("Push the button!");
@@ -439,7 +478,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel6.add(importFireworkStartButton, gbc);
+        panel7.add(importFireworkStartButton, gbc);
         final JScrollPane scrollPane1 = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -447,13 +486,18 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel5.add(scrollPane1, gbc);
+        panel6.add(scrollPane1, gbc);
         explosionList = new JList();
         explosionList.setToolTipText("Double click to edit!");
         scrollPane1.setViewportView(explosionList);
         label3.setLabelFor(flightMultiplierTextField);
         label5.setLabelFor(amountTextField);
         label6.setLabelFor(radiusTextField);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(rideThisFireworkRadioButton);
+        buttonGroup.add(dontRidemob);
+        buttonGroup.add(randomlyRideMob);
     }
 
     /**
