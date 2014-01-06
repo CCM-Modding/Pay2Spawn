@@ -31,9 +31,10 @@ import java.io.IOException;
 
 public class Help
 {
-    public  JPanel    panel1;
-    public  JTextPane textPane;
-    private JFrame    frame;
+    public  JPanel      panel1;
+    public  JTextPane   textPane;
+    public  JScrollPane scrollpane;
+    private JFrame      frame;
 
     private static Help instance;
 
@@ -57,7 +58,10 @@ public class Help
             {
                 e.printStackTrace();
             }
+            instance.textPane.setSelectionStart(1);
+            instance.textPane.setSelectionEnd(1);
         }
+
         if (!instance.frame.isVisible()) instance.frame.setVisible(true);
     }
 
@@ -79,8 +83,8 @@ public class Help
     {
         panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
-        final JScrollPane scrollPane1 = new JScrollPane();
-        scrollPane1.setHorizontalScrollBarPolicy(31);
+        scrollpane = new JScrollPane();
+        scrollpane.setHorizontalScrollBarPolicy(31);
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -88,12 +92,12 @@ public class Help
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
-        panel1.add(scrollPane1, gbc);
+        panel1.add(scrollpane, gbc);
         textPane = new JTextPane();
         textPane.setContentType("text/html");
         textPane.setEditable(false);
         textPane.setEnabled(true);
-        scrollPane1.setViewportView(textPane);
+        scrollpane.setViewportView(textPane);
     }
 
     /**
