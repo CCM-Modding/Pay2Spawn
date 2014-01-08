@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.random;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,7 +39,7 @@ import static ccm.pay2spawn.util.Constants.RANDOM;
  */
 public class RndListValue implements IRandomResolver
 {
-    private final static Pattern PATTERN = Pattern.compile("^\\$random\\[(?:(-?\\w+), ?)+(-?\\w+)\\]$");
+    private final static Pattern PATTERN = Pattern.compile("^\\$random\\[(.+)\\]$");
 
     @Override
     public String getIdentifier()
@@ -51,7 +52,7 @@ public class RndListValue implements IRandomResolver
     {
         Matcher matcher = PATTERN.matcher(value);
         matcher.find();
-        return matcher.group(1 + RANDOM.nextInt(matcher.groupCount()));
+        return RandomRegistry.getRandomFromSet(Arrays.asList(matcher.group(1).split(", ?")));
     }
 
     @Override
