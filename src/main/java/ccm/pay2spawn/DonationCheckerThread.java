@@ -242,7 +242,7 @@ public class DonationCheckerThread extends Thread
                     //file.delete();
                     file.createNewFile();
                     PrintWriter pw = new PrintWriter(file);
-                    for (int i = 0; i < fileSettings.top_amount; i++)
+                    for (int i = 0; i < fileSettings.top_amount && i < root.getAsJsonArray("top").size(); i++)
                     {
                         if (i == fileSettings.top_amount - 1) end = "";
                         JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
@@ -270,7 +270,7 @@ public class DonationCheckerThread extends Thread
 
                     PrintWriter pw = new PrintWriter(file);
 
-                    for (int i = 0; i < fileSettings.recent_amount; i++)
+                    for (int i = 0; i < fileSettings.recent_amount && i < root.getAsJsonArray("mostRecent").size(); i++)
                     {
                         if (i == fileSettings.recent_amount - 1) end = "";
                         JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
