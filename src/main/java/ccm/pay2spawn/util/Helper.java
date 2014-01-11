@@ -30,7 +30,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -168,6 +167,8 @@ public class Helper
         return new String(b);
     }
 
+    public static final String FORMAT_WITH_DELIMITER = "((?<=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr])|(?=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr]))";
+
     /**
      * Print a message client side
      *
@@ -175,7 +176,8 @@ public class Helper
      */
     public static void msg(String message)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient()) Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+        System.out.println(message);
+        Minecraft.getMinecraft().thePlayer.addChatMessage(message);
     }
 
     /**

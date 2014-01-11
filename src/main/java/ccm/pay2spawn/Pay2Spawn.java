@@ -178,6 +178,7 @@ public class Pay2Spawn
             e.printStackTrace();
         }
         event.registerServerCommand(new CommandP2SPermissions());
+        event.registerServerCommand(new CommandP2SServer());
 
         // for (String node : PermissionsHandler.getAllPermNodes()) logger.info(node);
     }
