@@ -63,14 +63,14 @@ public class EntityType extends TypeBase
 {
     private static final String NAME = "entity";
 
-    public static final String ENTITYNAME_KEY  = "name";
-    public static final String SPAWNRADIUS_KEY = "SPAWNRADIUS";
-    public static final String AMOUNT_KEY      = "AMOUNT";
-    public static final String AGRO_KEY        = "agro";
-    public static final String CUSTOMNAME_KEY  = "CustomName";
-    public static final String RIDING_KEY      = "Riding";
-    public static final String RIDETHISMOB_KEY = "RideThisMob";
-    public static final String RANDOM_KEY      = "random";
+    public static final String ENTITYNAME_KEY         = "name";
+    public static final String SPAWNRADIUS_KEY        = "SPAWNRADIUS";
+    public static final String AMOUNT_KEY             = "AMOUNT";
+    public static final String AGRO_KEY               = "agro";
+    public static final String CUSTOMNAME_KEY         = "CustomName";
+    public static final String RIDING_KEY             = "Riding";
+    public static final String RIDETHISMOB_KEY        = "RideThisMob";
+    public static final String RANDOM_KEY             = "random";
     public static final String THROWTOWARDSPLAYER_KEY = "throwTowardsPlayer";
 
     public static final HashSet<String>         NAMES    = new HashSet<>();

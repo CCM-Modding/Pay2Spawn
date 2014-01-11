@@ -27,8 +27,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.RANDOM;
-
 /**
  * Picks 1 value from a list
  * Expected syntax: $random[value1, value2, value3, value4, ..., valueN]

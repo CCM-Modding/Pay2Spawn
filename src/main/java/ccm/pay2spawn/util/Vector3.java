@@ -31,9 +31,9 @@ public class Vector3
 
     public Vector3(Entity src, Entity target)
     {
-        x = - src.posX + target.posX;
-        y = - src.posY + target.posY;
-        z = - src.posZ + target.posZ;
+        x = -src.posX + target.posX;
+        y = -src.posY + target.posY;
+        z = -src.posZ + target.posZ;
     }
 
     public Vector3 normalize()
@@ -47,7 +47,7 @@ public class Vector3
 
     private double getSize()
     {
-        return Math.sqrt(x*x + y*y + z*z);
+        return Math.sqrt(x * x + y * y + z * z);
     }
 
     public Vector3 setAsVelocity(Entity entity, double multiplier)

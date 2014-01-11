@@ -26,7 +26,6 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
-import ccm.pay2spawn.types.EntityType;
 import ccm.pay2spawn.util.IIHasCallback;
 import com.google.gson.JsonObject;
 

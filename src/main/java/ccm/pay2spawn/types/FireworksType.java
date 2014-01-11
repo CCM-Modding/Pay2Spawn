@@ -25,7 +25,6 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.FireworksTypeGui;
-import ccm.pay2spawn.util.Helper;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityFireworkRocket;
