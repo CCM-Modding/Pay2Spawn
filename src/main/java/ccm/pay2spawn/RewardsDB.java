@@ -70,12 +70,20 @@ public class RewardsDB
         {
             if (file.exists())
             {
-                JsonArray rootArray = JSON_PARSER.parse(new FileReader(file)).getAsJsonArray();
-
-                for (JsonElement element : rootArray)
+                try
                 {
-                    Reward reward = new Reward(element.getAsJsonObject());
-                    map.put(reward.getAmount(), reward);
+                    JsonArray rootArray = JSON_PARSER.parse(new FileReader(file)).getAsJsonArray();
+
+                    for (JsonElement element : rootArray)
+                    {
+                        Reward reward = new Reward(element.getAsJsonObject());
+                        map.put(reward.getAmount(), reward);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Pay2Spawn.getLogger().severe("ERROR TYPE 2: There is an error in your config file.");
+                    e.printStackTrace();
                 }
             }
             else
