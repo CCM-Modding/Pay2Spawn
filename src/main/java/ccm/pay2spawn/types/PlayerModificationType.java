@@ -166,7 +166,8 @@ public class PlayerModificationType extends TypeBase
                                 food.addStats((int) -dataFromClient.getFloat(AMOUNT_KEY), 0);
                                 break;
                             case SET:
-                                food.setFoodLevel((int) dataFromClient.getFloat(AMOUNT_KEY));
+                                food.addStats(-food.getFoodLevel(), 0);
+                                food.addStats((int) dataFromClient.getFloat(AMOUNT_KEY), 0);
                                 break;
                         }
                     }
@@ -180,13 +181,14 @@ public class PlayerModificationType extends TypeBase
                         switch (dataFromClient.getInteger(OPERATION_KEY))
                         {
                             case ADD:
-                                food.addStats(0, (int) dataFromClient.getFloat(AMOUNT_KEY));
+                                food.addStats(0, dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                             case SUBTRACT:
-                                food.addStats(0, (int) -dataFromClient.getFloat(AMOUNT_KEY));
+                                food.addStats(0, -dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                             case SET:
-                                food.setFoodSaturationLevel((int) dataFromClient.getFloat(AMOUNT_KEY));
+                                food.addStats(0, -food.getSaturationLevel());
+                                food.addStats(0, dataFromClient.getFloat(AMOUNT_KEY));
                                 break;
                         }
                     }
