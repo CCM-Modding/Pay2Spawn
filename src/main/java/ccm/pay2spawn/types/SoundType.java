@@ -30,12 +30,14 @@ import ccm.pay2spawn.types.guis.SoundTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemRecord;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -48,6 +50,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import static ccm.pay2spawn.util.Constants.BYTE;
 import static ccm.pay2spawn.util.Constants.FLOAT;
 import static ccm.pay2spawn.util.Constants.STRING;
 
@@ -64,6 +67,7 @@ public class SoundType extends TypeBase
     public static final String SOUNDNAME_KEY = "soundName";
     public static final String VOLUME_KEY    = "volume";
     public static final String PITCH_KEY     = "pitch";
+    public static final String PLAYTOALL_KEY = "playToAll";
 
     public static final HashSet<String>         sounds    = new HashSet<>();
     public static final HashSet<String>         streaming = new HashSet<>();
@@ -76,6 +80,7 @@ public class SoundType extends TypeBase
         typeMap.put(SOUNDNAME_KEY, NBTBase.NBTTypes[STRING]);
         typeMap.put(VOLUME_KEY, NBTBase.NBTTypes[FLOAT]);
         typeMap.put(PITCH_KEY, NBTBase.NBTTypes[FLOAT]);
+        typeMap.put(PLAYTOALL_KEY, NBTBase.NBTTypes[BYTE]);
 
         if (FMLCommonHandler.instance().getSide().isClient()) nameToSoundPoolEntriesMappingField = getHackField();
     }
@@ -98,12 +103,19 @@ public class SoundType extends TypeBase
         nbt.setString(SOUNDNAME_KEY, RandomRegistry.getRandomFromSet(sounds));
         nbt.setFloat(VOLUME_KEY, 1f);
         nbt.setFloat(PITCH_KEY, 1f);
+        nbt.setBoolean(PLAYTOALL_KEY, false);
 
         return nbt;
     }
 
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY)) for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);
+        else play(player, dataFromClient);
+    }
+
+    private void play(EntityPlayer player, NBTTagCompound dataFromClient)
     {
         if (sounds.contains(dataFromClient.getString(SOUNDNAME_KEY)))
             player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
