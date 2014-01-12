@@ -25,6 +25,7 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.CommandType.COMMAND_KEY;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -47,6 +49,7 @@ public class CommandTypeGui extends HelperGuiBase
     public JButton     saveButton;
     public JButton     updateJsonButton;
     public JButton     testButton;
+    public JTextField  HTMLTextField;
 
     public CommandTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -59,6 +62,7 @@ public class CommandTypeGui extends HelperGuiBase
     public void readJson()
     {
         cmdTextField.setText(readValue(COMMAND_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -67,6 +71,7 @@ public class CommandTypeGui extends HelperGuiBase
     public void updateJson()
     {
         storeValue(COMMAND_KEY, data, cmdTextField.getText());
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -189,6 +194,28 @@ public class CommandTypeGui extends HelperGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel2.add(cmdTextField, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label5, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label6, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -198,13 +225,13 @@ public class CommandTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Json:");
+        final JLabel label7 = new JLabel();
+        label7.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label5, gbc);
+        panel3.add(label7, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

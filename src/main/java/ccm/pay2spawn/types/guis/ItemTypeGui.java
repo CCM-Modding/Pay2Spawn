@@ -27,6 +27,7 @@ import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.IIHasCallback;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -35,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -48,6 +50,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     public JButton     testButton;
     public JButton     importItemYouAreButton;
     public JPanel      pane1;
+    public JTextField  HTMLTextField;
     private ItemTypeGui instance = this;
 
     public ItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
@@ -61,12 +64,16 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     public void readJson()
     {
         jsonPane.setText(GSON.toJson(data));
+
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
     }
 
     @Override
     public void updateJson()
     {
         jsonPane.setText(GSON.toJson(data));
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
     }
 
     @Override
@@ -173,9 +180,32 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        gbc.gridwidth = 3;
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(importItemYouAreButton, gbc);
+        final JLabel label1 = new JLabel();
+        label1.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel1.add(label1, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel1.add(HTMLTextField, gbc);
+        final JLabel label2 = new JLabel();
+        label2.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(label2, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -185,13 +215,13 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         pane1.add(panel2, gbc);
-        final JLabel label1 = new JLabel();
-        label1.setText("Json:");
+        final JLabel label3 = new JLabel();
+        label3.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(label1, gbc);
+        panel2.add(label3, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

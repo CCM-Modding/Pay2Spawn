@@ -27,6 +27,7 @@ import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.IIHasCallback;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -36,6 +37,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.EntityType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -57,6 +59,7 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     public JRadioButton dontThrown;
     public JRadioButton RndThrown;
     public JTextField   amountTextField;
+    public JTextField   HTMLTextField;
     public CustomEntityTypeGui instance = this;
 
     public CustomEntityTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
@@ -74,6 +77,7 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
     {
         spawnRadiusTextField.setText(readValue(SPAWNRADIUS_KEY, data));
         amountTextField.setText(readValue(AMOUNT_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         String ride = readValue(RIDETHISMOB_KEY, data);
         dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
@@ -96,6 +100,8 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
 
         storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisMobRadioButton.isSelected() ? "1" : "0");
         storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? "$random" : thrown.isSelected() ? "1" : "0");
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -305,7 +311,7 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 4;
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label4, gbc);
         final JLabel label5 = new JLabel();
         label5.setText("INT");
@@ -314,6 +320,29 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 4;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label5, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label6, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 6;
+        gbc.gridwidth = 4;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label7 = new JLabel();
+        label7.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 6;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label7, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -323,13 +352,13 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label6 = new JLabel();
-        label6.setText("Json:");
+        final JLabel label8 = new JLabel();
+        label8.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label6, gbc);
+        panel3.add(label8, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

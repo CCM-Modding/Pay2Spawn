@@ -25,6 +25,7 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -36,6 +37,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.XPOrbsType.AMOUNTOFORBS_KEY;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -50,6 +52,7 @@ public class XPOrbsGui extends HelperGuiBase
     public JButton     testButton;
 
     private JTextField amountField;
+    public  JTextField HTMLTextField;
 
     public XPOrbsGui(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
     {
@@ -125,6 +128,7 @@ public class XPOrbsGui extends HelperGuiBase
     public void readJson()
     {
         amountField.setText(readValue(AMOUNTOFORBS_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -132,6 +136,7 @@ public class XPOrbsGui extends HelperGuiBase
     public void updateJson()
     {
         storeValue(AMOUNTOFORBS_KEY, data, amountField.getText());
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -204,6 +209,27 @@ public class XPOrbsGui extends HelperGuiBase
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         panel3.add(label4, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel3.add(label5, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel3.add(HTMLTextField, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(label6, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -213,13 +239,13 @@ public class XPOrbsGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel2.add(panel4, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Json:");
+        final JLabel label7 = new JLabel();
+        label7.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel4.add(label5, gbc);
+        panel4.add(label7, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
@@ -278,7 +304,8 @@ public class XPOrbsGui extends HelperGuiBase
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(testButton, gbc);
         label3.setLabelFor(amountField);
-        label5.setLabelFor(scrollPane);
+        label5.setLabelFor(HTMLTextField);
+        label7.setLabelFor(scrollPane);
     }
 
     /**

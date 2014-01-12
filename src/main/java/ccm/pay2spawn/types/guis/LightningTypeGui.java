@@ -25,6 +25,7 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.LightningType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -52,6 +54,7 @@ public class LightningTypeGui extends HelperGuiBase
     public JRadioButton rndEntityRadioButton;
     public JRadioButton rndSpotRadioButton;
     public JRadioButton playerRadioButton;
+    public JTextField   HTMLTextField;
 
     public LightningTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -120,6 +123,7 @@ public class LightningTypeGui extends HelperGuiBase
     public void readJson()
     {
         spreadTextField.setText(readValue(SPREAD_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         String type = readValue(TYPE_KEY, data);
         playerRadioButton.setSelected(type.equals(PLAYER_ENTITY + ""));
@@ -136,6 +140,8 @@ public class LightningTypeGui extends HelperGuiBase
         storeValue(SPREAD_KEY, data, spreadTextField.getText());
 
         String type = RND_SPOT + "";
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         if (playerRadioButton.isSelected()) type = PLAYER_ENTITY + "";
         else if (nearestEntityRadioButton.isSelected()) type = NEAREST_ENTITY + "";
@@ -241,6 +247,28 @@ public class LightningTypeGui extends HelperGuiBase
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
         panel3.add(playerRadioButton, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel3.add(label5, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        gbc.gridwidth = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel3.add(HTMLTextField, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(label6, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -250,13 +278,13 @@ public class LightningTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel2.add(panel4, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Json:");
+        final JLabel label7 = new JLabel();
+        label7.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel4.add(label5, gbc);
+        panel4.add(label7, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

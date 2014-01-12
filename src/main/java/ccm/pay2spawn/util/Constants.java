@@ -61,6 +61,8 @@ public class Constants
     public static final String DONATION_NOTE     = "note";
     public static final String ANONYMOUS         = "Anonymous";
 
+    public static final String CUSTOMHTML        = "customHTML";
+
     /**
      * Global helpers
      */

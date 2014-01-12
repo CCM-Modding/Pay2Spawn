@@ -181,6 +181,34 @@
               <text value="If enable or disable, amount is time in seconds. If empty, no time limit."/>
             </properties>
           </component>
+          <component id="101c3" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <labelFor value="886cf"/>
+              <text value="Custom HTML:"/>
+            </properties>
+          </component>
+          <component id="6052f" class="javax.swing.JTextField" binding="HTMLTextField" default-binding="true">
+            <constraints>
+              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="6ac24" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="STRING"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="e3cae" layout-manager="GridBagLayout">

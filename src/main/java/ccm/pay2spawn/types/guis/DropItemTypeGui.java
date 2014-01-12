@@ -25,6 +25,7 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -34,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.DropItemType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -50,6 +52,7 @@ public class DropItemTypeGui extends HelperGuiBase
     public JRadioButton holdingEntireStackRadioButton;
     public JRadioButton allRadioButton;
     public JRadioButton armorRadioButton;
+    public JTextField   HTMLTextField;
 
     public DropItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -67,6 +70,8 @@ public class DropItemTypeGui extends HelperGuiBase
         allRadioButton.setSelected(type.equals("" + ALL));
         armorRadioButton.setSelected(type.equals("" + ARMOR));
 
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
+
         jsonPane.setText(GSON.toJson(data));
     }
 
@@ -77,6 +82,8 @@ public class DropItemTypeGui extends HelperGuiBase
         if (holdingEntireStackRadioButton.isSelected()) storeValue(TYPE_KEY, data, "" + HOLDING_ALL);
         if (allRadioButton.isSelected()) storeValue(TYPE_KEY, data, "" + ALL);
         if (armorRadioButton.isSelected()) storeValue(TYPE_KEY, data, "" + ARMOR);
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -167,31 +174,54 @@ public class DropItemTypeGui extends HelperGuiBase
         holding1ItemRadioButton = new JRadioButton();
         holding1ItemRadioButton.setText("Holding, 1 item");
         gbc = new GridBagConstraints();
-        gbc.gridx = 0;
+        gbc.gridx = 1;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(holding1ItemRadioButton, gbc);
         holdingEntireStackRadioButton = new JRadioButton();
         holdingEntireStackRadioButton.setText("Holding, entire stack");
         gbc = new GridBagConstraints();
-        gbc.gridx = 1;
+        gbc.gridx = 2;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(holdingEntireStackRadioButton, gbc);
         allRadioButton = new JRadioButton();
         allRadioButton.setText("All");
         gbc = new GridBagConstraints();
-        gbc.gridx = 2;
+        gbc.gridx = 3;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(allRadioButton, gbc);
         armorRadioButton = new JRadioButton();
         armorRadioButton.setText("Armor");
         gbc = new GridBagConstraints();
-        gbc.gridx = 3;
+        gbc.gridx = 4;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel1.add(armorRadioButton, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 1;
+        gbc.gridwidth = 4;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel1.add(HTMLTextField, gbc);
+        final JLabel label1 = new JLabel();
+        label1.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel1.add(label1, gbc);
+        final JLabel label2 = new JLabel();
+        label2.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 5;
+        gbc.gridy = 1;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(label2, gbc);
         final JPanel panel2 = new JPanel();
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -201,13 +231,13 @@ public class DropItemTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         pane1.add(panel2, gbc);
-        final JLabel label1 = new JLabel();
-        label1.setText("Json:");
+        final JLabel label3 = new JLabel();
+        label3.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(label1, gbc);
+        panel2.add(label3, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

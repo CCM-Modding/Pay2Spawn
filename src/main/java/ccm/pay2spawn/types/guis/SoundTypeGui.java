@@ -28,6 +28,7 @@ import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.random.RndSound;
 import ccm.pay2spawn.types.SoundType;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.SoundType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -56,6 +58,7 @@ public class SoundTypeGui extends HelperGuiBase
     public JTextField        volumeTextField;
     public JTextField        pitchTextField;
     public JCheckBox         playAtEveryoneCheckBox;
+    public JTextField        HTMLTextField;
 
     public SoundTypeGui(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
     {
@@ -133,6 +136,7 @@ public class SoundTypeGui extends HelperGuiBase
         soundNameComboBox.setSelectedItem(readValue(SOUNDNAME_KEY, data));
         volumeTextField.setText(readValue(VOLUME_KEY, data));
         pitchTextField.setText(readValue(PITCH_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         playAtEveryoneCheckBox.setSelected(readValue(PLAYTOALL_KEY, data).equals("1"));
 
@@ -147,6 +151,7 @@ public class SoundTypeGui extends HelperGuiBase
         storeValue(PITCH_KEY, data, pitchTextField.getText());
 
         storeValue(PLAYTOALL_KEY, data, playAtEveryoneCheckBox.isSelected() ? "1" : "0");
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -260,6 +265,27 @@ public class SoundTypeGui extends HelperGuiBase
         gbc.gridy = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel3.add(playAtEveryoneCheckBox, gbc);
+        final JLabel label9 = new JLabel();
+        label9.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel3.add(label9, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel3.add(HTMLTextField, gbc);
+        final JLabel label10 = new JLabel();
+        label10.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel3.add(label10, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -269,13 +295,13 @@ public class SoundTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel2.add(panel4, gbc);
-        final JLabel label9 = new JLabel();
-        label9.setText("Json:");
+        final JLabel label11 = new JLabel();
+        label11.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel4.add(label9, gbc);
+        panel4.add(label11, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

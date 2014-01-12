@@ -27,6 +27,7 @@ import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.IIHasCallback;
+import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -40,6 +41,7 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
 import static ccm.pay2spawn.types.FireworksType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -61,6 +63,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     public JRadioButton  rideThisFireworkRadioButton;
     public JRadioButton  dontRidemob;
     public JRadioButton  randomlyRideMob;
+    public JTextField    HTMLTextField;
     public FireworksTypeGui instance = this;
 
     public JsonObject fireworks;
@@ -100,6 +103,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
     {
         amountTextField.setText(readValue(AMOUNT_KEY, data));
         radiusTextField.setText(readValue(RADIUS_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         if (!data.has("tag")) data.add("tag", new JsonObject());
         if (!data.getAsJsonObject("tag").has(FIREWORKS_KEY)) data.getAsJsonObject("tag").add(FIREWORKS_KEY, new JsonObject());
@@ -126,6 +130,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         storeValue(RADIUS_KEY, data, radiusTextField.getText());
 
         storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisFireworkRadioButton.isSelected() ? "1" : "0");
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         explosionList.updateUI();
 
@@ -371,6 +376,28 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         panel3.add(randomlyRideMob, gbc);
+        final JLabel label9 = new JLabel();
+        label9.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label9, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 5;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label10 = new JLabel();
+        label10.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label10, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -380,13 +407,13 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         gbc.weighty = 0.5;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel4, gbc);
-        final JLabel label9 = new JLabel();
-        label9.setText("Json:");
+        final JLabel label11 = new JLabel();
+        label11.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel4.add(label9, gbc);
+        panel4.add(label11, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

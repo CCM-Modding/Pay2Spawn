@@ -28,6 +28,7 @@ import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.random.RndEntity;
 import ccm.pay2spawn.types.EntityType;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -39,6 +40,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.EntityType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -68,6 +70,7 @@ public class EntityTypeGui extends HelperGuiBase
     public JRadioButton      dontThrown;
     public JRadioButton      RndThrown;
     public JTextField        amountTextField;
+    public JTextField        HTMLTextField;
     public EntityTypeGui     superGui;
     public EntityTypeGui instance = this;
     public EntityTypeGui clientGui;
@@ -191,6 +194,7 @@ public class EntityTypeGui extends HelperGuiBase
         customNameTextField.setText(readValue(CUSTOMNAME_KEY, data));
         spawnRadiusTextField.setText(readValue(SPAWNRADIUS_KEY, data));
         amountTextField.setText(readValue(AMOUNT_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         String agro = readValue(AGRO_KEY, data);
         notAgroRadioButton.setSelected(agro.equals("0") || agro.equals(""));
@@ -227,6 +231,8 @@ public class EntityTypeGui extends HelperGuiBase
         storeValue(RANDOM_KEY, data, randomlyRandomizeMobRadioButton.isSelected() ? "$random" : randomizeMobRadioButton.isSelected() ? "1" : "0");
         storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisMobRadioButton.isSelected() ? "1" : "0");
         storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? "$random" : thrown.isSelected() ? "1" : "0");
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -433,7 +439,7 @@ public class EntityTypeGui extends HelperGuiBase
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 8;
-        gbc.anchor = GridBagConstraints.WEST;
+        gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label9, gbc);
         amountTextField = new JTextField();
         gbc = new GridBagConstraints();
@@ -449,6 +455,29 @@ public class EntityTypeGui extends HelperGuiBase
         gbc.gridx = 4;
         gbc.gridy = 8;
         panel2.add(label10, gbc);
+        final JLabel label11 = new JLabel();
+        label11.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 9;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label11, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 9;
+        gbc.gridwidth = 3;
+        gbc.weightx = 1.0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label12 = new JLabel();
+        label12.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 4;
+        gbc.gridy = 9;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label12, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -458,13 +487,13 @@ public class EntityTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label11 = new JLabel();
-        label11.setText("Json:");
+        final JLabel label13 = new JLabel();
+        label13.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label11, gbc);
+        panel3.add(label13, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

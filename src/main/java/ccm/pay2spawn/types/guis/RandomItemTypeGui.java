@@ -35,6 +35,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.RandomItemType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -48,6 +49,7 @@ public class RandomItemTypeGui extends HelperGuiBase
     public JButton     updateJsonButton;
     public JButton     testButton;
     public JPanel      panel1;
+    public JTextField  HTMLTextField;
 
     public RandomItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -62,6 +64,7 @@ public class RandomItemTypeGui extends HelperGuiBase
     {
         if (data.has(TAG_KEY) && data.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) itemNameField.setText(readValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY)));
 
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
         jsonPane.setText(GSON.toJson(data));
     }
 
@@ -74,6 +77,8 @@ public class RandomItemTypeGui extends HelperGuiBase
             if (!data.getAsJsonObject(TAG_KEY).has(DISPLAY_KEY)) data.getAsJsonObject(TAG_KEY).add(DISPLAY_KEY, new JsonObject());
             storeValue(NAME_KEY, data.getAsJsonObject(TAG_KEY).getAsJsonObject(DISPLAY_KEY), itemNameField.getText());
         }
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -199,6 +204,27 @@ public class RandomItemTypeGui extends HelperGuiBase
         gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.EAST;
         panel2.add(label4, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel2.add(label5, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel2.add(HTMLTextField, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 2;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel2.add(label6, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -208,13 +234,13 @@ public class RandomItemTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel3, gbc);
-        final JLabel label5 = new JLabel();
-        label5.setText("Json (any tag put in there wil override a tags from the random item):");
+        final JLabel label7 = new JLabel();
+        label7.setText("Json (any tag put in there wil override a tags from the random item):");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel3.add(label5, gbc);
+        panel3.add(label7, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

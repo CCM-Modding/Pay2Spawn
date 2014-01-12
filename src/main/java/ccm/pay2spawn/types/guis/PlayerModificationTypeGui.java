@@ -26,6 +26,7 @@ package ccm.pay2spawn.types.guis;
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestPacket;
 import ccm.pay2spawn.util.Helper;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -35,6 +36,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PlayerModificationType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -60,6 +62,7 @@ public class PlayerModificationTypeGui extends HelperGuiBase
     public JRadioButton enableRadioButton;
     public JRadioButton disableRadioButton;
     public JTextField   amountTextField;
+    public JTextField   HTMLTextField;
 
     public PlayerModificationTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -121,6 +124,7 @@ public class PlayerModificationTypeGui extends HelperGuiBase
             }
         }
 
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
         amountTextField.setText(readValue(AMOUNT_KEY, data));
 
         jsonPane.setText(GSON.toJson(data));
@@ -153,6 +157,8 @@ public class PlayerModificationTypeGui extends HelperGuiBase
         if (subtractRadioButton.isSelected()) storeValue(OPERATION_KEY, data, SUBTRACT + "");
         if (enableRadioButton.isSelected()) storeValue(OPERATION_KEY, data, ENABLE + "");
         if (disableRadioButton.isSelected()) storeValue(OPERATION_KEY, data, DISABLE + "");
+
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         storeValue(AMOUNT_KEY, data, amountTextField.getText());
 
@@ -433,6 +439,27 @@ public class PlayerModificationTypeGui extends HelperGuiBase
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel1.add(label3, gbc);
+        final JLabel label4 = new JLabel();
+        label4.setText("Custom HTML:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.EAST;
+        panel1.add(label4, gbc);
+        HTMLTextField = new JTextField();
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel1.add(HTMLTextField, gbc);
+        final JLabel label5 = new JLabel();
+        label5.setText("STRING");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 4;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel1.add(label5, gbc);
         final JPanel panel4 = new JPanel();
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -442,13 +469,13 @@ public class PlayerModificationTypeGui extends HelperGuiBase
         gbc.weighty = 1.0;
         gbc.fill = GridBagConstraints.BOTH;
         pane1.add(panel4, gbc);
-        final JLabel label4 = new JLabel();
-        label4.setText("Json:");
+        final JLabel label6 = new JLabel();
+        label6.setText("Json:");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
-        panel4.add(label4, gbc);
+        panel4.add(label6, gbc);
         scrollPane = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

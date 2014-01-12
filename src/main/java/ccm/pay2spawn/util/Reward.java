@@ -198,7 +198,9 @@ public class Reward
         StringBuilder sb = new StringBuilder();
         for (JsonElement element : rewards)
         {
-            sb.append(TypeRegistry.getByName(element.getAsJsonObject().get("type").getAsString()).getHTML(element.getAsJsonObject().getAsJsonObject("data")));
+            JsonObject object = element.getAsJsonObject();
+            if (object.has(CUSTOMHTML) && !Strings.isNullOrEmpty(object.get(CUSTOMHTML).getAsString())) sb.append(object.get(CUSTOMHTML).getAsString());
+            else  sb.append(TypeRegistry.getByName(object.get("type").getAsString()).getHTML(object.getAsJsonObject("data")));
         }
         return sb.toString();
     }
