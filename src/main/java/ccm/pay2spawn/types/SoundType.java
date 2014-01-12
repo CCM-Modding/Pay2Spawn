@@ -38,6 +38,7 @@ import net.minecraft.item.ItemRecord;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatMessageComponent;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -119,8 +120,10 @@ public class SoundType extends TypeBase
     {
         if (sounds.contains(dataFromClient.getString(SOUNDNAME_KEY)))
             player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
-        if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY)))
+        else if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY)))
             player.getEntityWorld().playAuxSFXAtEntity(null, 1005, (int) player.posX, (int) player.posY - 1, (int) player.posZ, ItemRecord.getRecord(dataFromClient.getString(SOUNDNAME_KEY)).itemID);
+        else
+            player.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Unknown sound."));
     }
 
     @Override
