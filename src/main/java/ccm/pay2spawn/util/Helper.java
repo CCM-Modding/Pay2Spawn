@@ -183,17 +183,29 @@ public class Helper
     /**
      * Fill in variables from a donation
      *
+     *
      * @param format   text that needs var replacing
      * @param donation the donation data
+     * @param reward
      * @return the fully var-replaced string
      */
-    public static String formatText(String format, JsonObject donation)
+    public static String formatText(String format, JsonObject donation, Reward reward)
     {
         donation = filter(donation);
         if (donation.has(DONATION_USERNAME)) format = format.replace("$name", donation.get(DONATION_USERNAME).getAsString());
         if (donation.has(DONATION_AMOUNT)) format = format.replace("$amount", donation.get(DONATION_AMOUNT).getAsString());
         if (donation.has(DONATION_NOTE)) format = format.replace("$note", donation.get(DONATION_NOTE).getAsString());
         if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getEntityName());
+
+        if (reward != null)
+        {
+            format = format.replace("$reward_message", reward.getMessage());
+            format = format.replace("$reward_name", reward.getName());
+            format = format.replace("$reward_amount", reward.getAmount() + "");
+            format = format.replace("$reward_countdown", reward.getCountdown() + "");
+        }
+
+        System.out.println(donation.toString());
         return format;
     }
 
@@ -254,18 +266,18 @@ public class Helper
      * @param donation     the donation data
      * @return the fully var-replaced JsonElement
      */
-    public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation)
+    public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation, Reward reward)
     {
         if (dataToFormat.isJsonPrimitive() && dataToFormat.getAsJsonPrimitive().isString())
         {
-            return new JsonPrimitive(Helper.formatText(dataToFormat.getAsString(), donation));
+            return new JsonPrimitive(Helper.formatText(dataToFormat.getAsString(), donation, reward));
         }
         if (dataToFormat.isJsonArray())
         {
             JsonArray out = new JsonArray();
             for (JsonElement element : dataToFormat.getAsJsonArray())
             {
-                out.add(formatText(element, donation));
+                out.add(formatText(element, donation, reward));
             }
             return out;
         }
@@ -274,7 +286,7 @@ public class Helper
             JsonObject out = new JsonObject();
             for (Map.Entry<String, JsonElement> entity : dataToFormat.getAsJsonObject().entrySet())
             {
-                out.add(entity.getKey(), Helper.formatText(entity.getValue(), donation));
+                out.add(entity.getKey(), Helper.formatText(entity.getValue(), donation, reward));
             }
             return out;
         }

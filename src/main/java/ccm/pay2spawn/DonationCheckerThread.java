@@ -206,7 +206,7 @@ public class DonationCheckerThread extends Thread
                 {
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    EventHandler.TOP.add(Helper.formatText(hudSettings.top_format, donation));
+                    EventHandler.TOP.add(Helper.formatText(hudSettings.top_format, donation, null));
                 }
             }
             /**
@@ -221,7 +221,7 @@ public class DonationCheckerThread extends Thread
                 {
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    EventHandler.RECENT.add(Helper.formatText(hudSettings.recent_format, donation));
+                    EventHandler.RECENT.add(Helper.formatText(hudSettings.recent_format, donation, null));
                 }
             }
         }
@@ -247,7 +247,7 @@ public class DonationCheckerThread extends Thread
                         if (i == fileSettings.top_amount - 1) end = "";
                         JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                         if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                        pw.print(Helper.formatText(fileSettings.top_format, donation) + end);
+                        pw.print(Helper.formatText(fileSettings.top_format, donation, null) + end);
                     }
                     pw.close();
                 }
@@ -275,7 +275,7 @@ public class DonationCheckerThread extends Thread
                         if (i == fileSettings.recent_amount - 1) end = "";
                         JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                         if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                        pw.print(Helper.formatText(fileSettings.recent_format, donation) + end);
+                        pw.print(Helper.formatText(fileSettings.recent_format, donation, null) + end);
                     }
                     pw.close();
                 }

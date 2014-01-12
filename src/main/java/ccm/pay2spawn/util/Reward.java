@@ -101,7 +101,7 @@ public class Reward
 
     public void addToCountdown(JsonObject donation, boolean addToHUD)
     {
-        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation));
+        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation, null));
         if (StatusPacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD);
     }
 
@@ -173,7 +173,7 @@ public class Reward
 
     public void send(JsonObject donation)
     {
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation).toString())));
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation, this).toString())));
     }
 
     public Integer getCountdown()
