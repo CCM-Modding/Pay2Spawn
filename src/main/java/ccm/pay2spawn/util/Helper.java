@@ -176,13 +176,12 @@ public class Helper
      */
     public static void msg(String message)
     {
-        System.out.println(message);
+        System.out.println("P2S client message: " + message);
         Minecraft.getMinecraft().thePlayer.addChatMessage(message);
     }
 
     /**
      * Fill in variables from a donation
-     *
      *
      * @param format   text that needs var replacing
      * @param donation the donation data
@@ -205,7 +204,6 @@ public class Helper
             format = format.replace("$reward_countdown", reward.getCountdown() + "");
         }
 
-        System.out.println(donation.toString());
         return format;
     }
 

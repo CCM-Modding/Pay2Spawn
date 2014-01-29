@@ -37,9 +37,7 @@ import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.XPOrbsType.AMOUNTOFORBS_KEY;
-import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
-import static ccm.pay2spawn.util.Constants.GSON;
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class XPOrbsGui extends HelperGuiBase
 {

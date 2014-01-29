@@ -28,6 +28,7 @@ import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
+import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.Point;
 import ccm.pay2spawn.util.Vector3;
@@ -129,6 +130,7 @@ public class CustomEntityType extends TypeBase
 
                 if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
 
+                entity.getEntityData().setBoolean(Constants.NAME, true);
                 player.worldObj.spawnEntityInWorld(entity);
 
                 Entity entity1 = entity;
@@ -154,6 +156,7 @@ public class CustomEntityType extends TypeBase
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
 
                         entity2.setPosition(entity.posX, entity.posY, entity.posZ);
+                        entity2.getEntityData().setBoolean(NAME, true);
                         player.worldObj.spawnEntityInWorld(entity2);
                         entity1.mountEntity(entity2);
                         if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);

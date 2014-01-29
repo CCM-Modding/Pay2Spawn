@@ -30,7 +30,6 @@ import ccm.pay2spawn.types.guis.SoundTypeGui;
 import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
@@ -51,9 +50,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import static ccm.pay2spawn.util.Constants.BYTE;
-import static ccm.pay2spawn.util.Constants.FLOAT;
-import static ccm.pay2spawn.util.Constants.STRING;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Play a sound based on name
@@ -112,7 +109,8 @@ public class SoundType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY)) for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);
+        if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY))
+            for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);
         else play(player, dataFromClient);
     }
 
@@ -122,8 +120,7 @@ public class SoundType extends TypeBase
             player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
         else if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY)))
             player.getEntityWorld().playAuxSFXAtEntity(null, 1005, (int) player.posX, (int) player.posY - 1, (int) player.posZ, ItemRecord.getRecord(dataFromClient.getString(SOUNDNAME_KEY)).itemID);
-        else
-            player.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Unknown sound."));
+        else player.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Unknown sound."));
     }
 
     @Override

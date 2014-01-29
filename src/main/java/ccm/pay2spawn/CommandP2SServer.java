@@ -24,12 +24,16 @@
 package ccm.pay2spawn;
 
 import ccm.pay2spawn.network.StatusPacket;
+import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.common.DimensionManager;
 
 import java.util.Arrays;
 import java.util.List;
@@ -73,15 +77,36 @@ public class CommandP2SServer extends CommandBase
         }
         switch (args[0])
         {
-            case "reload":
-                try
+            case "butcher":
+            {
+                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Removing all spawned entities...").setColor(EnumChatFormatting.YELLOW));
+                int count = 0;
+                for (WorldServer world : DimensionManager.getWorlds())
                 {
-                    Pay2Spawn.reloadDB_Server();
+                    for (Entity entity : (List<Entity>) world.getLoadedEntityList())
+                    {
+                        if (entity.getEntityData().getBoolean(Constants.NAME))
+                        {
+                            count++;
+                            entity.setDead();
+                        }
+                    }
                 }
-                catch (Exception e)
+                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Removed " + count + " entities.").setColor(EnumChatFormatting.GREEN));
+                break;
+            }
+            case "reload":
+                if (MinecraftServer.getServer().isDedicatedServer())
                 {
-                    sender.sendChatToPlayer(ChatMessageComponent.createFromText("RELOAD FAILED.").setColor(EnumChatFormatting.RED));
-                    e.printStackTrace();
+                    try
+                    {
+                        Pay2Spawn.reloadDB_Server();
+                    }
+                    catch (Exception e)
+                    {
+                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("RELOAD FAILED.").setColor(EnumChatFormatting.RED));
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case "hasmod":
@@ -100,7 +125,7 @@ public class CommandP2SServer extends CommandBase
         switch (args.length)
         {
             case 1:
-                return getListOfStringsMatchingLastWord(args, "reload", "hasmod");
+                return getListOfStringsMatchingLastWord(args, "reload", "hasmod", "butcher");
             case 2:
                 switch (args[1])
                 {

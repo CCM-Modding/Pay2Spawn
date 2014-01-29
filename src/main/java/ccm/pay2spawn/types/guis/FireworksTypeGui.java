@@ -41,9 +41,7 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
 import static ccm.pay2spawn.types.FireworksType.*;
-import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
-import static ccm.pay2spawn.util.Constants.GSON;
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 {

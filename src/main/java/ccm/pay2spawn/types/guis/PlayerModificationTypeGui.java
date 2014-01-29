@@ -36,9 +36,7 @@ import java.awt.event.ActionListener;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PlayerModificationType.*;
-import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
-import static ccm.pay2spawn.util.Constants.GSON;
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class PlayerModificationTypeGui extends HelperGuiBase
 {
