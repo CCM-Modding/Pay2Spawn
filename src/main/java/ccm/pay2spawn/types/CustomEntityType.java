@@ -40,6 +40,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -118,6 +119,7 @@ public class CustomEntityType extends TypeBase
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
         ArrayList<Point> points = new Point(player).getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
 
+        int count = 0;
         if (!dataFromClient.hasKey(AMOUNT_KEY)) dataFromClient.setInteger(AMOUNT_KEY, 1);
         for (int i = 0; i < dataFromClient.getInteger(AMOUNT_KEY); i++)
         {
@@ -125,6 +127,9 @@ public class CustomEntityType extends TypeBase
 
             if (entity != null)
             {
+                count ++;
+                if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
+
                 entity.setPosition(player.posX, player.posY, player.posZ);
                 Helper.rndSpawnPoint(points, entity);
 
@@ -153,6 +158,9 @@ public class CustomEntityType extends TypeBase
 
                     if (entity2 != null)
                     {
+                        count ++;
+                        if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
+
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
 
                         entity2.setPosition(entity.posX, entity.posY, entity.posZ);

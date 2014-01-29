@@ -41,6 +41,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,8 @@ public class EntityType extends TypeBase
     public static final HashMap<String, String> typeMap  = new HashMap<>();
     public static final String                  NODENAME = NAME;
 
+    private static int spawnLimit = 100;
+
     static
     {
         typeMap.put(ENTITYNAME_KEY, NBTBase.NBTTypes[STRING]);
@@ -94,6 +97,18 @@ public class EntityType extends TypeBase
     public String getName()
     {
         return NAME;
+    }
+
+    @Override
+    public void doConfig(Configuration configuration)
+    {
+        configuration.addCustomCategoryComment(NAME, "Used for Entity and CustomEntity");
+        spawnLimit = configuration.get(NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
+    }
+
+    public static int getSpawnLimit()
+    {
+        return spawnLimit;
     }
 
     @Override
@@ -162,6 +177,7 @@ public class EntityType extends TypeBase
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
         ArrayList<Point> points = new Point(player).makeNiceForBlock().getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
 
+        int count = 0;
         if (!dataFromClient.hasKey(AMOUNT_KEY)) dataFromClient.setInteger(AMOUNT_KEY, 1);
         for (int i = 0; i < dataFromClient.getInteger(AMOUNT_KEY); i++)
         {
@@ -169,6 +185,8 @@ public class EntityType extends TypeBase
 
             if (entity != null)
             {
+                count ++;
+                if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
                 entity.setPosition(player.posX, player.posY, player.posZ);
                 Helper.rndSpawnPoint(points, entity);
 
@@ -199,6 +217,9 @@ public class EntityType extends TypeBase
 
                     if (entity2 != null)
                     {
+                        count ++;
+                        if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
+
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
                         if (tag.getCompoundTag(RIDING_KEY).hasKey(CUSTOMNAME_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setCustomNameTag(tag.getCompoundTag(RIDING_KEY).getString(CUSTOMNAME_KEY));
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
