@@ -24,6 +24,8 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.configurator.Configurator;
+import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -95,6 +97,7 @@ public class StatusPacket
                     if (FMLCommonHandler.instance().getEffectiveSide().isClient())
                     {
                         Pay2Spawn.reloadDBFromServer(stream.readUTF());
+                        ConfiguratorManager.exit();
                         Helper.msg(EnumChatFormatting.GOLD + "[P2S] Using config specified by the server.");
                     }
                     break;

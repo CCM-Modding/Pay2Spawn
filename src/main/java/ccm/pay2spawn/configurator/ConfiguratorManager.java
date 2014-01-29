@@ -76,4 +76,9 @@ public class ConfiguratorManager
     {
         if (Configurator.instance != null) Configurator.instance.update();
     }
+
+    public static void exit()
+    {
+        if (Configurator.instance != null) Configurator.instance.close();
+    }
 }
