@@ -123,21 +123,25 @@ public class RewardsDB
     {
         double highestmatch = 0d;
         double amount = donation.get("amount").getAsDouble();
-        if (map.containsKey(amount)) RandomRegistry.getRandomFromSet(map.get(amount)).addToCountdown(donation, true);
+
+        Reward reward = null;
+        if (map.containsKey(amount)) reward = RandomRegistry.getRandomFromSet(map.get(amount));
         else
         {
             for (double key : map.keySet())
                 if (key < amount && highestmatch < key) highestmatch = key;
 
-            if (map.containsKey(highestmatch)) RandomRegistry.getRandomFromSet(map.get(highestmatch)).addToCountdown(donation, true);
+            if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }
+
+        if (reward != null) reward.addToCountdown(donation, true, null);
 
         /**
          * -1 will always spawn
          */
         if (map.containsKey(-1D))
         {
-            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false);
+            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
     }
 

@@ -93,9 +93,9 @@ public class ClientTickHandler implements IScheduledTickHandler
         return MODID + "_ClientTicker";
     }
 
-    public void add(Reward reward, JsonObject donation, boolean addToHUD)
+    public void add(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
     {
-        entries.add(new QueEntry(reward, donation, addToHUD));
+        entries.add(new QueEntry(reward, donation, addToHUD, actualReward));
     }
 
     public class QueEntry
@@ -103,19 +103,21 @@ public class ClientTickHandler implements IScheduledTickHandler
         int        remaining;
         JsonObject donation;
         Reward     reward;
+        Reward     actualReward;
         boolean    addToHUD;
 
-        public QueEntry(Reward reward, JsonObject donation, boolean addToHUD)
+        public QueEntry(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
         {
             this.remaining = reward.getCountdown();
             this.donation = donation;
             this.reward = reward;
             this.addToHUD = addToHUD;
+            this.actualReward = actualReward;
         }
 
         public void send()
         {
-            reward.send(donation);
+            reward.send(donation, actualReward);
         }
     }
 }

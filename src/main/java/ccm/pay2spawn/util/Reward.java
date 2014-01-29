@@ -99,10 +99,10 @@ public class Reward
         return amount;
     }
 
-    public void addToCountdown(JsonObject donation, boolean addToHUD)
+    public void addToCountdown(JsonObject donation, boolean addToHUD, Reward reward)
     {
-        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation, null));
-        if (StatusPacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD);
+        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation, reward == null ? this : reward));
+        if (StatusPacket.doesServerHaveMod()) ClientTickHandler.INSTANCE.add(this, donation, addToHUD, reward);
     }
 
     private byte[] toBytes(String formattedData)
@@ -171,9 +171,9 @@ public class Reward
         }
     }
 
-    public void send(JsonObject donation)
+    public void send(JsonObject donation, Reward actualReward)
     {
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation, this).toString())));
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_REWARD, toBytes(Helper.formatText(rewards, donation, actualReward == null ? this : actualReward).toString())));
     }
 
     public Integer getCountdown()
