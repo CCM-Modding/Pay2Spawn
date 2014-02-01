@@ -119,7 +119,7 @@ public class FireworksType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
         int flight = 0;

@@ -88,7 +88,7 @@ public class LightningType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         double spread = dataFromClient.getInteger(SPREAD_KEY);
         double X = player.posX, Y = player.posY - 1, Z = player.posZ;

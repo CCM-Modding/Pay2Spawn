@@ -68,7 +68,7 @@ public class DropItemType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         switch (dataFromClient.getInteger(TYPE_KEY))
         {

@@ -24,14 +24,15 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.Statistics;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
@@ -52,6 +53,7 @@ public class StatusPacket
     private static final byte CONFIGSYNC = 1;
     private static final byte FORCE      = 2;
     private static final byte STATUS     = 3;
+    private static final byte DEATH      = 4;
 
     public static boolean doesServerHaveMod()
     {
@@ -115,6 +117,9 @@ public class StatusPacket
                         String message = ((EntityPlayer) player).getEntityName() + " has Pay2Spawn " + (stream.readBoolean() ? "enabled." : "disabled.");
                         sender.sendChatToPlayer(ChatMessageComponent.createFromText(message).setColor(EnumChatFormatting.AQUA));
                     }
+                    break;
+                case DEATH:
+                    Statistics.handleKill(Helper.readNBTTagCompound(stream));
                     break;
             }
             stream.close();
@@ -232,5 +237,23 @@ public class StatusPacket
             e.printStackTrace();
         }
         PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_STATUS, streambyte.toByteArray()), player);
+    }
+
+    public static void sendKillDataToClient(EntityPlayer entity, NBTTagCompound data)
+    {
+        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
+        DataOutputStream stream = new DataOutputStream(streambyte);
+        try
+        {
+            stream.writeByte(DEATH);
+            Helper.writeNBTTagCompound(data, stream);
+            stream.close();
+            streambyte.close();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_STATUS, streambyte.toByteArray()), (Player) entity);
     }
 }

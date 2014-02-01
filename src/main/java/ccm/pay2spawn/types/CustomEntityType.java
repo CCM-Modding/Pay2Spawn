@@ -40,7 +40,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.Configuration;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -114,10 +113,13 @@ public class CustomEntityType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
         ArrayList<Point> points = new Point(player).getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
+        NBTTagCompound p2sTag = new NBTTagCompound();
+        p2sTag.setString("Type", getName());
+        if (rewardData.hasKey("name")) p2sTag.setString("Reward", rewardData.getString("name"));
 
         int count = 0;
         if (!dataFromClient.hasKey(AMOUNT_KEY)) dataFromClient.setInteger(AMOUNT_KEY, 1);
@@ -135,7 +137,7 @@ public class CustomEntityType extends TypeBase
 
                 if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
 
-                entity.getEntityData().setBoolean(Constants.NAME, true);
+                entity.getEntityData().setTag(Constants.NAME, p2sTag.copy());
                 player.worldObj.spawnEntityInWorld(entity);
 
                 Entity entity1 = entity;
@@ -164,7 +166,7 @@ public class CustomEntityType extends TypeBase
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);
 
                         entity2.setPosition(entity.posX, entity.posY, entity.posZ);
-                        entity2.getEntityData().setBoolean(NAME, true);
+                        entity2.getEntityData().setTag(Constants.NAME, p2sTag.copy());
                         player.worldObj.spawnEntityInWorld(entity2);
                         entity1.mountEntity(entity2);
                         if (tag.getCompoundTag(RIDING_KEY).hasKey(RIDETHISMOB_KEY) && tag.getCompoundTag(RIDING_KEY).getBoolean(RIDETHISMOB_KEY)) player.mountEntity(entity2);

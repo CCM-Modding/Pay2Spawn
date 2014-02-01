@@ -107,7 +107,7 @@ public class SoundType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY))
             for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);

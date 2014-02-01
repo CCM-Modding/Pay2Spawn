@@ -85,7 +85,7 @@ public class CommandP2SServer extends CommandBase
                 {
                     for (Entity entity : (List<Entity>) world.getLoadedEntityList())
                     {
-                        if (entity.getEntityData().getBoolean(Constants.NAME))
+                        if (entity.getEntityData().hasKey(Constants.NAME))
                         {
                             count++;
                             entity.setDead();

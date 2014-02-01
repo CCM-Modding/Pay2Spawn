@@ -112,7 +112,7 @@ public class PotionEffectType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         player.addPotionEffect(PotionEffect.readCustomPotionEffectFromNBT(dataFromClient));
     }

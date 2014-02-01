@@ -65,7 +65,7 @@ public class XPOrbsType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         for (int i = 0; i < dataFromClient.getInteger(AMOUNTOFORBS_KEY); i++)
         {

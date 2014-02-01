@@ -53,6 +53,7 @@ public class Reward
     private Double    amount;
     private JsonArray rewards;
     private Integer   countdown;
+    private NBTTagCompound rewardData = new NBTTagCompound();
 
     public Reward(JsonObject json)
     {
@@ -80,6 +81,8 @@ public class Reward
             Pay2Spawn.getLogger().severe("ERROR TYPE 2: Error in reward " + name + "'s NBT data.");
             throw e;
         }
+
+        rewardData.setString("name", name);
     }
 
     public Reward(String name, Double amount, JsonArray rewards)
@@ -87,6 +90,7 @@ public class Reward
         this.name = name;
         this.amount = amount;
         this.rewards = rewards;
+        this.rewardData.setString("name", name);
     }
 
     public String getName()
@@ -159,7 +163,7 @@ public class Reward
                     Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
                     continue;
                 }
-                type.spawnServerSide(player, nbt);
+                type.spawnServerSide(player, nbt, rewardData);
             }
             catch (Exception e)
             {

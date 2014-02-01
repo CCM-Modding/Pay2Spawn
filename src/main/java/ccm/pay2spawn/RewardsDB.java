@@ -28,6 +28,7 @@ import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
+import ccm.pay2spawn.util.Statistics;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -134,7 +135,11 @@ public class RewardsDB
             if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }
 
-        if (reward != null) reward.addToCountdown(donation, true, null);
+        if (reward != null)
+        {
+            Statistics.handleSpawn(reward.getName());
+            reward.addToCountdown(donation, true, null);
+        }
 
         /**
          * -1 will always spawn

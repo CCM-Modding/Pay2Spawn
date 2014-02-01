@@ -75,7 +75,7 @@ public class PlayerModificationType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         Type.values()[dataFromClient.getInteger(TYPE_KEY)].doOnServer(player, dataFromClient);
     }

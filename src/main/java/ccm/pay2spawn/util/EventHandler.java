@@ -26,11 +26,19 @@ package ccm.pay2spawn.util;
 import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.NbtRequestPacket;
+import ccm.pay2spawn.network.StatusPacket;
+import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 import java.util.ArrayList;
@@ -56,9 +64,6 @@ public class EventHandler
         }
     }
 
-    // Right click tracker for entity NBT data
-    public static HashSet<String> entitySet = new HashSet<>();
-
     static boolean entityTracking = false;
 
     public static void addEntityTracking()
@@ -76,10 +81,27 @@ public class EventHandler
         }
     }
 
+    @ForgeSubscribe
+    public void event(LivingDeathEvent event)
+    {
+        if (event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource)
+        {
+            EntityDamageSource entityDamageSource = (EntityDamageSource) event.source;
+            if (entityDamageSource.getEntity().getEntityData().hasKey(Constants.NAME))
+            {
+                NBTTagCompound data = entityDamageSource.getEntity().getEntityData().getCompoundTag(Constants.NAME);
+                data.setString("mob", EntityList.getEntityString(entityDamageSource.getEntity()));
+                StatusPacket.sendKillDataToClient((EntityPlayer) event.entity, data);
+            }
+        }
+    }
+
     // HUD messages
     public final static ArrayList<String> TOP       = new ArrayList<>();
     public final static ArrayList<String> RECENT    = new ArrayList<>();
     public final static ArrayList<String> COUNTDOWN = new ArrayList<>();
+    public final static ArrayList<String> KILLERS = new ArrayList<>();
+    public final static ArrayList<String> SPAWNED = new ArrayList<>();
 
     @ForgeSubscribe
     public void hudEvent(RenderGameOverlayEvent.Text event)
@@ -135,6 +157,38 @@ public class EventHandler
                 break;
             case 4:
                 bottomRight.addAll(COUNTDOWN);
+                break;
+        }
+
+        switch (hudSettings.top_killers)
+        {
+            case 1:
+                event.left.addAll(KILLERS);
+                break;
+            case 2:
+                event.right.addAll(KILLERS);
+                break;
+            case 3:
+                bottomLeft.addAll(KILLERS);
+                break;
+            case 4:
+                bottomRight.addAll(KILLERS);
+                break;
+        }
+
+        switch (hudSettings.spawned)
+        {
+            case 1:
+                event.left.addAll(SPAWNED);
+                break;
+            case 2:
+                event.right.addAll(SPAWNED);
+                break;
+            case 3:
+                bottomLeft.addAll(SPAWNED);
+                break;
+            case 4:
+                bottomRight.addAll(SPAWNED);
                 break;
         }
 

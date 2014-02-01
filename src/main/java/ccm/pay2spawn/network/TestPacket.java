@@ -24,6 +24,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.configurator.Help;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
@@ -70,15 +71,18 @@ public class TestPacket
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_TEST, streambyte.toByteArray()));
     }
 
-    public static void reconstruct(Packet250CustomPayload packet, Player playero) throws IOException
+    public static void reconstruct(Packet250CustomPayload packet, Player playerI) throws IOException
     {
-        EntityPlayer player = (EntityPlayer) playero;
-        ByteArrayInputStream streambyte = new ByteArrayInputStream(packet.data);
-        DataInputStream stream = new DataInputStream(streambyte);
+        EntityPlayer player = (EntityPlayer) playerI;
+        ByteArrayInputStream streamByte = new ByteArrayInputStream(packet.data);
+        DataInputStream stream = new DataInputStream(streamByte);
         String name = stream.readUTF();
         String json = stream.readUTF();
+        NBTTagCompound rewardData = new NBTTagCompound();
         stream.close();
-        streambyte.close();
+        streamByte.close();
+
+        Pay2Spawn.getLogger().info(json);
 
         player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
         Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
@@ -97,6 +101,6 @@ public class TestPacket
             Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
             return;
         }
-        type.spawnServerSide(player, nbt);
+        type.spawnServerSide(player, nbt, rewardData);
     }
 }

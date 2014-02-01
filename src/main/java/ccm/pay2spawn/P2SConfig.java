@@ -111,6 +111,7 @@ public class P2SConfig
         public int    top_amount    = 5;
         public String top_format    = "$name: $$amount";
         public String top_header    = "-- Top donations --";
+        
         public int    recent        = 2;
         public int    recent_amount = 5;
         public String recent_format = "$name: $$amount";
@@ -119,6 +120,16 @@ public class P2SConfig
         public int    countdown        = 2;
         public String countdown_format = "$name incoming in $time sec.";
         public String countdown_header = "-- Countdown --";
+
+        public int    top_killers        = 1;
+        public int    top_killers_amount = 5;
+        public String top_killers_format = "$amount x $name";
+        public String top_killers_header = "-- Top kills by mobs: --";
+
+        public int    spawned        = 2;
+        public int    spawned_amount = 5;
+        public String spawned_format = "$amount x $name";
+        public String spawned_header = "-- Top spawned rewards: --";
 
         private HudSettings()
         {
@@ -139,6 +150,16 @@ public class P2SConfig
             countdown = configuration.get(HUD, "countdown", countdown, "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
             countdown_format = Helper.formatColors(configuration.get(HUD, "countdown_format", countdown_format, "Vars: $name (of the group), $time (in seconds).").getString());
             countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header. Use \\n for a blank line.").getString());
+
+            top_killers = configuration.get(HUD, "top_killers", top_killers, "Display a list of the top killers on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
+            top_killers_amount = configuration.get(HUD, "top_killers_amount", top_killers_amount, "Amount of top killers.").getInt();
+            top_killers_format = Helper.formatColors(configuration.get(HUD, "top_killers_format", top_killers_format, "Vars: $name, $amount.").getString());
+            top_killers_header = Helper.formatColors(configuration.get(HUD, "top_killers_header", top_killers_header, "empty for no header. Use \\n for a blank line.").getString());
+
+            spawned = configuration.get(HUD, "spawned", spawned, "Display a list of the top killers on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
+            spawned_amount = configuration.get(HUD, "spawned_amount", spawned_amount, "Amount of times a reward has been spawned.").getInt();
+            spawned_format = Helper.formatColors(configuration.get(HUD, "spawned_format", spawned_format, "Vars: $name, $amount.").getString());
+            spawned_header = Helper.formatColors(configuration.get(HUD, "spawned_header", spawned_header, "empty for no header. Use \\n for a blank line.").getString());
         }
     }
 

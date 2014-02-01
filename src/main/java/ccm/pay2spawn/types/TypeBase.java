@@ -66,8 +66,9 @@ public abstract class TypeBase
      *
      * @param player         The player the reward comes from
      * @param dataFromClient the nbt from the JSON file, fully usable
+     * @param rewardData
      */
-    public abstract void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient);
+    public abstract void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData);
 
     /**
      * Extra method for custom configuration

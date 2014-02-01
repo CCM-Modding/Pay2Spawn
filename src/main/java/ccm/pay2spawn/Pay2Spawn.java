@@ -106,8 +106,7 @@ public class Pay2Spawn
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event)
-    {
+    public void preInit(FMLPreInitializationEvent event) throws IOException {
         logger = event.getModLog();
         logger.setLevel(Level.ALL);
 
@@ -117,10 +116,11 @@ public class Pay2Spawn
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
 
-        logger.info("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
+        logger.severe("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
 
         TypeRegistry.preInit();
         RandomRegistry.preInit();
+        Statistics.preInit();
     }
 
     @Mod.EventHandler

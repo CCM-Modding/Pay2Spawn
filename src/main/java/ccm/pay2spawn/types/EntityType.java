@@ -172,10 +172,13 @@ public class EntityType extends TypeBase
     }
 
     @Override
-    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient)
+    public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
         ArrayList<Point> points = new Point(player).makeNiceForBlock().getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
+        NBTTagCompound p2sTag = new NBTTagCompound();
+        p2sTag.setString("Type", getName());
+        if (rewardData.hasKey("name")) p2sTag.setString("Reward", rewardData.getString("name"));
 
         int count = 0;
         if (!dataFromClient.hasKey(AMOUNT_KEY)) dataFromClient.setInteger(AMOUNT_KEY, 1);
@@ -194,7 +197,7 @@ public class EntityType extends TypeBase
                 if (dataFromClient.hasKey(CUSTOMNAME_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setCustomNameTag(dataFromClient.getString(CUSTOMNAME_KEY));
                 if (dataFromClient.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).onSpawnWithEgg(null);
 
-                entity.getEntityData().setBoolean(Constants.NAME, true);
+                entity.getEntityData().setTag(Constants.NAME, p2sTag.copy());
                 player.getEntityWorld().spawnEntityInWorld(entity);
 
                 Entity entity1 = entity;
@@ -225,7 +228,7 @@ public class EntityType extends TypeBase
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(RANDOM_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).onSpawnWithEgg(null);
 
                         entity2.setPosition(entity.posX, entity.posY, entity.posZ);
-                        entity2.getEntityData().setBoolean(NAME, true);
+                        entity2.getEntityData().setTag(Constants.NAME, p2sTag.copy());
                         player.worldObj.spawnEntityInWorld(entity2);
                         entity1.mountEntity(entity2);
 
