@@ -23,8 +23,14 @@
 
 package ccm.pay2spawn;
 
+import ccm.pay2spawn.cmd.CommandP2S;
+import ccm.pay2spawn.cmd.CommandP2SPermissions;
+import ccm.pay2spawn.cmd.CommandP2SServer;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.configurator.HTMLGenerator;
+import ccm.pay2spawn.misc.DonationCheckerThread;
+import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.misc.RewardsDB;
 import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.network.StatusPacket;
@@ -106,7 +112,8 @@ public class Pay2Spawn
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event) throws IOException {
+    public void preInit(FMLPreInitializationEvent event) throws IOException
+    {
         logger = event.getModLog();
         logger.setLevel(Level.ALL);
 
@@ -146,6 +153,8 @@ public class Pay2Spawn
         NetworkRegistry.instance().registerConnectionHandler(new ConnectionHandler());
         PacketHandler packetHandler = new PacketHandler();
         for (String channel : CHANNELS) NetworkRegistry.instance().registerChannel(packetHandler, channel);
+
+        ClientTickHandler.INSTANCE.init();
     }
 
     @Mod.EventHandler

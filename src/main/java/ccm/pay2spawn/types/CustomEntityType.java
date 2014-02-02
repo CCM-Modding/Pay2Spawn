@@ -24,14 +24,14 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.misc.Point;
+import ccm.pay2spawn.misc.Vector3;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
-import ccm.pay2spawn.util.Point;
-import ccm.pay2spawn.util.Vector3;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -129,7 +129,7 @@ public class CustomEntityType extends TypeBase
 
             if (entity != null)
             {
-                count ++;
+                count++;
                 if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
 
                 entity.setPosition(player.posX, player.posY, player.posZ);
@@ -160,7 +160,7 @@ public class CustomEntityType extends TypeBase
 
                     if (entity2 != null)
                     {
-                        count ++;
+                        count++;
                         if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
 
                         if (tag.getCompoundTag(RIDING_KEY).getBoolean(AGRO_KEY) && entity2 instanceof EntityLiving) ((EntityLiving) entity2).setAttackTarget(player);

@@ -21,9 +21,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.misc;
 
-import ccm.pay2spawn.util.EventHandler;
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.hud.Hud;
+import ccm.pay2spawn.hud.JsonBasedHudEntry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;
@@ -51,11 +53,12 @@ import static ccm.pay2spawn.util.Constants.*;
  */
 public class DonationCheckerThread extends Thread
 {
+    public static JsonBasedHudEntry topJsonBasedHudEntry, recentJsonBasedHudEntry;
     final int    interval;
     final String channel;
     final URL    donationsUrl;
     final URL    subsUrl;
-    boolean firstrun = true;
+    public boolean firstrun = true;
     JsonArray latest;
     HashSet<String> subs = new HashSet<>();
 
@@ -66,6 +69,11 @@ public class DonationCheckerThread extends Thread
         this.channel = Pay2Spawn.getConfig().channel;
         this.donationsUrl = new URL("http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + Pay2Spawn.getConfig().API_Key);
         this.subsUrl = new URL("https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + Pay2Spawn.getConfig().twitchToken);
+
+        topJsonBasedHudEntry = new JsonBasedHudEntry("topDonations", 5, 1, 5, "$name: $$amount", "-- Top donations --");
+        Hud.INSTANCE.set.add(topJsonBasedHudEntry);
+        recentJsonBasedHudEntry = new JsonBasedHudEntry("recentDonations", 5, 2, 5, "$name: $$amount", "-- Recent donations --");
+        Hud.INSTANCE.set.add(recentJsonBasedHudEntry);
     }
 
     ArrayList<String>     doneIDs = new ArrayList<>();
@@ -196,32 +204,29 @@ public class DonationCheckerThread extends Thread
             /**
              * Top
              */
-            EventHandler.TOP.clear();
-            P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
-            if (hudSettings.top != 0)
+            topJsonBasedHudEntry.strings.clear();
+            if (topJsonBasedHudEntry.getPosition() != 0)
             {
-                String header = hudSettings.top_header.trim();
-                if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.TOP, header);
-                for (int i = 0; i < hudSettings.top_amount && i < root.getAsJsonArray("top").size(); i++)
+                if (!Strings.isNullOrEmpty(topJsonBasedHudEntry.getHeader())) Helper.addWithEmptyLines(topJsonBasedHudEntry.strings, topJsonBasedHudEntry.getHeader());
+                for (int i = 0; i < topJsonBasedHudEntry.getAmount() && i < root.getAsJsonArray("top").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("top").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    EventHandler.TOP.add(Helper.formatText(hudSettings.top_format, donation, null));
+                    topJsonBasedHudEntry.strings.add(Helper.formatText(topJsonBasedHudEntry.getFormat(), donation, null));
                 }
             }
             /**
              * Recent
              */
-            EventHandler.RECENT.clear();
-            if (hudSettings.recent != 0)
+            recentJsonBasedHudEntry.strings.clear();
+            if (recentJsonBasedHudEntry.getPosition() != 0)
             {
-                String header = hudSettings.recent_header.trim();
-                if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.RECENT, header);
-                for (int i = 0; i < hudSettings.recent_amount && i < root.getAsJsonArray("mostRecent").size(); i++)
+                if (!Strings.isNullOrEmpty(recentJsonBasedHudEntry.getHeader())) Helper.addWithEmptyLines(recentJsonBasedHudEntry.strings, recentJsonBasedHudEntry.getHeader());
+                for (int i = 0; i < recentJsonBasedHudEntry.getAmount() && i < root.getAsJsonArray("mostRecent").size(); i++)
                 {
                     JsonObject donation = root.getAsJsonArray("mostRecent").get(i).getAsJsonObject();
                     if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) continue;
-                    EventHandler.RECENT.add(Helper.formatText(hudSettings.recent_format, donation, null));
+                    recentJsonBasedHudEntry.strings.add(Helper.formatText(recentJsonBasedHudEntry.getFormat(), donation, null));
                 }
             }
         }

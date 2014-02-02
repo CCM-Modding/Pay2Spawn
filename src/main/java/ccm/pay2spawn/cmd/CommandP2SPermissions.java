@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.cmd;
 
 import ccm.pay2spawn.permissions.Group;
 import ccm.pay2spawn.permissions.Node;

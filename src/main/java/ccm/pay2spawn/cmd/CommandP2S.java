@@ -21,9 +21,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.cmd;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
+import ccm.pay2spawn.misc.DonationCheckerThread;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;

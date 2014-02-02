@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.misc;
 
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.Configuration;
@@ -40,7 +40,9 @@ import static ccm.pay2spawn.util.Constants.NAME;
  */
 public class P2SConfig
 {
-    Configuration configuration;
+    public final static String HUD = MODID + ".Hud";
+
+    public Configuration configuration;
 
     public  boolean  forceServerconfig = true;
     public  boolean  forceP2S          = false;
@@ -59,12 +61,11 @@ public class P2SConfig
     public Pattern[] whitelist_Name_p;
     public Pattern[] whitelist_Note_p;
 
-    public HudSettings  hud;
     public FileSettings file;
     public String subMessage = "&e$name&f subscribed!";
 
 
-    P2SConfig(File file)
+    public P2SConfig(File file)
     {
         configuration = new Configuration(file);
 
@@ -97,70 +98,9 @@ public class P2SConfig
         whitelist_Note_p = new Pattern[whitelist_Note.length];
         for (int i = 0; i < whitelist_Note.length; i++) whitelist_Note_p[i] = Pattern.compile(Helper.removeQuotes(whitelist_Note[i]), Pattern.CASE_INSENSITIVE);
 
-        this.hud = new HudSettings();
         this.file = new FileSettings();
 
         configuration.save();
-    }
-
-    public class HudSettings
-    {
-        public final static String HUD = MODID + ".Hud";
-
-        public int    top           = 1;
-        public int    top_amount    = 5;
-        public String top_format    = "$name: $$amount";
-        public String top_header    = "-- Top donations --";
-        
-        public int    recent        = 2;
-        public int    recent_amount = 5;
-        public String recent_format = "$name: $$amount";
-        public String recent_header = "-- Recent donations --";
-
-        public int    countdown        = 2;
-        public String countdown_format = "$name incoming in $time sec.";
-        public String countdown_header = "-- Countdown --";
-
-        public int    top_killers        = 1;
-        public int    top_killers_amount = 5;
-        public String top_killers_format = "$amount x $name";
-        public String top_killers_header = "-- Top kills by mobs: --";
-
-        public int    spawned        = 2;
-        public int    spawned_amount = 5;
-        public String spawned_format = "$amount x $name";
-        public String spawned_header = "-- Top spawned rewards: --";
-
-        private HudSettings()
-        {
-            configuration.addCustomCategoryComment(HUD, "Donation lists on screen!");
-
-            top = configuration.get(HUD, "top", top, "Display a list of the top donations on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
-            top_amount = configuration.get(HUD, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
-            if (top_amount > 5) top_amount = 5;
-            top_format = Helper.formatColors(configuration.get(HUD, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
-            top_header = Helper.formatColors(configuration.get(HUD, "top_header", top_header, "empty for no header. Use \\n for a blank line.").getString());
-
-            recent = configuration.get(HUD, "recent", recent, "Display a list of the most recent donations on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
-            recent_amount = configuration.get(HUD, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
-            if (recent_amount > 5) recent_amount = 5;
-            recent_format = Helper.formatColors(configuration.get(HUD, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
-            recent_header = Helper.formatColors(configuration.get(HUD, "recent_header", recent_header, "empty for no header. Use \\n for a blank line.").getString());
-
-            countdown = configuration.get(HUD, "countdown", countdown, "Display a list of the rewards on countdown on screen. 0 = off, 1 = left, 2 = right, 3 = left bottom, 4 = right bottom.").getInt();
-            countdown_format = Helper.formatColors(configuration.get(HUD, "countdown_format", countdown_format, "Vars: $name (of the group), $time (in seconds).").getString());
-            countdown_header = Helper.formatColors(configuration.get(HUD, "countdown_header", countdown_header, "empty for no header. Use \\n for a blank line.").getString());
-
-            top_killers = configuration.get(HUD, "top_killers", top_killers, "Display a list of the top killers on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
-            top_killers_amount = configuration.get(HUD, "top_killers_amount", top_killers_amount, "Amount of top killers.").getInt();
-            top_killers_format = Helper.formatColors(configuration.get(HUD, "top_killers_format", top_killers_format, "Vars: $name, $amount.").getString());
-            top_killers_header = Helper.formatColors(configuration.get(HUD, "top_killers_header", top_killers_header, "empty for no header. Use \\n for a blank line.").getString());
-
-            spawned = configuration.get(HUD, "spawned", spawned, "Display a list of the top killers on screen. 0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt();
-            spawned_amount = configuration.get(HUD, "spawned_amount", spawned_amount, "Amount of times a reward has been spawned.").getInt();
-            spawned_format = Helper.formatColors(configuration.get(HUD, "spawned_format", spawned_format, "Vars: $name, $amount.").getString());
-            spawned_header = Helper.formatColors(configuration.get(HUD, "spawned_header", spawned_header, "empty for no header. Use \\n for a blank line.").getString());
-        }
     }
 
     public class FileSettings

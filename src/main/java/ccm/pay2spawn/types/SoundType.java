@@ -109,17 +109,14 @@ public class SoundType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
-        if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY))
-            for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);
+        if (dataFromClient.hasKey(PLAYTOALL_KEY) && dataFromClient.getBoolean(PLAYTOALL_KEY)) for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) play((EntityPlayer) o, dataFromClient);
         else play(player, dataFromClient);
     }
 
     private void play(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        if (sounds.contains(dataFromClient.getString(SOUNDNAME_KEY)))
-            player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
-        else if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY)))
-            player.getEntityWorld().playAuxSFXAtEntity(null, 1005, (int) player.posX, (int) player.posY - 1, (int) player.posZ, ItemRecord.getRecord(dataFromClient.getString(SOUNDNAME_KEY)).itemID);
+        if (sounds.contains(dataFromClient.getString(SOUNDNAME_KEY))) player.getEntityWorld().playSoundAtEntity(player, dataFromClient.getString(SOUNDNAME_KEY), dataFromClient.getFloat(VOLUME_KEY), dataFromClient.getFloat(PITCH_KEY));
+        else if (streaming.contains(dataFromClient.getString(SOUNDNAME_KEY))) player.getEntityWorld().playAuxSFXAtEntity(null, 1005, (int) player.posX, (int) player.posY - 1, (int) player.posZ, ItemRecord.getRecord(dataFromClient.getString(SOUNDNAME_KEY)).itemID);
         else player.sendChatToPlayer(ChatMessageComponent.createFromText("[P2S] Unknown sound."));
     }
 

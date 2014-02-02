@@ -21,8 +21,9 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.cmd;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;

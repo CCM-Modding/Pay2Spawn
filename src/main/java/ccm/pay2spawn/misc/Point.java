@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.util;
+package ccm.pay2spawn.misc;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;

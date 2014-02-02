@@ -21,13 +21,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn;
+package ccm.pay2spawn.misc;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.JsonNBTHelper;
-import ccm.pay2spawn.util.Reward;
 import ccm.pay2spawn.util.Statistics;
 import com.google.common.collect.HashMultimap;
 import com.google.gson.JsonArray;
@@ -45,14 +45,14 @@ import static ccm.pay2spawn.util.Constants.JSON_PARSER;
  * The rewards database
  *
  * @author Dries007
- * @see Pay2Spawn#getRewardsDB()
+ * @see ccm.pay2spawn.Pay2Spawn#getRewardsDB()
  */
 public class RewardsDB
 {
     private final HashMultimap<Double, Reward> map = HashMultimap.create();
     public boolean editable;
 
-    RewardsDB(String input)
+    public RewardsDB(String input)
     {
         editable = false;
         JsonArray rootArray = JSON_PARSER.parse(input).getAsJsonArray();
@@ -64,7 +64,7 @@ public class RewardsDB
         }
     }
 
-    RewardsDB(File file)
+    public RewardsDB(File file)
     {
         editable = true;
         try

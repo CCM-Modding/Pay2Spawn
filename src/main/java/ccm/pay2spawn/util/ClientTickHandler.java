@@ -23,8 +23,9 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.P2SConfig;
-import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.hud.CountDownHudEntry;
+import ccm.pay2spawn.hud.Hud;
+import ccm.pay2spawn.misc.Reward;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.IScheduledTickHandler;
@@ -42,6 +43,10 @@ public class ClientTickHandler implements IScheduledTickHandler
 
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
 
+    private CountDownHudEntry countDownHudEntry;
+
+    private ClientTickHandler() {}
+
     @Override
     public int nextTickSpacing()
     {
@@ -51,8 +56,6 @@ public class ClientTickHandler implements IScheduledTickHandler
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
-        EventHandler.COUNTDOWN.clear();
         Iterator<QueEntry> rewardIterator = entries.iterator();
         while (rewardIterator.hasNext())
         {
@@ -64,14 +67,13 @@ public class ClientTickHandler implements IScheduledTickHandler
             }
             else
             {
-                if (hudSettings.countdown != 0 && queEntry.addToHUD) EventHandler.COUNTDOWN.add(hudSettings.countdown_format.replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
+                if (countDownHudEntry.getPosition() != 0 && queEntry.addToHUD) countDownHudEntry.lines.add(countDownHudEntry.getFormat().replace("$name", queEntry.reward.getName()).replace("$time", queEntry.remaining + ""));
                 queEntry.remaining--;
             }
         }
-        if (hudSettings.countdown != 0 && !EventHandler.COUNTDOWN.isEmpty())
+        if (countDownHudEntry.getPosition() != 0 && !countDownHudEntry.lines.isEmpty())
         {
-            String header = hudSettings.countdown_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.COUNTDOWN, header);
+            if (!Strings.isNullOrEmpty(countDownHudEntry.getHeader())) Helper.addWithEmptyLines(countDownHudEntry.lines, countDownHudEntry.getHeader());
         }
     }
 
@@ -96,6 +98,12 @@ public class ClientTickHandler implements IScheduledTickHandler
     public void add(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
     {
         entries.add(new QueEntry(reward, donation, addToHUD, actualReward));
+    }
+
+    public void init()
+    {
+        countDownHudEntry = new CountDownHudEntry("countdown", 1, "$name incoming in $time sec.", "-- Countdown --");
+        Hud.INSTANCE.set.add(countDownHudEntry);
     }
 
     public class QueEntry

@@ -23,8 +23,10 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.misc.Point;
+import ccm.pay2spawn.misc.Reward;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;

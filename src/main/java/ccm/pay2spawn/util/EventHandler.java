@@ -23,14 +23,11 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.P2SConfig;
-import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.network.NbtRequestPacket;
 import ccm.pay2spawn.network.StatusPacket;
-import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -42,7 +39,6 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 /**
  * Handler for all forge events.
@@ -97,11 +93,11 @@ public class EventHandler
     }
 
     // HUD messages
-    public final static ArrayList<String> TOP       = new ArrayList<>();
-    public final static ArrayList<String> RECENT    = new ArrayList<>();
-    public final static ArrayList<String> COUNTDOWN = new ArrayList<>();
-    public final static ArrayList<String> KILLERS = new ArrayList<>();
-    public final static ArrayList<String> SPAWNED = new ArrayList<>();
+    //    public final static ArrayList<String> TOP       = new ArrayList<>();
+    //    public final static ArrayList<String> RECENT    = new ArrayList<>();
+    //    public final static ArrayList<String> COUNTDOWN = new ArrayList<>();
+    //    public final static ArrayList<String> KILLERS   = new ArrayList<>();
+    //    public final static ArrayList<String> SPAWNED   = new ArrayList<>();
 
     @ForgeSubscribe
     public void hudEvent(RenderGameOverlayEvent.Text event)
@@ -110,87 +106,8 @@ public class EventHandler
         ArrayList<String> bottomRight = new ArrayList<>();
 
         FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
-        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
 
-        switch (hudSettings.top)
-        {
-            case 1:
-                event.left.addAll(TOP);
-                break;
-            case 2:
-                event.right.addAll(TOP);
-                break;
-            case 3:
-                bottomLeft.addAll(TOP);
-                break;
-            case 4:
-                bottomRight.addAll(TOP);
-                break;
-        }
-
-        switch (hudSettings.recent)
-        {
-            case 1:
-                event.left.addAll(RECENT);
-                break;
-            case 2:
-                event.right.addAll(RECENT);
-                break;
-            case 3:
-                bottomLeft.addAll(RECENT);
-                break;
-            case 4:
-                bottomRight.addAll(RECENT);
-                break;
-        }
-
-        switch (hudSettings.countdown)
-        {
-            case 1:
-                event.left.addAll(COUNTDOWN);
-                break;
-            case 2:
-                event.right.addAll(COUNTDOWN);
-                break;
-            case 3:
-                bottomLeft.addAll(COUNTDOWN);
-                break;
-            case 4:
-                bottomRight.addAll(COUNTDOWN);
-                break;
-        }
-
-        switch (hudSettings.top_killers)
-        {
-            case 1:
-                event.left.addAll(KILLERS);
-                break;
-            case 2:
-                event.right.addAll(KILLERS);
-                break;
-            case 3:
-                bottomLeft.addAll(KILLERS);
-                break;
-            case 4:
-                bottomRight.addAll(KILLERS);
-                break;
-        }
-
-        switch (hudSettings.spawned)
-        {
-            case 1:
-                event.left.addAll(SPAWNED);
-                break;
-            case 2:
-                event.right.addAll(SPAWNED);
-                break;
-            case 3:
-                bottomLeft.addAll(SPAWNED);
-                break;
-            case 4:
-                bottomRight.addAll(SPAWNED);
-                break;
-        }
+        Hud.INSTANCE.render(event.left, event.right, bottomLeft, bottomRight);
 
         int baseHeight = event.resolution.getScaledHeight() - 25 - bottomLeft.size() * 10;
         if (!Minecraft.getMinecraft().ingameGUI.getChatGUI().getChatOpen())

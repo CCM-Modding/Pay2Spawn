@@ -59,8 +59,7 @@ public class ConnectionHandler implements IConnectionHandler
                 @Override
                 public void run()
                 {
-                    if (!StatusPacket.doesPlayerHaveValidConfig(username)) MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username).playerNetServerHandler.kickPlayerFromServer(
-                            "Pay2Spawn is required on this server.\nIt needs to be configured properly.");
+                    if (!StatusPacket.doesPlayerHaveValidConfig(username)) MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
                 }
             }, 5 * 1000);
         }

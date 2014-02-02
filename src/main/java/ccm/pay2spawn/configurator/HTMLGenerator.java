@@ -24,8 +24,8 @@
 package ccm.pay2spawn.configurator;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.misc.Reward;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.util.Reward;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

@@ -49,13 +49,13 @@ We try to crash here if there is an issue with the configs. We try not to have i
 
 >    [INFO] [STDOUT] java.lang.IllegalStateException: This is not a JSON Array.
 >    [INFO] [STDOUT] 	at com.google.gson.JsonElement.getAsJsonArray(JsonElement.java:100)
->    [INFO] [STDOUT] 	at ccm.pay2spawn.RewardsDB.<init>(RewardsDB.java:73)
+>    [INFO] [STDOUT] 	at ccm.pay2spawn.misc.RewardsDB.<init>(RewardsDB.java:73)
 
 * One of your rewards is invalid. (Please use our build in GUI, or for experts an actual JSON editor.):
 
 >    [INFO] [STDOUT] java.lang.NullPointerException
 >    [INFO] [STDOUT] 	at ccm.pay2spawn.util.Reward.<init>(Reward.java:59)
->    [INFO] [STDOUT] 	at ccm.pay2spawn.RewardsDB.<init>(RewardsDB.java:77)
+>    [INFO] [STDOUT] 	at ccm.pay2spawn.misc.RewardsDB.<init>(RewardsDB.java:77)
 
 * One of your rewards NBT data is invalid. (Please use our build in GUI, or for experts an actual JSON editor.) I know the NBT to JSON thing is weard but it is the best solution apart from saving our data as actual NBT. (Witch is not human readable without an editor):
 

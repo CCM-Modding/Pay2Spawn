@@ -21,38 +21,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package ccm.pay2spawn.util;
+package ccm.pay2spawn.hud;
 
-import net.minecraft.entity.Entity;
+import java.util.ArrayList;
+import java.util.HashSet;
 
-public class Vector3
+public class Hud
 {
-    public double x, y, z;
+    public static final Hud INSTANCE = new Hud();
 
-    public Vector3(Entity src, Entity target)
-    {
-        x = -src.posX + target.posX;
-        y = -src.posY + target.posY;
-        z = -src.posZ + target.posZ;
-    }
+    private Hud() {}
 
-    public Vector3 normalize()
-    {
-        double size = getSize();
-        x /= size;
-        y /= size;
-        z /= size;
-        return this;
-    }
+    public final HashSet<IHudEntry> set = new HashSet<>();
 
-    private double getSize()
+    public void render(ArrayList<String> left, ArrayList<String> right, ArrayList<String> bottomLeft, ArrayList<String> bottomRight)
     {
-        return Math.sqrt(x * x + y * y + z * z);
-    }
-
-    public Vector3 setAsVelocity(Entity entity, double multiplier)
-    {
-        entity.setVelocity(x * multiplier, y * multiplier, z * multiplier);
-        return this;
+        for (IHudEntry hudEntry : set)
+        {
+            switch (hudEntry.getPosition())
+            {
+                case 1:
+                    hudEntry.addToList(left);
+                    break;
+                case 2:
+                    hudEntry.addToList(right);
+                    break;
+                case 3:
+                    hudEntry.addToList(bottomLeft);
+                    break;
+                case 4:
+                    hudEntry.addToList(bottomRight);
+                    break;
+            }
+        }
     }
 }

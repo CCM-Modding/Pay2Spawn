@@ -23,24 +23,33 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.hud.Hud;
+import ccm.pay2spawn.hud.StatisticsHudEntry;
 import com.google.common.base.Strings;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagInt;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Statistics
 {
     private static File statisticsFile;
     private static NBTTagCompound root = new NBTTagCompound();
-    private static HashMap<String, Integer> killsMap = new HashMap<>();
+
+    private static HashMap<String, Integer> killsMap       = new HashMap<>();
     private static TreeMap<String, Integer> sortedKillsMap = new TreeMap<>(new ValueComparator(killsMap));
 
-    private static HashMap<String, Integer> spawnsMap = new HashMap<>();
+    private static HashMap<String, Integer> spawnsMap       = new HashMap<>();
     private static TreeMap<String, Integer> sortedSpawnsMap = new TreeMap<>(new ValueComparator(spawnsMap));
+
+    private static StatisticsHudEntry killsStatisticsHudEntry, spawnsStatisticsHudEntry;
 
     private Statistics() {}
 
@@ -56,21 +65,7 @@ public class Statistics
 
         sortedKillsMap.putAll(killsMap);
 
-        EventHandler.KILLERS.clear();
-        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
-
-        if (hudSettings.top_killers != 0)
-        {
-            String header = hudSettings.top_killers_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.KILLERS, header);
-
-            Iterator<String> iterator = sortedKillsMap.navigableKeySet().iterator();
-            for (i = 0; i < hudSettings.top_killers_amount && iterator.hasNext(); i++)
-            {
-                String key = iterator.next();
-                EventHandler.KILLERS.add(hudSettings.top_killers_format.replace("$name", key).replace("$amount", killsMap.get(key).toString()));
-            }
-        }
+        update(sortedKillsMap, killsStatisticsHudEntry);
 
         save();
     }
@@ -84,21 +79,9 @@ public class Statistics
 
         sortedSpawnsMap.putAll(spawnsMap);
 
-        EventHandler.SPAWNED.clear();
-        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
+        update(sortedSpawnsMap, spawnsStatisticsHudEntry);
 
-        if (hudSettings.spawned != 0)
-        {
-            String header = hudSettings.spawned_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.SPAWNED, header);
-
-            Iterator<String> iterator = sortedSpawnsMap.navigableKeySet().iterator();
-            for (i = 0; i < hudSettings.spawned_amount && iterator.hasNext(); i++)
-            {
-                String key = iterator.next();
-                EventHandler.SPAWNED.add(hudSettings.spawned_format.replace("$name", key).replace("$amount", spawnsMap.get(key).toString()));
-            }
-        }
+        save();
     }
 
     public static void preInit() throws IOException
@@ -132,36 +115,32 @@ public class Statistics
                 }
                 sortedSpawnsMap.putAll(spawnsMap);
             }
-
         }
 
-        EventHandler.KILLERS.clear();
-        EventHandler.SPAWNED.clear();
-        P2SConfig.HudSettings hudSettings = Pay2Spawn.getConfig().hud;
-        if (hudSettings.top_killers != 0)
+        killsStatisticsHudEntry = new StatisticsHudEntry("topKillers", -1, 1, 5, "$amount x $name", "-- Top kills by mobs: --");
+        Hud.INSTANCE.set.add(killsStatisticsHudEntry);
+        update(sortedKillsMap, killsStatisticsHudEntry);
+
+        spawnsStatisticsHudEntry = new StatisticsHudEntry("topSpawned", -1, 2, 5, "$amount x $name", "-- Top spawned rewards: --");
+        Hud.INSTANCE.set.add(spawnsStatisticsHudEntry);
+        update(sortedSpawnsMap, spawnsStatisticsHudEntry);
+    }
+
+    private static void update(TreeMap<String, Integer> map, StatisticsHudEntry hudEntry)
+    {
+        if (map == null || hudEntry == null) return;
+        int i = 0;
+        hudEntry.strings.clear();
+        if (!Strings.isNullOrEmpty(hudEntry.getHeader())) Helper.addWithEmptyLines(hudEntry.strings, hudEntry.getHeader());
+        for (Map.Entry<String, Integer> entry : map.entrySet())
         {
-            String header = hudSettings.top_killers_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.KILLERS, header);
+            if (i > hudEntry.getAmount()) break;
+            i++;
 
-            Iterator<String> iterator = sortedKillsMap.navigableKeySet().iterator();
-            for (int i = 0; i < hudSettings.top_killers_amount && iterator.hasNext(); i ++)
-            {
-                String key = iterator.next();
-                EventHandler.KILLERS.add(hudSettings.top_killers_format.replace("$name", key).replace("$amount", killsMap.get(key).toString()));
-            }
-        }
+            String key = entry.getKey();
+            Integer value = entry.getValue();
 
-        if (hudSettings.spawned != 0)
-        {
-            String header = hudSettings.spawned_header.trim();
-            if (!Strings.isNullOrEmpty(header)) Helper.addWithEmptyLines(EventHandler.SPAWNED, header);
-
-            Iterator<String> iterator = sortedSpawnsMap.navigableKeySet().iterator();
-            for (int i = 0; i < hudSettings.spawned_amount && iterator.hasNext(); i++)
-            {
-                String key = iterator.next();
-                EventHandler.SPAWNED.add(hudSettings.spawned_format.replace("$name", key).replace("$amount", spawnsMap.get(key).toString()));
-            }
+            hudEntry.strings.add(hudEntry.getFormat().replace("$name", key).replace("$amount", value.toString()));
         }
     }
 
@@ -179,7 +158,7 @@ public class Statistics
         {
             spawns.setInteger(name, spawnsMap.get(name));
         }
-        root.setCompoundTag("spawns", kills);
+        root.setCompoundTag("spawns", spawns);
 
         try
         {
