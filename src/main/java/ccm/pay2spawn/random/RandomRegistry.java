@@ -38,6 +38,16 @@ public class RandomRegistry
 {
     private static final HashMap<Class<? extends IRandomResolver>, IRandomResolver> RANDOM_RESOLVERS = new HashMap<>();
 
+    static
+    {
+        addRandomResolver(new RndBoolean());
+        addRandomResolver(new RndColors());
+        addRandomResolver(new RndEntity());
+        addRandomResolver(new RndListValue());
+        addRandomResolver(new RndNumberRange());
+        addRandomResolver(new RndSound());
+    }
+
     /**
      * Register your IRandomResolver here
      *
@@ -62,19 +72,6 @@ public class RandomRegistry
             if (resolver.matches(type, value)) return resolver.solverRandom(type, value);
         }
         return value;
-    }
-
-    /**
-     * Registered at Pre-Init.
-     */
-    public static void preInit()
-    {
-        addRandomResolver(new RndBoolean());
-        addRandomResolver(new RndColors());
-        addRandomResolver(new RndEntity());
-        addRandomResolver(new RndListValue());
-        addRandomResolver(new RndNumberRange());
-        addRandomResolver(new RndSound());
     }
 
     /**

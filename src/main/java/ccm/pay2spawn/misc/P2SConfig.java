@@ -23,12 +23,15 @@
 
 package ccm.pay2spawn.misc;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.Configuration;
 
 import java.io.File;
 import java.util.regex.Pattern;
 
+import static ccm.pay2spawn.util.Constants.DOUBLE;
 import static ccm.pay2spawn.util.Constants.MODID;
 import static ccm.pay2spawn.util.Constants.NAME;
 
@@ -62,7 +65,8 @@ public class P2SConfig
     public Pattern[] whitelist_Note_p;
 
     public FileSettings file;
-    public String subMessage = "&e$name&f subscribed!";
+
+    public String subReward = "-2";
 
 
     public P2SConfig(File file)
@@ -78,7 +82,15 @@ public class P2SConfig
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
         forceP2S = configuration.get(MODID, "forceP2S", forceP2S, "If a client connects, kick it if there is no P2S. If there is, p2s will be locked in ON mode.").getBoolean(forceP2S);
-        subMessage = Helper.formatColors(configuration.get(MODID, "subMessage", subMessage, "Message that gets send when someone subscribes to your channel. & for colors, $name for the twitch name").getString());
+        subReward = configuration.get(MODID, "subReward", subReward, "The reward triggerd by someone subscribing. You can use the random tags in here.").getString();
+        try
+        {
+            Double.parseDouble(RandomRegistry.solveRandom(DOUBLE, subReward));
+        }
+        catch (Exception e)
+        {
+            throw new RuntimeException("Configuration error. " + subReward + " doesn't parse properly. Must result in a boolean.");
+        }
 
         String filterCat = MODID + ".filter";
         configuration.addCustomCategoryComment(filterCat, "All filters use regex, very useful site: http://gskinner.com/RegExr/\nMatching happens case insensitive.\nUSE DOUBLE QUOTES (\") AROUND EACH LINE!");

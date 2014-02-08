@@ -126,7 +126,6 @@ public class Pay2Spawn
         logger.severe("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
 
         TypeRegistry.preInit();
-        RandomRegistry.preInit();
         Statistics.preInit();
     }
 

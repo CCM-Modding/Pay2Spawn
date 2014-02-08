@@ -26,6 +26,7 @@ package ccm.pay2spawn.misc;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.hud.JsonBasedHudEntry;
+import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.MetricsHelper;
@@ -143,7 +144,25 @@ public class DonationCheckerThread extends Thread
             parseSubs(newSubs, root);
         }
 
-        for (String sub : newSubs) if (!subs.contains(sub)) Helper.msg(Pay2Spawn.getConfig().subMessage.replace("$name", sub));
+        for (String sub : newSubs)
+        {
+            if (!subs.contains(sub))
+            {
+                JsonObject donation = new JsonObject();
+                donation.addProperty("amount", Double.parseDouble(RandomRegistry.solveRandom(DOUBLE, Pay2Spawn.getConfig().subReward)));
+                donation.addProperty("note", "");
+                donation.addProperty("twitchUsername", sub);
+                try
+                {
+                    Pay2Spawn.getRewardsDB().process(donation);
+                }
+                catch (Exception e)
+                {
+                    Pay2Spawn.getLogger().warning("Error processing a donation.");
+                    e.printStackTrace();
+                }
+            }
+        }
         subs = newSubs;
     }
 
