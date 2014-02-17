@@ -41,4 +41,5 @@ You can use the beta on 1 condition. You report bugs!
 The idea & proper credit
 ------------------------
  
-[**MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.**](http://overload.playat.ch/mods/donationsummon/)
+MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.
+It seems like production on there mod has halted, if someone finds an up to date link, let us know.
