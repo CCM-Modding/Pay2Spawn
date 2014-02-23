@@ -90,6 +90,7 @@ public class LightningType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
+        if (!dataFromClient.hasKey(SPREAD_KEY)) dataFromClient.setInteger(SPREAD_KEY, 10);
         double spread = dataFromClient.getInteger(SPREAD_KEY);
         double X = player.posX, Y = player.posY - 1, Z = player.posZ;
         if (!dataFromClient.hasKey(TYPE_KEY)) dataFromClient.setInteger(TYPE_KEY, RND_SPOT);
@@ -105,13 +106,17 @@ public class LightningType extends TypeBase
             {
                 AxisAlignedBB AABB = AxisAlignedBB.getAABBPool().getAABB(X - spread, Y - spread, Z - spread, X + spread, Y + spread, Z + spread);
                 Entity entity = player.getEntityWorld().findNearestEntityWithinAABB(EntityLiving.class, AABB, player);
-                player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), entity.posX, entity.posY, entity.posZ));
+                if (entity != null)
+                    player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), entity.posX, entity.posY, entity.posZ));
+                else
+                    player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), X, Y, Z));
                 break;
             }
             case RND_SPOT:
             {
-                X += (spread - (RANDOM.nextDouble() * spread));
-                Z += (spread - (RANDOM.nextDouble() * spread));
+                X += (spread - (RANDOM.nextDouble() * spread * 2));
+                Z += (spread - (RANDOM.nextDouble() * spread * 2));
+                Y += (3 - RANDOM.nextDouble() * 6);
                 player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), X, Y, Z));
                 break;
             }
@@ -129,7 +134,10 @@ public class LightningType extends TypeBase
                 //noinspection unchecked
                 List<EntityLiving> entity = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, AABB, iEntitySelector);
                 EntityLiving entityLiving = RandomRegistry.getRandomFromSet(entity);
-                player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), entityLiving.posX, entityLiving.posY, entityLiving.posZ));
+                if (entityLiving != null)
+                    player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), entityLiving.posX, entityLiving.posY, entityLiving.posZ));
+                else
+                    player.getEntityWorld().addWeatherEffect(new EntityLightningBolt(player.getEntityWorld(), X, Y, Z));
             }
         }
     }
