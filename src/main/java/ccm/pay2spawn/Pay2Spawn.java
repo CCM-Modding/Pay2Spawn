@@ -35,7 +35,6 @@ import ccm.pay2spawn.network.ConnectionHandler;
 import ccm.pay2spawn.network.PacketHandler;
 import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.permissions.PermissionsHandler;
-import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.*;

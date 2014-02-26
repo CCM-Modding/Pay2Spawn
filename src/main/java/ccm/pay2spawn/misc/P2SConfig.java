@@ -23,7 +23,6 @@
 
 package ccm.pay2spawn.misc;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.Configuration;
@@ -31,9 +30,7 @@ import net.minecraftforge.common.Configuration;
 import java.io.File;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.DOUBLE;
-import static ccm.pay2spawn.util.Constants.MODID;
-import static ccm.pay2spawn.util.Constants.NAME;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Uses subclasses to make file cleaner

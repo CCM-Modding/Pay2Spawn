@@ -81,8 +81,6 @@ public class TestPacket
         stream.close();
         streamByte.close();
 
-        Pay2Spawn.getLogger().info(json);
-
         player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
         Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
         TypeBase type = TypeRegistry.getByName(name);

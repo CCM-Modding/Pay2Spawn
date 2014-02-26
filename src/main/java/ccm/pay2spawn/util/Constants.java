@@ -51,7 +51,8 @@ public class Constants
     public static final String   CHANNEL_REWARD      = MODID + "_r";
     public static final String   CHANNEL_TEST        = MODID + "_t";
     public static final String   CHANNEL_NBT_REQUEST = MODID + "_req";
-    public static final String[] CHANNELS            = {CHANNEL_STATUS, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_NBT_REQUEST};
+    public static final String   CHANNEL_MUSIC       = MODID + "_m";
+    public static final String[] CHANNELS            = {CHANNEL_STATUS, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_NBT_REQUEST, CHANNEL_MUSIC};
 
     /**
      * Donation data

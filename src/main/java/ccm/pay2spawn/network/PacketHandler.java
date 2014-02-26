@@ -58,6 +58,9 @@ public class PacketHandler implements IPacketHandler
                 case CHANNEL_NBT_REQUEST:
                     NbtRequestPacket.reconstruct(packet, player);
                     break;
+                case CHANNEL_MUSIC:
+                    MusicPacket.get(packet.data);
+                    break;
             }
         }
         catch (Exception e)
