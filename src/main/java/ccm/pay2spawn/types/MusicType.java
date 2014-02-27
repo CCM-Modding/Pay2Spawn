@@ -27,20 +27,23 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.MusicPacket;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.MusicTypeGui;
+import ccm.pay2spawn.util.Constants;
 import com.google.common.io.Files;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
+import org.apache.commons.io.IOUtils;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 import static ccm.pay2spawn.util.Constants.STRING;
 
@@ -109,39 +112,37 @@ public class MusicType extends TypeBase
     public void doConfig(Configuration configuration)
     {
         musicFolder = new File(Pay2Spawn.getFolder(), "music");
-        //noinspection ResultOfMethodCallIgnored
-        musicFolder.mkdirs();
-
-        try
+        if (musicFolder.mkdirs())
         {
-            File[] list = new File(getClass().getResource("/p2s/music/").toURI()).listFiles(new FileFilter()
-            {
+            new Thread(new Runnable() {
                 @Override
-                public boolean accept(File pathname)
-                {
-                    return !pathname.getName().endsWith(".txt");
-                }
-            });
-
-            for (File file : list)
-            {
-                File target = new File(musicFolder, file.getName());
-                if (!target.exists())
+                public void run()
                 {
                     try
                     {
-                        Files.copy(file, target);
+                        File zip = new File(musicFolder, "music.zip");
+                        Files.copy(new File(Constants.MUSICURL), zip); //Download file
+
+                        ZipFile zipFile = new ZipFile(zip);
+                        Enumeration<? extends ZipEntry> entries = zipFile.entries();
+                        while (entries.hasMoreElements()) {
+                            ZipEntry entry = entries.nextElement();
+                            File entryDestination = new File(musicFolder,  entry.getName());
+                            entryDestination.getParentFile().mkdirs();
+                            InputStream in = zipFile.getInputStream(entry);
+                            OutputStream out = new FileOutputStream(entryDestination);
+                            IOUtils.copy(in, out);
+                            IOUtils.closeQuietly(in);
+                            IOUtils.closeQuietly(out);
+                        }
                     }
-                    catch (IOException | NullPointerException e)
+                    catch (IOException e)
                     {
+                        Pay2Spawn.getLogger().severe("Error downloading music file. Get from github and unpack yourself please.");
                         e.printStackTrace();
                     }
                 }
-            }
-        }
-        catch (NullPointerException | URISyntaxException e)
-        {
-            e.printStackTrace();
+            }, "Pay2Spawn music download and unzip").start();
         }
     }
 }
