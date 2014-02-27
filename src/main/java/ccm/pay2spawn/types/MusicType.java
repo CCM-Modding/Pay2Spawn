@@ -34,10 +34,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -121,8 +123,7 @@ public class MusicType extends TypeBase
                     try
                     {
                         File zip = new File(musicFolder, "music.zip");
-                        Files.copy(new File(Constants.MUSICURL), zip); //Download file
-
+                        FileUtils.copyURLToFile(new URL(Constants.MUSICURL), zip);
                         ZipFile zipFile = new ZipFile(zip);
                         Enumeration<? extends ZipEntry> entries = zipFile.entries();
                         while (entries.hasMoreElements()) {
@@ -135,6 +136,8 @@ public class MusicType extends TypeBase
                             IOUtils.closeQuietly(in);
                             IOUtils.closeQuietly(out);
                         }
+                        zipFile.close();
+                        zip.delete();
                     }
                     catch (IOException e)
                     {
