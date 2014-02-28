@@ -32,7 +32,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -41,8 +40,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
-import static ccm.pay2spawn.util.Constants.INT;
-import static ccm.pay2spawn.util.Constants.RANDOM;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Strikes the world within 1 block of the player
@@ -68,8 +66,8 @@ public class LightningType extends TypeBase
 
     static
     {
-        typeMap.put(SPREAD_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(SPREAD_KEY, NBTTypes[INT]);
+        typeMap.put(TYPE_KEY, NBTTypes[INT]);
     }
 
     @Override

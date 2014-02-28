@@ -27,7 +27,6 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PlayerModificationTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.FoodStats;
 
@@ -53,9 +52,9 @@ public class PlayerModificationType extends TypeBase
 
     static
     {
-        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(OPERATION_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[FLOAT]);
+        typeMap.put(TYPE_KEY, NBTTypes[INT]);
+        typeMap.put(OPERATION_KEY, NBTTypes[INT]);
+        typeMap.put(AMOUNT_KEY, NBTTypes[FLOAT]);
     }
 
     @Override

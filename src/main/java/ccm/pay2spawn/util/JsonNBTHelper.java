@@ -33,7 +33,6 @@ import net.minecraft.nbt.*;
 import java.util.Map;
 
 import static ccm.pay2spawn.util.Constants.*;
-import static net.minecraft.nbt.NBTBase.NBTTypes;
 
 /**
  * This is nearly full Json (gson) to NBT converter.

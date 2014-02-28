@@ -34,7 +34,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.SoundPool;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemRecord;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
@@ -75,10 +74,10 @@ public class SoundType extends TypeBase
 
     static
     {
-        typeMap.put(SOUNDNAME_KEY, NBTBase.NBTTypes[STRING]);
-        typeMap.put(VOLUME_KEY, NBTBase.NBTTypes[FLOAT]);
-        typeMap.put(PITCH_KEY, NBTBase.NBTTypes[FLOAT]);
-        typeMap.put(PLAYTOALL_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(SOUNDNAME_KEY, NBTTypes[STRING]);
+        typeMap.put(VOLUME_KEY, NBTTypes[FLOAT]);
+        typeMap.put(PITCH_KEY, NBTTypes[FLOAT]);
+        typeMap.put(PLAYTOALL_KEY, NBTTypes[BYTE]);
 
         if (FMLCommonHandler.instance().getSide().isClient()) nameToSoundPoolEntriesMappingField = getHackField();
     }

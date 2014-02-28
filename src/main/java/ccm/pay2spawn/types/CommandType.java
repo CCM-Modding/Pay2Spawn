@@ -31,7 +31,6 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatMessageComponent;
@@ -43,8 +42,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import static ccm.pay2spawn.util.Constants.MODID;
-import static ccm.pay2spawn.util.Constants.STRING;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class CommandType extends TypeBase
 {
@@ -58,7 +56,7 @@ public class CommandType extends TypeBase
 
     static
     {
-        typeMap.put(COMMAND_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(COMMAND_KEY, NBTTypes[STRING]);
     }
 
     @Override

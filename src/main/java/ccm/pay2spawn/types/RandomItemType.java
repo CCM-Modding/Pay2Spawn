@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 
+import static ccm.pay2spawn.util.Constants.NBTTypes;
 import static ccm.pay2spawn.util.Constants.STRING;
 
 public class RandomItemType extends TypeBase
@@ -51,7 +52,7 @@ public class RandomItemType extends TypeBase
 
     static
     {
-        typeMap.put(NAME_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(NAME_KEY, NBTTypes[STRING]);
     }
 
     @Override

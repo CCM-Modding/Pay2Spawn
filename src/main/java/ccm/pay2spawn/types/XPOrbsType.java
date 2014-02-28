@@ -28,15 +28,13 @@ import ccm.pay2spawn.types.guis.XPOrbsGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.Constants.INT;
-import static ccm.pay2spawn.util.Constants.RANDOM;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class XPOrbsType extends TypeBase
 {
@@ -47,7 +45,7 @@ public class XPOrbsType extends TypeBase
 
     static
     {
-        typeMap.put(AMOUNTOFORBS_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(AMOUNTOFORBS_KEY, NBTTypes[INT]);
     }
 
     @Override

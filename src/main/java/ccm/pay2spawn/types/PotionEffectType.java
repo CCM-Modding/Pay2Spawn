@@ -30,7 +30,6 @@ import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -61,9 +60,9 @@ public class PotionEffectType extends TypeBase
 
     static
     {
-        typeMap.put(ID_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(AMPLIFIER_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(DURATION_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(ID_KEY, NBTTypes[BYTE]);
+        typeMap.put(AMPLIFIER_KEY, NBTTypes[BYTE]);
+        typeMap.put(DURATION_KEY, NBTTypes[INT]);
     }
 
     @Override

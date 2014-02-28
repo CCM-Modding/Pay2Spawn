@@ -28,17 +28,14 @@ import ccm.pay2spawn.network.MusicPacket;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.MusicTypeGui;
 import ccm.pay2spawn.util.Constants;
-import com.google.common.io.Files;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import java.io.*;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -47,6 +44,7 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import static ccm.pay2spawn.util.Constants.NBTTypes;
 import static ccm.pay2spawn.util.Constants.STRING;
 
 public class MusicType extends TypeBase
@@ -58,7 +56,7 @@ public class MusicType extends TypeBase
 
     static
     {
-        typeMap.put(SOUND_KEY, NBTBase.NBTTypes[STRING]);
+        typeMap.put(SOUND_KEY, NBTTypes[STRING]);
     }
 
     @Override
@@ -116,7 +114,8 @@ public class MusicType extends TypeBase
         musicFolder = new File(Pay2Spawn.getFolder(), "music");
         if (musicFolder.mkdirs())
         {
-            new Thread(new Runnable() {
+            new Thread(new Runnable()
+            {
                 @Override
                 public void run()
                 {
@@ -126,9 +125,10 @@ public class MusicType extends TypeBase
                         FileUtils.copyURLToFile(new URL(Constants.MUSICURL), zip);
                         ZipFile zipFile = new ZipFile(zip);
                         Enumeration<? extends ZipEntry> entries = zipFile.entries();
-                        while (entries.hasMoreElements()) {
+                        while (entries.hasMoreElements())
+                        {
                             ZipEntry entry = entries.nextElement();
-                            File entryDestination = new File(musicFolder,  entry.getName());
+                            File entryDestination = new File(musicFolder, entry.getName());
                             entryDestination.getParentFile().mkdirs();
                             InputStream in = zipFile.getInputStream(entry);
                             OutputStream out = new FileOutputStream(entryDestination);

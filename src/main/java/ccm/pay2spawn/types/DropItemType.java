@@ -27,7 +27,6 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.DropItemTypeGui;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -35,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 public class DropItemType extends TypeBase
 {
@@ -50,7 +50,7 @@ public class DropItemType extends TypeBase
 
     static
     {
-        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(TYPE_KEY, NBTTypes[INT]);
     }
 
     @Override

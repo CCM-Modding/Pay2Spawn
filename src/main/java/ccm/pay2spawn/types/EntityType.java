@@ -37,7 +37,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
@@ -83,14 +82,14 @@ public class EntityType extends TypeBase
 
     static
     {
-        typeMap.put(ENTITYNAME_KEY, NBTBase.NBTTypes[STRING]);
-        typeMap.put(SPAWNRADIUS_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(AGRO_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(CUSTOMNAME_KEY, NBTBase.NBTTypes[STRING]);
-        typeMap.put(RIDETHISMOB_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(RANDOM_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(THROWTOWARDSPLAYER_KEY, NBTBase.NBTTypes[BYTE]);
+        typeMap.put(ENTITYNAME_KEY, NBTTypes[STRING]);
+        typeMap.put(SPAWNRADIUS_KEY, NBTTypes[INT]);
+        typeMap.put(AMOUNT_KEY, NBTTypes[INT]);
+        typeMap.put(AGRO_KEY, NBTTypes[BYTE]);
+        typeMap.put(CUSTOMNAME_KEY, NBTTypes[STRING]);
+        typeMap.put(RIDETHISMOB_KEY, NBTTypes[BYTE]);
+        typeMap.put(RANDOM_KEY, NBTTypes[BYTE]);
+        typeMap.put(THROWTOWARDSPLAYER_KEY, NBTTypes[BYTE]);
     }
 
     @Override

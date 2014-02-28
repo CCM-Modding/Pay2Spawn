@@ -31,7 +31,6 @@ import net.minecraft.entity.item.EntityFireworkRocket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
@@ -64,15 +63,15 @@ public class FireworksType extends TypeBase
 
     static
     {
-        typeMap.put(FLIGHT_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(TYPE_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(FLICKER_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(TRAIL_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(COLORS_KEY, NBTBase.NBTTypes[INT_ARRAY]);
+        typeMap.put(FLIGHT_KEY, NBTTypes[BYTE]);
+        typeMap.put(TYPE_KEY, NBTTypes[BYTE]);
+        typeMap.put(FLICKER_KEY, NBTTypes[BYTE]);
+        typeMap.put(TRAIL_KEY, NBTTypes[BYTE]);
+        typeMap.put(COLORS_KEY, NBTTypes[INT_ARRAY]);
 
-        typeMap.put(RIDETHISMOB_KEY, NBTBase.NBTTypes[BYTE]);
-        typeMap.put(RADIUS_KEY, NBTBase.NBTTypes[INT]);
-        typeMap.put(AMOUNT_KEY, NBTBase.NBTTypes[INT]);
+        typeMap.put(RIDETHISMOB_KEY, NBTTypes[BYTE]);
+        typeMap.put(RADIUS_KEY, NBTTypes[INT]);
+        typeMap.put(AMOUNT_KEY, NBTTypes[INT]);
     }
 
     @Override
