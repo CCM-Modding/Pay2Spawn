@@ -39,7 +39,7 @@ import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.*;
 import com.google.common.base.Strings;
-import com.jadarstudios.developercapes.DevCapesUtil;
+import ccm.libs.com.jadarstudios.developercapes.DevCapesUtil;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;

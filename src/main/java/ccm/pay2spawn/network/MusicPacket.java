@@ -27,7 +27,7 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.MusicType;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
-import javazoom.jl.decoder.JavaLayerException;
+import ccm.libs.javazoom.jl.decoder.JavaLayerException;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.File;
@@ -84,7 +84,7 @@ public class MusicPacket
             {
                 try
                 {
-                    new javazoom.jl.player.Player(new FileInputStream(file)).play();
+                    new ccm.libs.javazoom.jl.player.Player(new FileInputStream(file)).play();
                 }
                 catch (JavaLayerException | FileNotFoundException e)
                 {

@@ -16,8 +16,7 @@ If that isn't anywhere in the log, copy the 5 to 10 lines above and below the st
 ## Type 0: Errors that you don't need to worry about
 Ignore these errors:
 
-* Anything with "*at com.jadarstudios.developercapes*" in the stacktrace. (Its not us.)
-* Anything with "*at org.mcstats*" in the stacktrace. (Its not us.)
+* Anything with "*at ccm.libs...." in the stacktrace. (Its not us.)
 
 ## Type 1: Recurring errors
 Errors that spam every time the mod tries to connect to Twitch or Streamdonations.net

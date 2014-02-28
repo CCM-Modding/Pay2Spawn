@@ -24,7 +24,7 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
-import org.mcstats.Metrics;
+import ccm.libs.org.mcstats.Metrics;
 
 import java.io.IOException;
 
