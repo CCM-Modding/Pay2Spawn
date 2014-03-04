@@ -84,7 +84,7 @@ public class CommandP2SServer extends CommandBase
                 int count = 0;
                 for (WorldServer world : DimensionManager.getWorlds())
                 {
-                    for (Entity entity : (List<Entity>) world.getLoadedEntityList())
+                    for (Entity entity : (List<Entity>) world.loadedEntityList)
                     {
                         if (entity.getEntityData().hasKey(Constants.NAME))
                         {
