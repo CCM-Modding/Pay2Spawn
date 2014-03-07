@@ -43,6 +43,7 @@ import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
@@ -61,7 +62,7 @@ public class DonationCheckerThread extends Thread
     final URL    subsUrl;
     public boolean firstrun = true;
     JsonArray latest;
-    HashSet<String> subs = new HashSet<>();
+    HashMap<String, String> subs = new HashMap<>();
 
     public DonationCheckerThread() throws MalformedURLException
     {
@@ -93,7 +94,6 @@ public class DonationCheckerThread extends Thread
             try
             {
                 if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().API_Key)) doDonations();
-                firstrun = false;
             }
             catch (Exception e)
             {
@@ -109,6 +109,7 @@ public class DonationCheckerThread extends Thread
                 Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Twitch api.");
                 if (Minecraft.getMinecraft().running) e.printStackTrace();
             }
+            firstrun = false;
             doWait(interval);
         }
     }
@@ -134,7 +135,7 @@ public class DonationCheckerThread extends Thread
 
     private void doSubs() throws Exception
     {
-        HashSet<String> newSubs = new HashSet<>();
+        HashMap<String, String> newSubs = new HashMap<>();
         JsonObject root = JSON_PARSER.parse(Helper.readUrl(subsUrl)).getAsJsonObject();
         parseSubs(newSubs, root);
         int total = root.getAsJsonPrimitive("_total").getAsInt();
@@ -144,14 +145,14 @@ public class DonationCheckerThread extends Thread
             parseSubs(newSubs, root);
         }
 
-        for (String sub : newSubs)
+        for (String sub : newSubs.keySet())
         {
-            if (!subs.contains(sub))
+            if (!subs.containsKey(sub) && !firstrun)
             {
                 JsonObject donation = new JsonObject();
                 donation.addProperty("amount", Double.parseDouble(RandomRegistry.solveRandom(DOUBLE, Pay2Spawn.getConfig().subReward)));
                 donation.addProperty("note", "");
-                donation.addProperty("twitchUsername", sub);
+                donation.addProperty("twitchUsername", newSubs.get(sub));
                 try
                 {
                     Pay2Spawn.getRewardsDB().process(donation);
@@ -166,11 +167,11 @@ public class DonationCheckerThread extends Thread
         subs = newSubs;
     }
 
-    private void parseSubs(HashSet<String> subs, JsonObject object)
+    private void parseSubs(HashMap<String, String> subs, JsonObject object)
     {
         for (JsonElement sub : object.getAsJsonArray("subscriptions"))
         {
-            subs.add(sub.getAsJsonObject().getAsJsonObject("user").get("display_name").getAsString());
+            subs.put(sub.getAsJsonObject().getAsJsonObject("user").get("_id").getAsString(), sub.getAsJsonObject().getAsJsonObject("user").get("display_name").getAsString());
         }
     }
 

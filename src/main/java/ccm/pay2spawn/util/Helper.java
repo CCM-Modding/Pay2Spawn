@@ -179,7 +179,7 @@ public class Helper
     public static void msg(String message)
     {
         System.out.println("P2S client message: " + message);
-        Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+        if (Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(message);
     }
 
     /**
