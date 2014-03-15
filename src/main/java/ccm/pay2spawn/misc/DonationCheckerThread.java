@@ -116,7 +116,7 @@ public class DonationCheckerThread extends Thread
 
     private void doDonations() throws Exception
     {
-        for (JsonObject donation : backlog) process(donation);
+        for (JsonObject donation : backlog) process(donation, true);
 
         JsonObject root = JSON_PARSER.parse(Helper.readUrl(donationsUrl)).getAsJsonObject();
 
@@ -125,7 +125,7 @@ public class DonationCheckerThread extends Thread
             root = JsonNBTHelper.fixNulls(root);
             doFileAndHud(root);
             latest = root.getAsJsonArray("mostRecent");
-            for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject());
+            for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject(), true);
         }
         else
         {
@@ -155,7 +155,7 @@ public class DonationCheckerThread extends Thread
                 donation.addProperty("twitchUsername", newSubs.get(sub));
                 try
                 {
-                    Pay2Spawn.getRewardsDB().process(donation);
+                    Pay2Spawn.getRewardsDB().process(donation, true);
                 }
                 catch (Exception e)
                 {
@@ -175,7 +175,7 @@ public class DonationCheckerThread extends Thread
         }
     }
 
-    private void process(JsonObject donation)
+    private void process(JsonObject donation, boolean msg)
     {
         if (firstrun) doneIDs.add(donation.get("transactionID").getAsString());
         if (Minecraft.getMinecraft().thePlayer == null || !Pay2Spawn.enable)
@@ -189,7 +189,7 @@ public class DonationCheckerThread extends Thread
             if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
             try
             {
-                Pay2Spawn.getRewardsDB().process(donation);
+                Pay2Spawn.getRewardsDB().process(donation, msg);
             }
             catch (Exception e)
             {
@@ -318,14 +318,14 @@ public class DonationCheckerThread extends Thread
         donation.addProperty(DONATION_AMOUNT, amount);
         donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
         donation.addProperty(DONATION_NOTE, "");
-        Pay2Spawn.getRewardsDB().process(donation);
+        Pay2Spawn.getRewardsDB().process(donation, false);
         Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
     }
 
     public static void redonate(int id)
     {
         JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(id);
-        Pay2Spawn.getRewardsDB().process(donation);
+        Pay2Spawn.getRewardsDB().process(donation, false);
         Helper.msg(EnumChatFormatting.GOLD + "[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
     }
 }

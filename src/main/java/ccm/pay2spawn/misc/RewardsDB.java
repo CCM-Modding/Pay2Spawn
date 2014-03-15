@@ -27,6 +27,7 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Statistics;
 import com.google.common.collect.HashMultimap;
@@ -120,7 +121,7 @@ public class RewardsDB
         }
     }
 
-    public synchronized void process(JsonObject donation)
+    public synchronized void process(JsonObject donation, boolean msg)
     {
         double highestmatch = 0d;
         double amount = donation.get("amount").getAsDouble();
@@ -146,8 +147,11 @@ public class RewardsDB
          */
         if (map.containsKey(-1D))
         {
-            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
+            reward = RandomRegistry.getRandomFromSet(map.get(-1D));
+            reward.addToCountdown(donation, false, reward);
         }
+
+        Helper.sendMessage(reward, donation);
     }
 
     public Set<Double> getAmounts()

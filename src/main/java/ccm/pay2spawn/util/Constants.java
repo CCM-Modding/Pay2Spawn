@@ -51,11 +51,12 @@ public class Constants
      * Network related
      */
     public static final String   CHANNEL_STATUS      = MODID + "_s";
+    public static final String   CHANNEL_MESSAGE     = MODID + "_mg";
     public static final String   CHANNEL_REWARD      = MODID + "_r";
     public static final String   CHANNEL_TEST        = MODID + "_t";
     public static final String   CHANNEL_NBT_REQUEST = MODID + "_req";
     public static final String   CHANNEL_MUSIC       = MODID + "_m";
-    public static final String[] CHANNELS            = {CHANNEL_STATUS, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_NBT_REQUEST, CHANNEL_MUSIC};
+    public static final String[] CHANNELS            = {CHANNEL_STATUS, CHANNEL_MESSAGE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_NBT_REQUEST, CHANNEL_MUSIC};
 
     /**
      * Donation data

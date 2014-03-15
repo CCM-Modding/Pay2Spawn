@@ -32,10 +32,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.network.packet.Packet3Chat;
+import net.minecraft.util.ChatMessageComponent;
 
 import java.io.*;
 import java.net.URL;
@@ -371,5 +375,36 @@ public class Helper
         {
             return false;
         }
+    }
+
+    public static void doMessage(Packet250CustomPayload packet) throws IOException
+    {
+        String format = formatColors(Pay2Spawn.getConfig().serverMessage);
+        if (Strings.isNullOrEmpty(format)) return;
+
+        JsonObject data = JSON_PARSER.parse(new String(packet.data)).getAsJsonObject();
+
+        data = filter(data);
+        if (data.has(DONATION_USERNAME))    format = format.replace("$name",             data.get(DONATION_USERNAME).getAsString());
+        if (data.has(DONATION_AMOUNT))      format = format.replace("$amount",           data.get(DONATION_AMOUNT).getAsString());
+        if (data.has(DONATION_NOTE))        format = format.replace("$note",             data.get(DONATION_NOTE).getAsString());
+        if (data.has("streamer"))           format = format.replace("$streamer",         data.get("streamer").getAsString());
+        if (data.has("reward_message"))     format = format.replace("$reward_message",   data.get("reward_message").getAsString());
+        if (data.has("reward_name"))        format = format.replace("$reward_name",      data.get("reward_name").getAsString());
+        if (data.has("reward_amount"))      format = format.replace("$reward_amount",    data.get("reward_amount").getAsString());
+        if (data.has("reward_countdown"))   format = format.replace("$reward_countdown", data.get("reward_countdown").getAsString());
+
+        PacketDispatcher.sendPacketToAllPlayers(new Packet3Chat(ChatMessageComponent.createFromText(format)));
+    }
+
+    public static void sendMessage(Reward reward, JsonObject donation)
+    {
+        if (Minecraft.getMinecraft().thePlayer != null) donation.addProperty("streamer", Minecraft.getMinecraft().thePlayer.username);
+        donation.addProperty("reward_message",      reward.getMessage());
+        donation.addProperty("reward_name",         reward.getName());
+        donation.addProperty("reward_amount",       reward.getAmount());
+        donation.addProperty("reward_countdown",    reward.getCountdown());
+
+        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_MESSAGE, GSON.toJson(donation).getBytes()));
     }
 }

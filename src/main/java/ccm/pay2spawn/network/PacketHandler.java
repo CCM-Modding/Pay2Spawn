@@ -24,6 +24,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.misc.Reward;
+import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +49,9 @@ public class PacketHandler implements IPacketHandler
             {
                 case CHANNEL_STATUS:
                     StatusPacket.reconstruct(packet, player);
+                    break;
+                case CHANNEL_MESSAGE:
+                    Helper.doMessage(packet);
                     break;
                 case CHANNEL_REWARD:
                     Reward.reconstruct(packet).spawnOnServer((EntityPlayer) player);
