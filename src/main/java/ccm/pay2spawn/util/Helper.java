@@ -400,10 +400,14 @@ public class Helper
     public static void sendMessage(Reward reward, JsonObject donation)
     {
         if (Minecraft.getMinecraft().thePlayer != null) donation.addProperty("streamer", Minecraft.getMinecraft().thePlayer.username);
-        donation.addProperty("reward_message",      reward.getMessage());
-        donation.addProperty("reward_name",         reward.getName());
-        donation.addProperty("reward_amount",       reward.getAmount());
-        donation.addProperty("reward_countdown",    reward.getCountdown());
+        if (reward != null)
+        {
+            donation.addProperty("reward_message",      reward.getMessage());
+            donation.addProperty("reward_name",         reward.getName());
+            donation.addProperty("reward_amount",       reward.getAmount());
+            donation.addProperty("reward_countdown",    reward.getCountdown());
+        }
+        else Pay2Spawn.getLogger().warning("Reward was null when sending message?! Please report how this happened.\n" + donation.toString());
 
         PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_MESSAGE, GSON.toJson(donation).getBytes()));
     }
