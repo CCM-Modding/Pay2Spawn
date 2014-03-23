@@ -112,7 +112,7 @@ public class CommandP2SServer extends CommandBase
                 break;
             case "hasmod":
                 if (args.length == 1) sender.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2sserver hasmod <player>'.").setColor(EnumChatFormatting.RED));
-                else sender.sendChatToPlayer(ChatMessageComponent.createFromText(args[2] + (StatusPacket.doesPlayerHaveValidConfig(args[2]) ? " does " : " doesn't ") + "have P2S.").setColor(EnumChatFormatting.AQUA));
+                else sender.sendChatToPlayer(ChatMessageComponent.createFromText(args[1] + (StatusPacket.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.").setColor(EnumChatFormatting.AQUA));
                 break;
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
