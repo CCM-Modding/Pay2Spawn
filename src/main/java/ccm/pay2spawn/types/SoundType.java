@@ -97,10 +97,13 @@ public class SoundType extends TypeBase
     {
         NBTTagCompound nbt = new NBTTagCompound();
 
-        nbt.setString(SOUNDNAME_KEY, RandomRegistry.getRandomFromSet(sounds));
-        nbt.setFloat(VOLUME_KEY, 1f);
-        nbt.setFloat(PITCH_KEY, 1f);
-        nbt.setBoolean(PLAYTOALL_KEY, false);
+        if (!sounds.isEmpty())
+        {
+            nbt.setString(SOUNDNAME_KEY, RandomRegistry.getRandomFromSet(sounds));
+            nbt.setFloat(VOLUME_KEY, 1f);
+            nbt.setFloat(PITCH_KEY, 1f);
+            nbt.setBoolean(PLAYTOALL_KEY, false);
+        }
 
         return nbt;
     }
