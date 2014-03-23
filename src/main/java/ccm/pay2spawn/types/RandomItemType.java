@@ -29,7 +29,7 @@ import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.guis.RandomItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
-import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -124,16 +124,19 @@ public class RandomItemType extends TypeBase
         return id;
     }
 
+    // TODO: figure out a way of getting all blocks/items. This is harder then it seems.
     public ItemStack pickRandomItemStack()
     {
-        ArrayList itemStacks = new ArrayList();
+        ArrayList<ItemStack> itemStacks = new ArrayList<>();
         for (Item item : Item.itemsList)
         {
-            if (item == null) continue;
-
-            item.getSubItems(item.itemID, CreativeTabs.tabAllSearch, itemStacks);
+            itemStacks.add(new ItemStack(item));
+        }
+        for (Block block : Block.blocksList)
+        {
+            itemStacks.add(new ItemStack(block));
         }
 
-        return (ItemStack) RandomRegistry.getRandomFromSet(itemStacks);
+        return RandomRegistry.getRandomFromSet(itemStacks);
     }
 }
