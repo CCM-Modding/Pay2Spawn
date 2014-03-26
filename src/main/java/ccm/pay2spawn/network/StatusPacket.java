@@ -90,7 +90,7 @@ public class StatusPacket
                     else
                     {
                         PermissionsHandler.getDB().newPlayer(((EntityPlayer) player).getEntityName());
-                        if (stream.readBoolean()) playersWithValidConfig.add(((EntityPlayer) player).getEntityName());
+                        playersWithValidConfig.add(((EntityPlayer) player).getEntityName());
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) StatusPacket.sendConfigToPlayer(player);
                         if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S) StatusPacket.sendForceToPlayer(player);
                     }
@@ -192,7 +192,6 @@ public class StatusPacket
         try
         {
             stream.writeByte(HANDSHAKE);
-            stream.writeBoolean(Pay2Spawn.isConfiguredProperly());
             stream.close();
             streambyte.close();
         }

@@ -26,7 +26,6 @@ package ccm.pay2spawn.cmd;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.StatusPacket;
 import ccm.pay2spawn.util.Constants;
-import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -72,8 +71,8 @@ public class CommandP2SServer extends CommandBase
     {
         if (args.length == 0)
         {
-            Helper.msg(EnumChatFormatting.AQUA + HELP);
-            Helper.msg(EnumChatFormatting.AQUA + "Protip: Use tab completion!");
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText(HELP).setColor(EnumChatFormatting.AQUA));
+            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!").setColor(EnumChatFormatting.AQUA));
             return;
         }
         switch (args[0])
@@ -115,7 +114,7 @@ public class CommandP2SServer extends CommandBase
                 else sender.sendChatToPlayer(ChatMessageComponent.createFromText(args[1] + (StatusPacket.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.").setColor(EnumChatFormatting.AQUA));
                 break;
             default:
-                Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
+                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown command. Protip: Use tab completion!").setColor(EnumChatFormatting.RED));
                 break;
         }
     }

@@ -97,7 +97,7 @@ public class CommandP2S extends CommandBase
                 else
                 {
                     Pay2Spawn.enable = false;
-                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled");
+                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Disabled on the client.");
                 }
                 break;
             case "on":
@@ -105,7 +105,7 @@ public class CommandP2S extends CommandBase
                 else
                 {
                     Pay2Spawn.enable = true;
-                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled");
+                    Helper.msg(EnumChatFormatting.GOLD + "[P2S] Enabled on the client.");
                 }
                 break;
             case "donate":
