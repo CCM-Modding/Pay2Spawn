@@ -130,10 +130,12 @@ public class RandomItemType extends TypeBase
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
         for (Item item : Item.itemsList)
         {
+            if (item == null) continue;
             itemStacks.add(new ItemStack(item));
         }
         for (Block block : Block.blocksList)
         {
+            if (block == null) continue;
             itemStacks.add(new ItemStack(block));
         }
 
