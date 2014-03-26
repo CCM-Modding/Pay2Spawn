@@ -1,24 +1,44 @@
 buildscript {
     repositories {
+        maven { url = "http://maven.dries007.net/content/repositories/ccm/" }
+        maven { url = "http://files.minecraftforge.net/maven/" }
+        maven { url = "https://libraries.minecraft.net/" }
         mavenCentral()
     }
+    
     dependencies {
 		classpath 'com.github.abrarsyed.gmcp:GMCP:latest.integration'
     }
 }
+configurations {
+    compile
+    deployJars
+}
+repositories {
+    maven { url = "http://maven.dries007.net/content/repositories/ccm/" }
+    maven { url = "http://files.minecraftforge.net/maven/" }
+    maven { url = "https://libraries.minecraft.net/" }
+}
 
 apply plugin: "gmcp"
+apply plugin: "maven"
 
-ext.env = System.getenv()
-version = new File('version.txt').text + env.BUILD_NUMBER
+group = "ccm.pay2spawn"
+version = "Beta"
+
+targetCompatibility = 1.6
+sourceCompatibility = 1.6
 
 archivesBaseName = 'Pay2Spawn'
 minecraft {
 	minecraftVersion = "1.6.4"
 }
 
-processResources
-{
+ext.BUILD_NUMBER = System.getenv().BUILD_NUMBER;
+if (ext.BUILD_NUMBER == null) ext.BUILD_NUMBER = "0"
+version = version + "." + ext.BUILD_NUMBER
+
+processResources {
     from(sourceSets.main.resources.srcDirs) {
         include '**/*.info'
         expand 'version':project.version, 'mcversion':project.minecraft.minecraftVersion
@@ -28,12 +48,83 @@ processResources
         exclude '**/*.info'
     }
 }
-// because the normal default jar task has been modified to be obfuscated
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'src'
+    appendix = project.minecraft.minecraftVersion
+}
+
 task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	appendix = 'dev'
+    from sourceSets.main.output
+    from (sourceSets.main.allSource.srcDirs) {
+        include '**/*.java'
+    }
+	classifier = 'dev'
+    appendix = project.minecraft.minecraftVersion
+}
+
+jar {
+    appendix = project.minecraft.minecraftVersion
 }
 
 artifacts {
-	archives deobfJar
+	archives jar
+    archives sourcesJar
+    archives deobfJar
+}
+
+uploadArchives {
+    if (project.hasProperty("mavenUrl")) {
+        repositories {
+            mavenDeployer {
+                repository(url: mavenUrl) {
+                    authentication(userName: mavenUser, password: mavenPassword)
+                }
+                pom {
+                    groupId = project.group
+                    version = project.minecraft.minecraftVersion + "-" + project.version
+                    artifactId = project.archivesBaseName
+                    project {
+                        name project.archivesBaseName
+                        packaging 'jar'
+                        description 'Usefull core for CCM mods'
+                        url 'https://github.com/CCM-Modding/Pay2Spawn'
+
+                        scm {
+                            url 'https://github.com/CCM-Modding/Pay2Spawn'
+                            connection 'scm:git:git://github.com/CCM-Modding/Pay2Spawn.git'
+                            developerConnection 'scm:git:git@github.com:CCM-Modding/Pay2Spawn.git'
+                        }
+
+                        issueManagement {
+                            system 'github'
+                            url 'https://github.com/CCM-Modding/Pay2Spawn/issues'
+                        }
+
+                        licenses  {
+                            license  {
+                                name 'MIT License'
+                                url 'https://raw.github.com/CCM-Modding/Pay2Spawn/master/LICENCE'
+                                distribution 'repo'
+                            }
+                        }
+
+                        developers {
+                            developer {
+                                id 'Dries007'
+                                name 'Dries007'
+                                roles { role 'developer' }
+                            }
+                            developer {
+                                id 'Claycorp'
+                                name 'Claycorp'
+                                roles { role 'architect' }
+                            }
+                        }
+                    }
+               }
+           }
+        }
+    }
 }
