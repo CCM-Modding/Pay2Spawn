@@ -55,6 +55,7 @@ public class Statistics
 
     public static void handleKill(NBTTagCompound data)
     {
+        Pay2Spawn.getLogger().warning("Debug kill data:" + JsonNBTHelper.parseNBT(data).toString());
         String name = data.getString("Reward");
 
         sortedKillsMap.clear();
