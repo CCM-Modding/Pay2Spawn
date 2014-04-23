@@ -31,12 +31,11 @@ import java.io.IOException;
 
 public class Help
 {
-    public  JPanel      panel1;
-    public  JTextPane   textPane;
-    public  JScrollPane scrollpane;
-    private JFrame      frame;
-
-    private static Help instance;
+    private static Help        instance;
+    public         JPanel      panel1;
+    public         JTextPane   textPane;
+    public         JScrollPane scrollpane;
+    private        JFrame      frame;
 
     public static void init()
     {

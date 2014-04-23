@@ -30,10 +30,10 @@ import ccm.pay2spawn.types.guis.RandomItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -68,8 +68,8 @@ public class RandomItemType extends TypeBase
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound display = new NBTTagCompound();
         display.setString(NAME_KEY, "$name");
-        tag.setCompoundTag(DISPLAY_KEY, display);
-        root.setCompoundTag(TAG_KEY, tag);
+        tag.setTag(DISPLAY_KEY, display);
+        root.setTag(TAG_KEY, tag);
 
         return root;
     }
@@ -80,11 +80,13 @@ public class RandomItemType extends TypeBase
         try
         {
             ItemStack is = ItemStack.loadItemStackFromNBT(dataFromClient);
-            player.dropPlayerItem(is).delayBeforeCanPickup = 0;
+            EntityItem entity = player.dropPlayerItemWithRandomChoice(is, false);
+            entity.delayBeforeCanPickup = 0;
+            entity.func_145797_a(player.getCommandSenderName());
         }
         catch (Exception e)
         {
-            Pay2Spawn.getLogger().warning("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
+            Pay2Spawn.getLogger().warn("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
         }
     }
 
@@ -103,18 +105,21 @@ public class RandomItemType extends TypeBase
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        ItemStack is = pickRandomItemStack();
-        NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
-        for (Object o : dataFromClient.getTags())
+        ItemStack is;
+        do
         {
-            NBTBase tag = (NBTBase) o;
-            nbtTagCompound.setTag(tag.getName(), tag);
+            is = pickRandomItemStack();
+        }
+        while (is == null || is.getItem() == null);
+
+        NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
+        for (Object o : dataFromClient.func_150296_c())
+        {
+            nbtTagCompound.setTag(o.toString(), dataFromClient.getTag(o.toString()));
         }
         is.readFromNBT(nbtTagCompound);
         is.writeToNBT(dataFromClient);
         String name = is.getUnlocalizedName();
-        if (name.startsWith("item.")) name = name.substring("item.".length());
-        if (name.startsWith("tile.")) name = name.substring("tile.".length());
         return new Node(ItemType.NAME, name.replace(".", "_"));
     }
 
@@ -124,19 +129,16 @@ public class RandomItemType extends TypeBase
         return id;
     }
 
-    // TODO: figure out a way of getting all blocks/items. This is harder then it seems.
     public ItemStack pickRandomItemStack()
     {
         ArrayList<ItemStack> itemStacks = new ArrayList<>();
-        for (Item item : Item.itemsList)
+        for (Object itemName : Item.itemRegistry.getKeys())
         {
-            if (item == null) continue;
-            itemStacks.add(new ItemStack(item));
+            itemStacks.add(new ItemStack((Item) Item.itemRegistry.getObject(itemName)));
         }
-        for (Block block : Block.blocksList)
+        for (Object blockName : Block.blockRegistry.getKeys())
         {
-            if (block == null) continue;
-            itemStacks.add(new ItemStack(block));
+            itemStacks.add(new ItemStack(Block.getBlockFromName(blockName.toString())));
         }
 
         return RandomRegistry.getRandomFromSet(itemStacks);

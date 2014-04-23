@@ -38,7 +38,6 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
@@ -80,8 +79,7 @@ public class CustomEntityType extends TypeBase
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        Entity entity = EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld());
-        return new Node(NODENAME, EntityList.getEntityString(entity));
+        return new Node(NODENAME, EntityList.getEntityString(EntityList.createEntityFromNBT(dataFromClient, player.getEntityWorld())));
     }
 
     @Override
@@ -148,13 +146,13 @@ public class CustomEntityType extends TypeBase
                     Node node = this.getPermissionNode(player, tag.getCompoundTag(RIDING_KEY));
                     if (BanHelper.isBanned(node))
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
-                        Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+                        Helper.sendChatToPlayer(player, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
+                        Pay2Spawn.getLogger().warn(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
                         continue;
                     }
                     if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
                     {
-                        Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                        Pay2Spawn.getLogger().warn(player.getDisplayName() + " doesn't have perm node " + node.toString());
                         continue;
                     }
 

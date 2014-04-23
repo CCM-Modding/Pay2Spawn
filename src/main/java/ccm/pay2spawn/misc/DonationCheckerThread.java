@@ -44,7 +44,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
@@ -62,7 +61,9 @@ public class DonationCheckerThread extends Thread
     final URL    subsUrl;
     public boolean firstrun = true;
     JsonArray latest;
-    HashMap<String, String> subs = new HashMap<>();
+    HashMap<String, String> subs    = new HashMap<>();
+    ArrayList<String>       doneIDs = new ArrayList<>();
+    ArrayList<JsonObject>   backlog = new ArrayList<>();
 
     public DonationCheckerThread() throws MalformedURLException
     {
@@ -78,8 +79,22 @@ public class DonationCheckerThread extends Thread
         Hud.INSTANCE.set.add(recentJsonBasedHudEntry);
     }
 
-    ArrayList<String>     doneIDs = new ArrayList<>();
-    ArrayList<JsonObject> backlog = new ArrayList<>();
+    public static void fakeDonation(double amount)
+    {
+        JsonObject donation = new JsonObject();
+        donation.addProperty(DONATION_AMOUNT, amount);
+        donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
+        donation.addProperty(DONATION_NOTE, "");
+        Pay2Spawn.getRewardsDB().process(donation, false);
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
+    }
+
+    public static void redonate(int id)
+    {
+        JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(id);
+        Pay2Spawn.getRewardsDB().process(donation, false);
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
+    }
 
     public synchronized JsonObject getLatestById(int id) throws IndexOutOfBoundsException
     {
@@ -97,8 +112,9 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
-                Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Streamdonations.");
-                if (Minecraft.getMinecraft().running) e.printStackTrace();
+                Pay2Spawn.getLogger().warn("You can ignore this if you closed mc right before it happened.");
+                Pay2Spawn.getLogger().warn("ERROR TYPE 1: Error while contacting Streamdonations.");
+                if (Minecraft.getMinecraft().isIntegratedServerRunning()) e.printStackTrace();
             }
             try
             {
@@ -106,8 +122,9 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
-                Pay2Spawn.getLogger().severe("ERROR TYPE 1: Error while contacting Twitch api.");
-                if (Minecraft.getMinecraft().running) e.printStackTrace();
+                Pay2Spawn.getLogger().warn("You can ignore this if you closed mc right before it happened.");
+                Pay2Spawn.getLogger().warn("ERROR TYPE 1: Error while contacting Twitch api.");
+                e.printStackTrace();
             }
             firstrun = false;
             doWait(interval);
@@ -159,7 +176,7 @@ public class DonationCheckerThread extends Thread
                 }
                 catch (Exception e)
                 {
-                    Pay2Spawn.getLogger().warning("Error processing a donation.");
+                    Pay2Spawn.getLogger().warn("Error processing a donation.");
                     e.printStackTrace();
                 }
             }
@@ -193,7 +210,7 @@ public class DonationCheckerThread extends Thread
             }
             catch (Exception e)
             {
-                Pay2Spawn.getLogger().warning("Error processing a donation.");
+                Pay2Spawn.getLogger().warn("Error processing a donation.");
                 e.printStackTrace();
             }
         }
@@ -310,22 +327,5 @@ public class DonationCheckerThread extends Thread
                 }
             }
         }
-    }
-
-    public static void fakeDonation(double amount)
-    {
-        JsonObject donation = new JsonObject();
-        donation.addProperty(DONATION_AMOUNT, amount);
-        donation.addProperty(DONATION_USERNAME, Minecraft.getMinecraft().thePlayer.getDisplayName());
-        donation.addProperty(DONATION_NOTE, "");
-        Pay2Spawn.getRewardsDB().process(donation, false);
-        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
-    }
-
-    public static void redonate(int id)
-    {
-        JsonObject donation = Pay2Spawn.getDonationCheckerThread().getLatestById(id);
-        Pay2Spawn.getRewardsDB().process(donation, false);
-        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Redoing " + donation.get(DONATION_USERNAME).getAsString() + "'s donation of " + donation.get(DONATION_AMOUNT).getAsString() + ".");
     }
 }

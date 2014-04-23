@@ -25,7 +25,7 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.permissions.PermissionsHandler;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +45,7 @@ public class TypeRegistry
      * Register your type here, in pre-preInit!
      *
      * @param typeBase the instance you want to register
+     *
      * @throws IllegalArgumentException if the name has been taken
      */
     public static void register(TypeBase typeBase)
@@ -56,6 +57,7 @@ public class TypeRegistry
      * Get a type by its name
      *
      * @param name the name
+     *
      * @return null if no such type, otherwise the instance given to us
      */
     public static TypeBase getByName(String name)
@@ -125,7 +127,7 @@ public class TypeRegistry
         TypeRegistry.register(new ItemType());
         TypeRegistry.register(new PotionEffectType());
         TypeRegistry.register(new LightningType());
-        TypeRegistry.register(new SoundType());
+        //TypeRegistry.register(new SoundType());
         TypeRegistry.register(new FireworksType());
         TypeRegistry.register(new CustomEntityType());
         TypeRegistry.register(new RandomItemType());

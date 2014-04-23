@@ -50,32 +50,31 @@ public class Configurator implements IIHasCallback
 {
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};
     public static final String[] COLUMN_NAMES = new String[] {"Name", "Amount", "Message", "Countdown", "Types of rewards"};
-    public static Configurator instance;
-    public        JFrame       frame;
-
-    private JsonArray     rootArray;
-    private JPanel        panel1;
-    private JTabbedPane   tabbedPane1;
-    private JTable        mainTable;
-    private JTextField    nameField;
-    private JTextField    amountField;
-    private JTextField    messageField;
-    private JButton       saveOverOldGroupButton;
-    private JButton       helpMeWithRandomizationButton;
-    private JButton       clearButton;
-    private JList<String> typeList;
-    private JList<String> rewards;
-    private JButton       saveAsNewGroupButton;
-    private JButton       removeGroupButton;
-    private JLabel        nameLabel;
-    private JLabel        amountLabel;
-    public  JButton       duplicateSelectedRewardButton;
-    public  JButton       deleteSelectedRewardButton;
-    public  JTextField    countdownTextField;
-    public  JButton       makeNiceHtmlPageButton;
-    private JsonObject    currentlyEditingData;
-    private int           currentlyEditingID;
-    private JsonArray     rewardData;
+    public static Configurator  instance;
+    public        JFrame        frame;
+    public        JButton       duplicateSelectedRewardButton;
+    public        JButton       deleteSelectedRewardButton;
+    public        JTextField    countdownTextField;
+    public        JButton       makeNiceHtmlPageButton;
+    private       JsonArray     rootArray;
+    private       JPanel        panel1;
+    private       JTabbedPane   tabbedPane1;
+    private       JTable        mainTable;
+    private       JTextField    nameField;
+    private       JTextField    amountField;
+    private       JTextField    messageField;
+    private       JButton       saveOverOldGroupButton;
+    private       JButton       helpMeWithRandomizationButton;
+    private       JButton       clearButton;
+    private       JList<String> typeList;
+    private       JList<String> rewards;
+    private       JButton       saveAsNewGroupButton;
+    private       JButton       removeGroupButton;
+    private       JLabel        nameLabel;
+    private       JLabel        amountLabel;
+    private       JsonObject    currentlyEditingData;
+    private       int           currentlyEditingID;
+    private       JsonArray     rewardData;
 
     private Configurator() throws FileNotFoundException
     {
@@ -95,6 +94,17 @@ public class Configurator implements IIHasCallback
         tabbedPane1.setSelectedIndex(0);
         clear();
         ColumnsAutoSizer.sizeColumnsToFit(mainTable, 20);
+    }
+
+    public static void show() throws FileNotFoundException
+    {
+        if (instance != null) instance.frame.dispose();
+        instance = new Configurator();
+    }
+
+    public static void close()
+    {
+        if (instance != null) instance.frame.dispose();
     }
 
     @Override
@@ -369,7 +379,7 @@ public class Configurator implements IIHasCallback
         }
         catch (IOException e)
         {
-            Pay2Spawn.getLogger().severe("Could not save JSON file from configurator!");
+            Pay2Spawn.getLogger().warn("Could not save JSON file from configurator!");
             e.printStackTrace();
         }
 
@@ -430,20 +440,9 @@ public class Configurator implements IIHasCallback
         amountLabel.setForeground(Color.black);
     }
 
-    public static void show() throws FileNotFoundException
-    {
-        if (instance != null) instance.frame.dispose();
-        instance = new Configurator();
-    }
-
     public void update()
     {
         if (frame != null && frame.isVisible()) mainTable.updateUI();
-    }
-
-    public static void close()
-    {
-        if (instance != null) instance.frame.dispose();
     }
 
     /**

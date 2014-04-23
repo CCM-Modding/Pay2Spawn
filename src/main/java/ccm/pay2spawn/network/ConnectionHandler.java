@@ -26,12 +26,11 @@ package ccm.pay2spawn.network;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.IConnectionHandler;
-import cpw.mods.fml.common.network.Player;
-import net.minecraft.network.INetworkManager;
-import net.minecraft.network.NetLoginHandler;
-import net.minecraft.network.packet.NetHandler;
-import net.minecraft.network.packet.Packet1Login;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -40,20 +39,28 @@ import java.util.TimerTask;
 
 import static ccm.pay2spawn.util.Constants.NAME;
 
-public class ConnectionHandler implements IConnectionHandler
+public class ConnectionHandler
 {
-    @Override
-    public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager)
+    public static final ConnectionHandler INSTANCE = new ConnectionHandler();
+
+    private ConnectionHandler()
     {
-        StatusPacket.sendHandshakeToPlayer(player);
+        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @Override
-    public String connectionReceived(NetLoginHandler netHandler, INetworkManager manager)
+    @SubscribeEvent
+    public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
-        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S)
+        if (event.player instanceof EntityPlayerMP) // Cheap server detection
+            StatusPacket.sendHandshakeToPlayer((EntityPlayerMP) event.player);
+    }
+
+    @SubscribeEvent
+    public void connectionReceived(FMLNetworkEvent.ServerConnectionFromClientEvent event)
+    {
+        if (!event.isLocal && Pay2Spawn.getConfig().forceP2S)
         {
-            final String username = netHandler.clientUsername;
+            final String username = ((NetHandlerPlayServer) event.handler).playerEntity.getCommandSenderName();
             new Timer().schedule(new TimerTask()
             {
                 @Override
@@ -63,29 +70,10 @@ public class ConnectionHandler implements IConnectionHandler
                 }
             }, 5 * 1000);
         }
-        return null;
     }
 
-    @Override
-    public void connectionOpened(NetHandler netClientHandler, String server, int port, INetworkManager manager)
-    {
-
-    }
-
-    @Override
-    public void connectionOpened(NetHandler netClientHandler, MinecraftServer server, INetworkManager manager)
-    {
-
-    }
-
-    @Override
-    public void connectionClosed(INetworkManager manager)
-    {
-        Pay2Spawn.getLogger().severe("connectionClosed " + FMLCommonHandler.instance().getEffectiveSide());
-    }
-
-    @Override
-    public void clientLoggedIn(NetHandler clientHandler, INetworkManager manager, Packet1Login login)
+    @SubscribeEvent
+    public void disconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         Pay2Spawn.reloadDB();
         StatusPacket.resetServerStatus();

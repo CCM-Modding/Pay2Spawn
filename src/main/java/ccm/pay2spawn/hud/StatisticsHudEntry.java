@@ -26,7 +26,7 @@ package ccm.pay2spawn.hud;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.misc.P2SConfig;
 import ccm.pay2spawn.util.Helper;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 

@@ -32,14 +32,15 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.client.Minecraft;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.network.packet.Packet3Chat;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
 import java.net.URL;
@@ -58,11 +59,15 @@ import static ccm.pay2spawn.util.Constants.*;
  */
 public class Helper
 {
+    public static final String  FORMAT_WITH_DELIMITER = "((?<=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr])|(?=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr]))";
+    public static final Pattern DOUBLE_QUOTES         = Pattern.compile("\"(.*)\"");
+
     /**
      * NBT to byte[]
      * Use for packets
      *
      * @param nbtTagCompound the NBTTagCompound
+     *
      * @return the bye array
      */
     public static byte[] nbtToByteArray(NBTTagCompound nbtTagCompound)
@@ -88,6 +93,7 @@ public class Helper
      * Use for packets
      *
      * @param data the byte arry
+     *
      * @return the NBTTagCompound
      */
     public static NBTTagCompound byteArrayToNBT(byte[] data)
@@ -114,7 +120,6 @@ public class Helper
      *
      * @param nbtTagCompound the NBTTagCompound
      * @param dataOutput     the output
-     * @throws IOException
      */
     public static void writeNBTTagCompound(NBTTagCompound nbtTagCompound, DataOutput dataOutput) throws IOException
     {
@@ -134,8 +139,8 @@ public class Helper
      * Used above, decompresses
      *
      * @param dataInput the input
+     *
      * @return The NBTTagCompound
-     * @throws IOException
      */
     public static NBTTagCompound readNBTTagCompound(DataInput dataInput) throws IOException
     {
@@ -157,6 +162,7 @@ public class Helper
      * Convert & into § if the next char is a chat formatter char
      *
      * @param message the message to be converted
+     *
      * @return the converted message
      */
     public static String formatColors(String message)
@@ -173,8 +179,6 @@ public class Helper
         return new String(b);
     }
 
-    public static final String FORMAT_WITH_DELIMITER = "((?<=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr])|(?=\u00a7[0123456789AaBbCcDdEeFfKkLlMmNnOoRr]))";
-
     /**
      * Print a message client side
      *
@@ -183,7 +187,7 @@ public class Helper
     public static void msg(String message)
     {
         System.out.println("P2S client message: " + message);
-        if (Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(message);
+        if (Minecraft.getMinecraft().thePlayer != null) Minecraft.getMinecraft().thePlayer.addChatMessage(new ChatComponentText(message));
     }
 
     /**
@@ -191,7 +195,7 @@ public class Helper
      *
      * @param format   text that needs var replacing
      * @param donation the donation data
-     * @param reward
+     *
      * @return the fully var-replaced string
      */
     public static String formatText(String format, JsonObject donation, Reward reward)
@@ -200,7 +204,7 @@ public class Helper
         if (donation.has(DONATION_USERNAME)) format = format.replace("$name", donation.get(DONATION_USERNAME).getAsString());
         if (donation.has(DONATION_AMOUNT)) format = format.replace("$amount", donation.get(DONATION_AMOUNT).getAsString());
         if (donation.has(DONATION_NOTE)) format = format.replace("$note", donation.get(DONATION_NOTE).getAsString());
-        if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getEntityName());
+        if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 
         if (reward != null)
         {
@@ -213,7 +217,7 @@ public class Helper
         return format;
     }
 
-    private static JsonObject filter(JsonObject donation)
+    public static JsonObject filter(JsonObject donation)
     {
         P2SConfig config = Pay2Spawn.getConfig();
         if (donation.has(DONATION_USERNAME) && !donation.get(DONATION_USERNAME).getAsString().equalsIgnoreCase(ANONYMOUS))
@@ -268,6 +272,7 @@ public class Helper
      *
      * @param dataToFormat data to be formatted
      * @param donation     the donation data
+     *
      * @return the fully var-replaced JsonElement
      */
     public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation, Reward reward)
@@ -318,8 +323,6 @@ public class Helper
         for (String s : lines)
             list.add(i++, s);
     }
-
-    public static final Pattern DOUBLE_QUOTES = Pattern.compile("\"(.*)\"");
 
     public static String removeQuotes(String s)
     {
@@ -377,38 +380,13 @@ public class Helper
         }
     }
 
-    public static void doMessage(Packet250CustomPayload packet) throws IOException
+    public static void sendChatToPlayer(ICommandSender player, String message, EnumChatFormatting chatFormatting)
     {
-        String format = formatColors(Pay2Spawn.getConfig().serverMessage);
-        if (Strings.isNullOrEmpty(format)) return;
-
-        JsonObject data = JSON_PARSER.parse(new String(packet.data)).getAsJsonObject();
-
-        data = filter(data);
-        if (data.has(DONATION_USERNAME))    format = format.replace("$name",             data.get(DONATION_USERNAME).getAsString());
-        if (data.has(DONATION_AMOUNT))      format = format.replace("$amount",           data.get(DONATION_AMOUNT).getAsString());
-        if (data.has(DONATION_NOTE))        format = format.replace("$note",             data.get(DONATION_NOTE).getAsString());
-        if (data.has("streamer"))           format = format.replace("$streamer",         data.get("streamer").getAsString());
-        if (data.has("reward_message"))     format = format.replace("$reward_message",   data.get("reward_message").getAsString());
-        if (data.has("reward_name"))        format = format.replace("$reward_name",      data.get("reward_name").getAsString());
-        if (data.has("reward_amount"))      format = format.replace("$reward_amount",    data.get("reward_amount").getAsString());
-        if (data.has("reward_countdown"))   format = format.replace("$reward_countdown", data.get("reward_countdown").getAsString());
-
-        PacketDispatcher.sendPacketToAllPlayers(new Packet3Chat(ChatMessageComponent.createFromText(format)));
+        player.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(chatFormatting)));
     }
 
-    public static void sendMessage(Reward reward, JsonObject donation)
+    public static void sendChatToPlayer(EntityPlayer player, String message)
     {
-        if (Minecraft.getMinecraft().thePlayer != null) donation.addProperty("streamer", Minecraft.getMinecraft().thePlayer.username);
-        if (reward != null)
-        {
-            donation.addProperty("reward_message",      reward.getMessage());
-            donation.addProperty("reward_name",         reward.getName());
-            donation.addProperty("reward_amount",       reward.getAmount());
-            donation.addProperty("reward_countdown",    reward.getCountdown());
-        }
-        else Pay2Spawn.getLogger().warning("Reward was null when sending message?! Please report how this happened.\n" + donation.toString());
-
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_MESSAGE, GSON.toJson(donation).getBytes()));
+        player.addChatMessage(new ChatComponentText(message));
     }
 }

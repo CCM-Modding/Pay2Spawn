@@ -24,17 +24,19 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.hud.Hud;
+import ccm.pay2spawn.network.KilldataPacket;
 import ccm.pay2spawn.network.NbtRequestPacket;
-import ccm.pay2spawn.network.StatusPacket;
+import ccm.pay2spawn.network.PacketPipeline;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
@@ -42,12 +44,13 @@ import java.util.ArrayList;
 
 /**
  * Handler for all forge events.
- * TODO: Make sure to check for FML only mode, inform the user if so
  *
  * @author Dries007
  */
 public class EventHandler
 {
+    static boolean entityTracking = false;
+
     public EventHandler()
     {
         try
@@ -60,24 +63,22 @@ public class EventHandler
         }
     }
 
-    static boolean entityTracking = false;
-
     public static void addEntityTracking()
     {
         entityTracking = true;
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void event(EntityInteractEvent event)
     {
         if (entityTracking)
         {
             entityTracking = false;
-            NbtRequestPacket.requestByEntityID(event.target.entityId);
+            NbtRequestPacket.requestByEntityID(event.target.getEntityId());
         }
     }
 
-    @ForgeSubscribe
+    @SubscribeEvent
     public void event(LivingDeathEvent event)
     {
         if (event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource)
@@ -87,19 +88,12 @@ public class EventHandler
             {
                 NBTTagCompound data = entityDamageSource.getEntity().getEntityData().getCompoundTag(Constants.NAME);
                 data.setString("mob", EntityList.getEntityString(entityDamageSource.getEntity()));
-                StatusPacket.sendKillDataToClient((EntityPlayer) event.entity, data);
+                PacketPipeline.PIPELINE.sendTo(new KilldataPacket(data), (EntityPlayerMP) event.entity);
             }
         }
     }
 
-    // HUD messages
-    //    public final static ArrayList<String> TOP       = new ArrayList<>();
-    //    public final static ArrayList<String> RECENT    = new ArrayList<>();
-    //    public final static ArrayList<String> COUNTDOWN = new ArrayList<>();
-    //    public final static ArrayList<String> KILLERS   = new ArrayList<>();
-    //    public final static ArrayList<String> SPAWNED   = new ArrayList<>();
-
-    @ForgeSubscribe
+    @SubscribeEvent
     public void hudEvent(RenderGameOverlayEvent.Text event)
     {
         ArrayList<String> bottomLeft = new ArrayList<>();

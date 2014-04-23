@@ -28,12 +28,13 @@ import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
+import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -56,8 +57,8 @@ public class ItemType extends TypeBase
     @Override
     public NBTTagCompound getExample()
     {
-        ItemStack is = new ItemStack(Item.appleGold);
-        is.setItemName("$name");
+        ItemStack is = new ItemStack((Item) Item.itemRegistry.getObject("minecraft:golden_apple"));
+        is.setStackDisplayName("$name");
         return is.writeToNBT(new NBTTagCompound());
     }
 
@@ -66,12 +67,13 @@ public class ItemType extends TypeBase
     {
         try
         {
-            ItemStack is = ItemStack.loadItemStackFromNBT(dataFromClient);
-            player.dropPlayerItem(is).delayBeforeCanPickup = 0;
+            EntityItem entityitem = player.dropPlayerItemWithRandomChoice(ItemStack.loadItemStackFromNBT(dataFromClient), false);
+            entityitem.delayBeforeCanPickup = 0;
+            entityitem.func_145797_a(player.getCommandSenderName());
         }
         catch (Exception e)
         {
-            Pay2Spawn.getLogger().warning("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
+            Pay2Spawn.getLogger().warn("ItemStack could not be spawned. Does the item exists? JSON: " + JsonNBTHelper.parseNBT(dataFromClient));
         }
     }
 
@@ -84,65 +86,22 @@ public class ItemType extends TypeBase
     @Override
     public Collection<Node> getPermissionNodes()
     {
-        ArrayList<ItemStack> itemStacks = new ArrayList<>();
-        for (Item item : Item.itemsList)
-        {
-            if (item == null) continue;
-
-            //            if (item.getHasSubtypes())
-            //            {
-            //                HashSet<String> names = new HashSet<>();
-            //                for (short s = 0; s < Short.MAX_VALUE; s++)
-            //                {
-            //                    try
-            //                    {
-            //                        ItemStack is = new ItemStack(item, 1, s);
-            //                        if (!names.contains(is.getUnlocalizedName()))
-            //                        {
-            //                            names.add(is.getUnlocalizedName());
-            //                            itemStacks.add(is);
-            //                        }
-            //                    }
-            //                    catch (Exception e)
-            //                    {
-            //                        e.printStackTrace();
-            //                    }
-            //                }
-            //            }
-            //            else
-            //            {
-            try
-            {
-                itemStacks.add(new ItemStack(item));
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-            //            }
-        }
-
         HashSet<Node> nodes = new HashSet<>();
-        for (ItemStack itemStack : itemStacks)
+        for (Object itemName : Item.itemRegistry.getKeys())
         {
-            String name = itemStack.getUnlocalizedName();
-            if (name == null) continue;
-            if (name.startsWith("item.")) name = name.substring("item.".length());
-            if (name.startsWith("tile.")) name = name.substring("tile.".length());
-            nodes.add(new Node(ItemType.NAME, name.replace(".", "_")));
+            nodes.add(new Node(ItemType.NAME, itemName.toString().replace(".", "_")));
         }
-
+        for (Object itemName : Block.blockRegistry.getKeys())
+        {
+            nodes.add(new Node(ItemType.NAME, itemName.toString().replace(".", "_")));
+        }
         return nodes;
     }
 
     @Override
     public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
     {
-        ItemStack itemStack = ItemStack.loadItemStackFromNBT(dataFromClient);
-        String name = itemStack.getUnlocalizedName();
-        if (name.startsWith("item.")) name = name.substring("item.".length());
-        if (name.startsWith("tile.")) name = name.substring("tile.".length());
-        return new Node(NAME, name.replace(".", "_"));
+        return new Node(NAME, ItemStack.loadItemStackFromNBT(dataFromClient).getUnlocalizedName().replace(".", "_"));
     }
 
     @Override
@@ -154,7 +113,7 @@ public class ItemType extends TypeBase
                 return jsonObject.get("Count").getAsString().replace("BYTE:", "");
             case "itemname":
                 ItemStack is = ItemStack.loadItemStackFromNBT(JsonNBTHelper.parseJSON(jsonObject));
-                return is.getItem().getItemDisplayName(is);
+                return is.getItem().getItemStackDisplayName(is);
         }
         return id;
     }

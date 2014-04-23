@@ -39,14 +39,8 @@ import java.util.Random;
  */
 public class Constants
 {
-    public static final String NAME  = "Pay2Spawn";
-    public static final String MODID = "P2S";
-
-    public static final String CAPEURL  = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/capes.txt";
-    public static final String MUSICURL = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/files/music.zip";
-
-    public static final String[] NBTTypes = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
-
+    public static final String   NAME                = "Pay2Spawn";
+    public static final String   MODID               = "P2S";
     /**
      * Network related
      */
@@ -57,14 +51,16 @@ public class Constants
     public static final String   CHANNEL_NBT_REQUEST = MODID + "_req";
     public static final String   CHANNEL_MUSIC       = MODID + "_m";
     public static final String[] CHANNELS            = {CHANNEL_STATUS, CHANNEL_MESSAGE, CHANNEL_REWARD, CHANNEL_TEST, CHANNEL_NBT_REQUEST, CHANNEL_MUSIC};
-
+    public static final String   CAPEURL             = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/capes.txt";
+    public static final String   MUSICURL            = "https://raw.github.com/CCM-Modding/Pay2Spawn/master/files/music.zip";
+    public static final String[] NBTTypes            = new String[] {"END", "BYTE", "SHORT", "INT", "LONG", "FLOAT", "DOUBLE", "BYTE[]", "STRING", "LIST", "COMPOUND", "INT[]"};
     /**
      * Donation data
      */
-    public static final String DONATION_USERNAME = "twitchUsername";
-    public static final String DONATION_AMOUNT   = "amount";
-    public static final String DONATION_NOTE     = "note";
-    public static final String ANONYMOUS         = "Anonymous";
+    public static final String   DONATION_USERNAME   = "twitchUsername";
+    public static final String   DONATION_AMOUNT     = "amount";
+    public static final String   DONATION_NOTE       = "note";
+    public static final String   ANONYMOUS           = "Anonymous";
 
     public static final String CUSTOMHTML = "customHTML";
 

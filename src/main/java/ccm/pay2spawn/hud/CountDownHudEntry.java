@@ -26,15 +26,15 @@ package ccm.pay2spawn.hud;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.misc.P2SConfig;
 import ccm.pay2spawn.util.Helper;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 
 public class CountDownHudEntry implements IHudEntry
 {
+    public final ArrayList<String> lines = new ArrayList<>();
     final int    position;
     final String header, format;
-    public final ArrayList<String> lines = new ArrayList<>();
 
     public CountDownHudEntry(String configCat, int defaultPosition, String defaultFormat, String defaultHeader)
     {

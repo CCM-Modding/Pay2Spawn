@@ -24,10 +24,11 @@
 package ccm.pay2spawn.misc;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.network.MessagePacket;
+import ccm.pay2spawn.network.PacketPipeline;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
-import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Statistics;
 import com.google.common.collect.HashMultimap;
@@ -84,7 +85,7 @@ public class RewardsDB
                 }
                 catch (Exception e)
                 {
-                    Pay2Spawn.getLogger().severe("ERROR TYPE 2: There is an error in your config file.");
+                    Pay2Spawn.getLogger().warn("ERROR TYPE 2: There is an error in your config file.");
                     e.printStackTrace();
                 }
             }
@@ -147,11 +148,10 @@ public class RewardsDB
          */
         if (map.containsKey(-1D))
         {
-            reward = RandomRegistry.getRandomFromSet(map.get(-1D));
-            reward.addToCountdown(donation, false, reward);
+            RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
 
-        Helper.sendMessage(reward, donation);
+        PacketPipeline.PIPELINE.sendToServer(new MessagePacket(reward, donation));
     }
 
     public Set<Double> getAmounts()

@@ -23,8 +23,8 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.libs.org.mcstats.Metrics;
+import ccm.pay2spawn.Pay2Spawn;
 
 import java.io.IOException;
 
@@ -37,8 +37,8 @@ import static ccm.pay2spawn.util.Constants.NAME;
  */
 public class MetricsHelper
 {
-    private static Metrics metrics;
     public static  double  totalMoney;
+    private static Metrics metrics;
 
     public static void init()
     {

@@ -33,8 +33,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
-import net.minecraftforge.common.Configuration;
+import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.config.Configuration;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -46,17 +46,35 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class CommandType extends TypeBase
 {
-    public static final  String                  COMMAND_KEY = "command";
-    private static final String                  NAME        = "command";
-    public static final  HashMap<String, String> typeMap     = new HashMap<>();
-    public static final  HashSet<String>         commands    = new HashSet<>();
-    public               boolean                 feedback    = true;
-
-    private static Field commandSetField = getHackField();
+    public static final  String                  COMMAND_KEY     = "command";
+    public static final  HashMap<String, String> typeMap         = new HashMap<>();
+    public static final  HashSet<String>         commands        = new HashSet<>();
+    private static final String                  NAME            = "command";
+    private static       Field                   commandSetField = getHackField();
 
     static
     {
         typeMap.put(COMMAND_KEY, NBTTypes[STRING]);
+    }
+
+    public boolean feedback = true;
+
+    /**
+     * Them cheaty ways...
+     */
+    private static Field getHackField()
+    {
+        try
+        {
+            Field f = CommandHandler.class.getDeclaredFields()[1];
+            f.setAccessible(true);
+            return f;
+        }
+        catch (Throwable t)
+        {
+            Throwables.propagate(t);
+        }
+        return null;
     }
 
     @Override
@@ -138,29 +156,11 @@ public class CommandType extends TypeBase
         feedback = configuration.get(MODID + ".command", "feedback", feedback, "Disable command feedback. (server overrides client)").getBoolean(feedback);
     }
 
-    /**
-     * Them cheaty ways...
-     */
-    private static Field getHackField()
-    {
-        try
-        {
-            Field f = CommandHandler.class.getDeclaredFields()[1];
-            f.setAccessible(true);
-            return f;
-        }
-        catch (Throwable t)
-        {
-            Throwables.propagate(t);
-        }
-        return null;
-    }
-
     public class cmdSender extends EntityPlayerMP
     {
         public cmdSender(EntityPlayerMP player)
         {
-            super(player.mcServer, player.worldObj, player.username, player.theItemInWorldManager);
+            super(player.mcServer, player.getServerForPlayer(), player.getGameProfile(), player.theItemInWorldManager);
             this.theItemInWorldManager.thisPlayerMP = player;
             this.playerNetServerHandler = player.playerNetServerHandler;
         }
@@ -172,9 +172,9 @@ public class CommandType extends TypeBase
         }
 
         @Override
-        public void sendChatToPlayer(ChatMessageComponent par1ChatMessageComponent)
+        public void addChatComponentMessage(IChatComponent p_146105_1_)
         {
-            if (feedback) super.sendChatToPlayer(par1ChatMessageComponent);
+            if (feedback) super.addChatComponentMessage(p_146105_1_);
         }
     }
 }

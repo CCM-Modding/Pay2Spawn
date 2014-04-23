@@ -32,70 +32,77 @@ import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.MemoryConnection;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.io.*;
-
-import static ccm.pay2spawn.util.Constants.CHANNEL_TEST;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
-public class TestPacket
+public class TestPacket extends AbstractPacket
 {
-    public static void sendToServer(String name, JsonObject data)
+    private String     name;
+    private JsonObject data;
+
+    public TestPacket()
     {
-        if (Minecraft.getMinecraft().thePlayer.sendQueue.getNetManager() instanceof MemoryConnection && ((MemoryConnection) Minecraft.getMinecraft().thePlayer.sendQueue.getNetManager()).isGamePaused()) Helper.msg(EnumChatFormatting.RED + "Some tests don't work while paused! Use your chat key to lose focus.");
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
-        {
-            stream.writeUTF(name);
-            stream.writeUTF(data.toString());
 
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_TEST, streambyte.toByteArray()));
     }
 
-    public static void reconstruct(Packet250CustomPayload packet, Player playerI) throws IOException
+    public TestPacket(String name, JsonObject data)
     {
-        EntityPlayer player = (EntityPlayer) playerI;
-        ByteArrayInputStream streamByte = new ByteArrayInputStream(packet.data);
-        DataInputStream stream = new DataInputStream(streamByte);
-        String name = stream.readUTF();
-        String json = stream.readUTF();
-        NBTTagCompound rewardData = new NBTTagCompound();
-        stream.close();
-        streamByte.close();
+        this.name = name;
+        this.data = data;
+    }
 
-        player.sendChatToPlayer(ChatMessageComponent.createFromText("Testing reward " + name + "."));
-        Pay2Spawn.getLogger().info("Test by " + player.getEntityName() + " Type: " + name + " Data: " + json);
+    public static void sendToServer(String name, JsonObject data)
+    {
+        if (Minecraft.getMinecraft().isGamePaused()) Helper.msg(EnumChatFormatting.RED + "Some tests don't work while paused! Use your chat key to lose focus.");
+        PacketPipeline.PIPELINE.sendToServer(new TestPacket(name, data));
+    }
+
+    @Override
+    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        ByteBufUtils.writeUTF8String(buffer, name);
+        ByteBufUtils.writeUTF8String(buffer, data.toString());
+    }
+
+    @Override
+    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        name = ByteBufUtils.readUTF8String(buffer);
+        data = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buffer)).getAsJsonObject();
+    }
+
+    @Override
+    public void handleClientSide(EntityPlayer player)
+    {
+        //Noop
+    }
+
+    @Override
+    public void handleServerSide(EntityPlayer player)
+    {
+        NBTTagCompound rewardData = new NBTTagCompound();
+        Helper.sendChatToPlayer(player, "Testing reward " + name + ".");
+        Pay2Spawn.getLogger().info("Test by " + player.getCommandSenderName() + " Type: " + name + " Data: " + data);
         TypeBase type = TypeRegistry.getByName(name);
-        NBTTagCompound nbt = JsonNBTHelper.parseJSON(JSON_PARSER.parse(json).getAsJsonObject());
+        NBTTagCompound nbt = JsonNBTHelper.parseJSON(data);
 
         Node node = type.getPermissionNode(player, nbt);
         if (BanHelper.isBanned(node))
         {
-            player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
-            Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+            Helper.sendChatToPlayer(player, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
+            Pay2Spawn.getLogger().warn(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
             return;
         }
         if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
         {
-            Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+            Pay2Spawn.getLogger().warn(player.getDisplayName() + " doesn't have perm node " + node.toString());
             return;
         }
         type.spawnServerSide(player, nbt, rewardData);

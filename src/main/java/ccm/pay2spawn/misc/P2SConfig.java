@@ -25,7 +25,7 @@ package ccm.pay2spawn.misc;
 
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.Helper;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -44,27 +44,28 @@ public class P2SConfig
 
     public Configuration configuration;
 
-    public  boolean  forceServerconfig = true;
-    public  boolean  forceP2S          = false;
-    public  double   min_donation      = 1;
-    public  int      interval          = 10;
-    public  String   API_Key           = "";
-    public  String   channel           = "";
-    public  String   twitchToken       = "";
-    private String[] blacklist_Name    = {"fuck", "cunt", "dick", "shit"};
-    private String[] blacklist_Note    = {"fuck", "cunt", "dick", "shit"};
-    private String[] whitelist_Name    = {"\"[\\w-]*\""};
-    private String[] whitelist_Note    = {};
-
-    public Pattern[] blacklist_Name_p;
-    public Pattern[] blacklist_Note_p;
-    public Pattern[] whitelist_Name_p;
-    public Pattern[] whitelist_Note_p;
-
+    public boolean forceServerconfig = true;
+    public boolean forceP2S          = false;
+    public double  min_donation      = 1;
+    public int     interval          = 10;
+    public String  API_Key           = "";
+    public String  channel           = "";
+    public String  twitchToken       = "";
+    public Pattern[]    blacklist_Name_p;
+    public Pattern[]    blacklist_Note_p;
+    public Pattern[]    whitelist_Name_p;
+    public Pattern[]    whitelist_Note_p;
     public FileSettings file;
-
-    public String subReward = "-2";
-    public String serverMessage = "$streamer got $$amount from $name and $reward_name was triggerd!";
+    public  String   subReward      = "-2";
+    public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggerd!";
+    @SuppressWarnings("FieldCanBeLocal")
+    private String[] blacklist_Name = {"fuck", "cunt", "dick", "shit"};
+    @SuppressWarnings("FieldCanBeLocal")
+    private String[] blacklist_Note = {"fuck", "cunt", "dick", "shit"};
+    @SuppressWarnings("FieldCanBeLocal")
+    private String[] whitelist_Name = {"\"[\\w-]*\""};
+    @SuppressWarnings("FieldCanBeLocal")
+    private String[] whitelist_Note = {};
 
     public P2SConfig(File file)
     {
@@ -83,6 +84,7 @@ public class P2SConfig
         serverMessage = configuration.get(MODID, "serverMessage", serverMessage, "Server config deferments the structure. Vars: $name, $amount, $note, $streamer, $reward_message, $reward_name, $reward_amount, $reward_countdown.").getString();
         try
         {
+            //noinspection ResultOfMethodCallIgnored
             Double.parseDouble(RandomRegistry.solveRandom(DOUBLE, subReward));
         }
         catch (Exception e)

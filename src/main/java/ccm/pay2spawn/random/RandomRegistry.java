@@ -45,7 +45,7 @@ public class RandomRegistry
         addRandomResolver(new RndEntity());
         addRandomResolver(new RndListValue());
         addRandomResolver(new RndNumberRange());
-        addRandomResolver(new RndSound());
+        //addRandomResolver(new RndSound());
     }
 
     /**
@@ -63,6 +63,7 @@ public class RandomRegistry
      *
      * @param type  NBT type
      * @param value The to be randomised string
+     *
      * @return the original or a randomised version
      */
     public static String solveRandom(int type, String value)
@@ -79,6 +80,7 @@ public class RandomRegistry
      *
      * @param collection the collection
      * @param <T>        the type that makes up the collection
+     *
      * @return the random element
      */
     public static <T> T getRandomFromSet(Collection<T> collection)

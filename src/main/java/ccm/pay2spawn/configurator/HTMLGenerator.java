@@ -45,14 +45,12 @@ import static ccm.pay2spawn.util.Constants.CURRENCY_FORMATTER;
 
 public class HTMLGenerator
 {
+    static final String  LOOP_START = "<!-- BEGIN REWARDS -->";
+    static final String  LOOP_END   = "<!-- END REWARDS -->";
+    static final Pattern VAR        = Pattern.compile("\\$\\{([\\w.]*?)\\}");
     public static  File htmlFolder;
     public static  File templateFolder;
     private static File templateIndex;
-
-    static final String LOOP_START = "<!-- BEGIN REWARDS -->";
-    static final String LOOP_END   = "<!-- END REWARDS -->";
-
-    static final Pattern VAR = Pattern.compile("\\$\\{([\\w.]*?)\\}");
 
     public static void init() throws IOException
     {

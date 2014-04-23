@@ -28,6 +28,7 @@ import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.hud.StatisticsHudEntry;
 import com.google.common.base.Strings;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 
@@ -55,7 +56,7 @@ public class Statistics
 
     public static void handleKill(NBTTagCompound data)
     {
-        Pay2Spawn.getLogger().warning("Debug kill data:" + JsonNBTHelper.parseNBT(data).toString());
+        Pay2Spawn.getLogger().warn("Debug kill data:" + JsonNBTHelper.parseNBT(data).toString());
         String name = data.getString("Reward");
 
         sortedKillsMap.clear();
@@ -93,12 +94,12 @@ public class Statistics
             root = CompressedStreamTools.read(statisticsFile);
             if (root.hasKey("kills"))
             {
-                for (Object tag : root.getCompoundTag("kills").getTags())
+                for (Object tagName : root.getCompoundTag("kills").func_150296_c())
                 {
+                    NBTBase tag = root.getCompoundTag("kills").getTag(tagName.toString());
                     if (tag instanceof NBTTagInt)
                     {
-                        NBTTagInt tagI = (NBTTagInt) tag;
-                        killsMap.put(tagI.getName(), tagI.data);
+                        killsMap.put(tagName.toString(), ((NBTTagInt) tag).func_150287_d());
                     }
                 }
                 sortedKillsMap.putAll(killsMap);
@@ -106,12 +107,12 @@ public class Statistics
 
             if (root.hasKey("spawns"))
             {
-                for (Object tag : root.getCompoundTag("spawns").getTags())
+                for (Object tagName : root.getCompoundTag("spawns").func_150296_c())
                 {
+                    NBTBase tag = root.getCompoundTag("spawns").getTag(tagName.toString());
                     if (tag instanceof NBTTagInt)
                     {
-                        NBTTagInt tagI = (NBTTagInt) tag;
-                        spawnsMap.put(tagI.getName(), tagI.data);
+                        spawnsMap.put(tagName.toString(), ((NBTTagInt) tag).func_150287_d());
                     }
                 }
                 sortedSpawnsMap.putAll(spawnsMap);
@@ -152,14 +153,14 @@ public class Statistics
         {
             kills.setInteger(name, killsMap.get(name));
         }
-        root.setCompoundTag("kills", kills);
+        root.setTag("kills", kills);
 
         NBTTagCompound spawns = new NBTTagCompound();
         for (String name : spawnsMap.keySet())
         {
             spawns.setInteger(name, spawnsMap.get(name));
         }
-        root.setCompoundTag("spawns", spawns);
+        root.setTag("spawns", spawns);
 
         try
         {

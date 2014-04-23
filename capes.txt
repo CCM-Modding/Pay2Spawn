@@ -1,5 +1,0 @@
-# If anyone on this list wants anything changed, feel free to message me. Github or IRC should do.
-# ~~Dries007
-P2S_devs=http://dries007.net/capes/p2s_dev.png
-P2S_devs=dries007
-P2S_devs=claycorp

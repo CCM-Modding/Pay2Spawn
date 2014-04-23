@@ -28,7 +28,7 @@ import ccm.pay2spawn.permissions.Node;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,7 +66,6 @@ public abstract class TypeBase
      *
      * @param player         The player the reward comes from
      * @param dataFromClient the nbt from the JSON file, fully usable
-     * @param rewardData
      */
     public abstract void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData);
 

@@ -74,6 +74,24 @@ public class FireworksType extends TypeBase
         typeMap.put(AMOUNT_KEY, NBTTypes[INT]);
     }
 
+    private static final Field fireworkAgeField = getHackField(0);
+    private static final Field lifetimeField    = getHackField(1);
+
+    private static Field getHackField(int id)
+    {
+        try
+        {
+            Field f = EntityFireworkRocket.class.getDeclaredFields()[id];
+            f.setAccessible(true);
+            return f;
+        }
+        catch (Throwable t)
+        {
+            Throwables.propagate(t);
+        }
+        return null;
+    }
+
     @Override
     public String getName()
     {
@@ -87,7 +105,7 @@ public class FireworksType extends TypeBase
          * YOU CAN'T TOUCH THIS.
          * No srsly. Touch it and you rebuild it from scratch!
          */
-        ItemStack out = new ItemStack(Item.firework);
+        ItemStack out = new ItemStack((Item) Item.itemRegistry.getObject("fireworks"));
         NBTTagCompound tag = new NBTTagCompound();
         NBTTagCompound fireworks = new NBTTagCompound();
         fireworks.setByte(FLIGHT_KEY, (byte) 0);
@@ -106,7 +124,7 @@ public class FireworksType extends TypeBase
         explosion.setIntArray(COLORS_KEY, new int[] {14188952, 8073150});
         explosions.appendTag(explosion);
         fireworks.setTag(EXPLOSIONS_KEY, explosions);
-        tag.setCompoundTag(FIREWORKS_KEY, fireworks);
+        tag.setTag(FIREWORKS_KEY, fireworks);
         out.setTagCompound(tag);
 
         tag = out.writeToNBT(new NBTTagCompound());
@@ -169,23 +187,5 @@ public class FireworksType extends TypeBase
     public String replaceInTemplate(String id, JsonObject jsonObject)
     {
         return id;
-    }
-
-    private static final Field fireworkAgeField = getHackField(0);
-    private static final Field lifetimeField    = getHackField(1);
-
-    private static Field getHackField(int id)
-    {
-        try
-        {
-            Field f = EntityFireworkRocket.class.getDeclaredFields()[id];
-            f.setAccessible(true);
-            return f;
-        }
-        catch (Throwable t)
-        {
-            Throwables.propagate(t);
-        }
-        return null;
     }
 }

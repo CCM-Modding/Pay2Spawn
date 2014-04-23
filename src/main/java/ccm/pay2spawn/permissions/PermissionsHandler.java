@@ -37,7 +37,7 @@ public class PermissionsHandler
 
     public static boolean hasPermissionNode(EntityPlayer player, Node node)
     {
-        return permissionsDB.check(player.getEntityName(), node);
+        return permissionsDB.check(player.getCommandSenderName(), node);
     }
 
     public static void init() throws IOException
@@ -55,7 +55,7 @@ public class PermissionsHandler
     public static boolean needPermCheck(EntityPlayer player)
     {
         MinecraftServer mcs = MinecraftServer.getServer();
-        return !(mcs.isSinglePlayer() || mcs.getConfigurationManager().isPlayerOpped(player.getEntityName()));
+        return !(mcs.isSinglePlayer() || mcs.getConfigurationManager().isPlayerOpped(player.getCommandSenderName()));
     }
 
     public static PermissionsDB getDB()

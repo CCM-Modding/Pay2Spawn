@@ -38,9 +38,8 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,21 +61,19 @@ import static ccm.pay2spawn.util.Constants.*;
  */
 public class EntityType extends TypeBase
 {
-    private static final String NAME = "entity";
-
-    public static final String ENTITYNAME_KEY         = "name";
-    public static final String SPAWNRADIUS_KEY        = "SPAWNRADIUS";
-    public static final String AMOUNT_KEY             = "AMOUNT";
-    public static final String AGRO_KEY               = "agro";
-    public static final String CUSTOMNAME_KEY         = "CustomName";
-    public static final String RIDING_KEY             = "Riding";
-    public static final String RIDETHISMOB_KEY        = "RideThisMob";
-    public static final String RANDOM_KEY             = "random";
-    public static final String THROWTOWARDSPLAYER_KEY = "throwTowardsPlayer";
-
-    public static final HashSet<String>         NAMES    = new HashSet<>();
-    public static final HashMap<String, String> typeMap  = new HashMap<>();
-    public static final String                  NODENAME = NAME;
+    public static final  String                  ENTITYNAME_KEY         = "name";
+    public static final  String                  SPAWNRADIUS_KEY        = "SPAWNRADIUS";
+    public static final  String                  AMOUNT_KEY             = "AMOUNT";
+    public static final  String                  AGRO_KEY               = "agro";
+    public static final  String                  CUSTOMNAME_KEY         = "CustomName";
+    public static final  String                  RIDING_KEY             = "Riding";
+    public static final  String                  RIDETHISMOB_KEY        = "RideThisMob";
+    public static final  String                  RANDOM_KEY             = "random";
+    public static final  String                  THROWTOWARDSPLAYER_KEY = "throwTowardsPlayer";
+    public static final  HashSet<String>         NAMES                  = new HashSet<>();
+    public static final  HashMap<String, String> typeMap                = new HashMap<>();
+    private static final String                  NAME                   = "entity";
+    public static final  String                  NODENAME               = NAME;
 
     private static int spawnLimit = 100;
 
@@ -92,6 +89,11 @@ public class EntityType extends TypeBase
         typeMap.put(THROWTOWARDSPLAYER_KEY, NBTTypes[BYTE]);
     }
 
+    public static int getSpawnLimit()
+    {
+        return spawnLimit;
+    }
+
     @Override
     public String getName()
     {
@@ -103,11 +105,6 @@ public class EntityType extends TypeBase
     {
         configuration.addCustomCategoryComment(Constants.MODID + "." + NAME, "Used for Entity and CustomEntity");
         spawnLimit = configuration.get(Constants.MODID + "." + NAME, "spawnLimit", spawnLimit, "A hard entity spawn limit. Only counts 1 reward's mobs. -1 for no limit.").getInt(spawnLimit);
-    }
-
-    public static int getSpawnLimit()
-    {
-        return spawnLimit;
     }
 
     @Override
@@ -125,7 +122,7 @@ public class EntityType extends TypeBase
         tag2.setString(CUSTOMNAME_KEY, "$name");
         tag2.setBoolean(RIDETHISMOB_KEY, true);
 
-        tag.setCompoundTag(RIDING_KEY, tag2);
+        tag.setTag(RIDING_KEY, tag2);
         tag.setInteger(SPAWNRADIUS_KEY, 10);
         tag.setInteger(AMOUNT_KEY, 2);
 
@@ -207,13 +204,13 @@ public class EntityType extends TypeBase
                     Node node = this.getPermissionNode(player, tag.getCompoundTag(EntityType.RIDING_KEY));
                     if (BanHelper.isBanned(node))
                     {
-                        player.sendChatToPlayer(ChatMessageComponent.createFromText("This node (" + node + ") is banned.").setColor(EnumChatFormatting.RED));
-                        Pay2Spawn.getLogger().warning(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
+                        Helper.sendChatToPlayer(player, "This node (" + node + ") is banned.", EnumChatFormatting.RED);
+                        Pay2Spawn.getLogger().warn(player.getCommandSenderName() + " tried using globally banned node " + node + ".");
                         continue;
                     }
                     if (PermissionsHandler.needPermCheck(player) && !PermissionsHandler.hasPermissionNode(player, node))
                     {
-                        Pay2Spawn.getLogger().warning(player.getDisplayName() + " doesn't have perm node " + node.toString());
+                        Pay2Spawn.getLogger().warn(player.getDisplayName() + " doesn't have perm node " + node.toString());
                         continue;
                     }
 

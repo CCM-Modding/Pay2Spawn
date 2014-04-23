@@ -23,25 +23,29 @@
 
 package ccm.pay2spawn.util;
 
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
-import java.util.EnumSet;
-
 import static ccm.pay2spawn.types.PlayerModificationType.Type;
-import static ccm.pay2spawn.util.Constants.MODID;
 
-public class ServerTickHandler implements ITickHandler
+public class ServerTickHandler
 {
     public static final ServerTickHandler INSTANCE = new ServerTickHandler();
 
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData)
+    private ServerTickHandler()
     {
-        EntityPlayer player = (EntityPlayer) tickData[0];
-        NBTTagCompound data = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("P2S");
+        FMLCommonHandler.instance().bus().register(this);
+    }
+
+    @SubscribeEvent
+    public void tickEvent(TickEvent.PlayerTickEvent event)
+    {
+        if (event.phase != TickEvent.Phase.START) return;
+
+        NBTTagCompound data = event.player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("P2S");
         for (Type t : Type.values())
         {
             if (t.isTimable())
@@ -51,7 +55,7 @@ public class ServerTickHandler implements ITickHandler
                     int i = data.getInteger(t.name());
                     if (i == 0)
                     {
-                        t.undo(player);
+                        t.undo(event.player);
                         data.removeTag(t.name());
                     }
                     else
@@ -63,21 +67,8 @@ public class ServerTickHandler implements ITickHandler
         }
     }
 
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData)
+    public void init()
     {
 
-    }
-
-    @Override
-    public EnumSet<TickType> ticks()
-    {
-        return EnumSet.of(TickType.PLAYER);
-    }
-
-    @Override
-    public String getLabel()
-    {
-        return MODID + "_ServerTicker";
     }
 }

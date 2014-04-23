@@ -1,33 +1,11 @@
-/*
- * The MIT License (MIT)
- *
- * Copyright (c) 2013 Dries K. Aka Dries007 and the CCM modding crew.
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
- * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
- * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
- * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 package ccm.pay2spawn.network;
 
+import ccm.libs.javazoom.jl.decoder.JavaLayerException;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.types.MusicType;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import ccm.libs.javazoom.jl.decoder.JavaLayerException;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.player.EntityPlayer;
 
 import java.io.File;
@@ -35,44 +13,18 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 
-import static ccm.pay2spawn.util.Constants.CHANNEL_MUSIC;
-
-public class MusicPacket
+public class MusicPacket extends AbstractPacket
 {
-    public static void send(EntityPlayer player, String name)
+    private String name;
+
+    public MusicPacket()
     {
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_MUSIC, name.getBytes()), (Player) player);
+
     }
 
-    public static void get(byte[] data)
+    public MusicPacket(String name)
     {
-        final String fileName = new String(data);
-        File file = new File(MusicType.musicFolder, fileName);
-
-        if (file.exists() && file.isFile()) play(file);
-        else
-        {
-            if (!file.isDirectory()) file = file.getParentFile();
-
-            File[] files = file.listFiles(new FilenameFilter()
-            {
-                @Override
-                public boolean accept(File dir, String name)
-                {
-                    return name.startsWith(fileName);
-                }
-            });
-
-            if (files.length == 1)
-            {
-                play(files[0]);
-            }
-            else
-            {
-                Pay2Spawn.getLogger().warning("Multiple matches with music:");
-                for (File file1 : files) Pay2Spawn.getLogger().warning(file1.getName());
-            }
-        }
+        this.name = name;
     }
 
     private static void play(final File file)
@@ -92,5 +44,54 @@ public class MusicPacket
                 }
             }
         }, "Pay2Spawn music thread").start();
+    }
+
+    @Override
+    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        ByteBufUtils.writeUTF8String(buffer, name);
+    }
+
+    @Override
+    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
+    {
+        name = ByteBufUtils.readUTF8String(buffer);
+    }
+
+    @Override
+    public void handleClientSide(EntityPlayer player)
+    {
+        File file = new File(MusicType.musicFolder, name);
+
+        if (file.exists() && file.isFile()) play(file);
+        else
+        {
+            if (!file.isDirectory()) file = file.getParentFile();
+
+            File[] files = file.listFiles(new FilenameFilter()
+            {
+                @Override
+                public boolean accept(File dir, String name)
+                {
+                    return name.startsWith(name);
+                }
+            });
+
+            if (files.length == 1)
+            {
+                play(files[0]);
+            }
+            else
+            {
+                Pay2Spawn.getLogger().warn("Multiple matches with music:");
+                for (File file1 : files) Pay2Spawn.getLogger().warn(file1.getName());
+            }
+        }
+    }
+
+    @Override
+    public void handleServerSide(EntityPlayer player)
+    {
+
     }
 }

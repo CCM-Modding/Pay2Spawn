@@ -239,8 +239,8 @@ public class PlayerModificationType extends TypeBase
                                 {
                                     NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("P2S");
                                     tagCompound.setInteger(name(), (int) (dataFromClient.getFloat(AMOUNT_KEY) * 20));
-                                    if (!player.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) player.getEntityData().setCompoundTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
-                                    player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setCompoundTag("P2S", tagCompound);
+                                    if (!player.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+                                    player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setTag("P2S", tagCompound);
                                 }
                                 break;
                             case DISABLE:
@@ -273,8 +273,8 @@ public class PlayerModificationType extends TypeBase
                                 {
                                     NBTTagCompound tagCompound = player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).getCompoundTag("P2S");
                                     tagCompound.setInteger(name(), (int) (dataFromClient.getFloat(AMOUNT_KEY) * 20));
-                                    if (!player.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) player.getEntityData().setCompoundTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
-                                    player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setCompoundTag("P2S", tagCompound);
+                                    if (!player.getEntityData().hasKey(EntityPlayer.PERSISTED_NBT_TAG)) player.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, new NBTTagCompound());
+                                    player.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG).setTag("P2S", tagCompound);
                                 }
                                 break;
                             case DISABLE:
@@ -291,13 +291,12 @@ public class PlayerModificationType extends TypeBase
                         player.sendPlayerAbilities();
                     }
                 };
+        private boolean timable;
 
         Type(boolean timable)
         {
             this.timable = timable;
         }
-
-        private boolean timable;
 
         public abstract void doOnServer(EntityPlayer player, NBTTagCompound dataFromClient);
 

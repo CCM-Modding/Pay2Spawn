@@ -45,7 +45,7 @@ public class ConfiguratorManager
         }
         else
         {
-            Pay2Spawn.getLogger().warning("WTF? Can't open the NBT Grabber on the server. How did this happen?");
+            Pay2Spawn.getLogger().warn("WTF? Can't open the NBT Grabber on the server. How did this happen?");
         }
     }
 
@@ -67,7 +67,7 @@ public class ConfiguratorManager
             }
             else
             {
-                Pay2Spawn.getLogger().warning("WTF? Can't open the Configurator on the server. How did this happen?");
+                Pay2Spawn.getLogger().warn("WTF? Can't open the Configurator on the server. How did this happen?");
             }
         }
     }

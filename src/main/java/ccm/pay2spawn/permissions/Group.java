@@ -59,6 +59,11 @@ public class Group
         return parent;
     }
 
+    public void setParent(String parent)
+    {
+        this.parent = parent;
+    }
+
     public JsonElement toJson()
     {
         JsonObject root = new JsonObject();
@@ -98,11 +103,6 @@ public class Group
         result = 31 * result + name.hashCode();
         result = 31 * result + parent.hashCode();
         return result;
-    }
-
-    public void setParent(String parent)
-    {
-        this.parent = parent;
     }
 
     public void addNode(String nodeString)

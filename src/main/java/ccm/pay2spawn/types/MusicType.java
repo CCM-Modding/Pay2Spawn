@@ -25,13 +25,15 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.network.MusicPacket;
+import ccm.pay2spawn.network.PacketPipeline;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.MusicTypeGui;
 import ccm.pay2spawn.util.Constants;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -50,8 +52,8 @@ import static ccm.pay2spawn.util.Constants.STRING;
 public class MusicType extends TypeBase
 {
     public static final  String                  SOUND_KEY = "song";
-    private static final String                  NAME      = "music";
     public static final  HashMap<String, String> typeMap   = new HashMap<>();
+    private static final String                  NAME      = "music";
     public static File musicFolder;
 
     static
@@ -76,7 +78,7 @@ public class MusicType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
-        MusicPacket.send(player, dataFromClient.getString(SOUND_KEY));
+        PacketPipeline.PIPELINE.sendTo(new MusicPacket(dataFromClient.getString(SOUND_KEY)), (EntityPlayerMP) player);
     }
 
     @Override
@@ -141,7 +143,7 @@ public class MusicType extends TypeBase
                     }
                     catch (IOException e)
                     {
-                        Pay2Spawn.getLogger().severe("Error downloading music file. Get from github and unpack yourself please.");
+                        Pay2Spawn.getLogger().warn("Error downloading music file. Get from github and unpack yourself please.");
                         e.printStackTrace();
                     }
                 }

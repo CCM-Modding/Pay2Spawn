@@ -30,7 +30,8 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
@@ -66,20 +67,25 @@ public class CommandP2SServer extends CommandBase
         return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(sender.getCommandSenderName());
     }
 
+    public void sendChatToPlayer(ICommandSender sender, String message, EnumChatFormatting chatFormatting)
+    {
+        sender.addChatMessage(new ChatComponentText(message).setChatStyle(new ChatStyle().setColor(chatFormatting)));
+    }
+
     @Override
     public void processCommand(ICommandSender sender, String[] args)
     {
         if (args.length == 0)
         {
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText(HELP).setColor(EnumChatFormatting.AQUA));
-            sender.sendChatToPlayer(ChatMessageComponent.createFromText("Protip: Use tab completion!").setColor(EnumChatFormatting.AQUA));
+            sendChatToPlayer(sender, HELP, EnumChatFormatting.AQUA);
+            sendChatToPlayer(sender, "Protip: Use tab completion!", EnumChatFormatting.AQUA);
             return;
         }
         switch (args[0])
         {
             case "butcher":
             {
-                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Removing all spawned entities...").setColor(EnumChatFormatting.YELLOW));
+                sendChatToPlayer(sender, "Removing all spawned entities...", EnumChatFormatting.YELLOW);
                 int count = 0;
                 for (WorldServer world : DimensionManager.getWorlds())
                 {
@@ -92,7 +98,7 @@ public class CommandP2SServer extends CommandBase
                         }
                     }
                 }
-                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Removed " + count + " entities.").setColor(EnumChatFormatting.GREEN));
+                sendChatToPlayer(sender, "Removed " + count + " entities.", EnumChatFormatting.GREEN);
                 break;
             }
             case "reload":
@@ -104,17 +110,17 @@ public class CommandP2SServer extends CommandBase
                     }
                     catch (Exception e)
                     {
-                        sender.sendChatToPlayer(ChatMessageComponent.createFromText("RELOAD FAILED.").setColor(EnumChatFormatting.RED));
+                        sendChatToPlayer(sender, "RELOAD FAILED.", EnumChatFormatting.RED);
                         e.printStackTrace();
                     }
                 }
                 break;
             case "hasmod":
-                if (args.length == 1) sender.sendChatToPlayer(ChatMessageComponent.createFromText("Use '/p2sserver hasmod <player>'.").setColor(EnumChatFormatting.RED));
-                else sender.sendChatToPlayer(ChatMessageComponent.createFromText(args[1] + (StatusPacket.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.").setColor(EnumChatFormatting.AQUA));
+                if (args.length == 1) sendChatToPlayer(sender, "Use '/p2sserver hasmod <player>'.", EnumChatFormatting.RED);
+                else sendChatToPlayer(sender, args[1] + (StatusPacket.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.", EnumChatFormatting.AQUA);
                 break;
             default:
-                sender.sendChatToPlayer(ChatMessageComponent.createFromText("Unknown command. Protip: Use tab completion!").setColor(EnumChatFormatting.RED));
+                sendChatToPlayer(sender, "Unknown command. Protip: Use tab completion!", EnumChatFormatting.RED);
                 break;
         }
     }

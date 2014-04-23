@@ -26,36 +26,36 @@ package ccm.pay2spawn.util;
 import ccm.pay2spawn.hud.CountDownHudEntry;
 import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.misc.Reward;
+import ccm.pay2spawn.network.PacketPipeline;
+import ccm.pay2spawn.network.RewardPacket;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.IScheduledTickHandler;
-import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
 
-import static ccm.pay2spawn.util.Constants.MODID;
-
-public class ClientTickHandler implements IScheduledTickHandler
+public class ClientTickHandler
 {
-    HashSet<QueEntry> entries = new HashSet<>();
-
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
-
+    HashSet<QueEntry> entries = new HashSet<>();
     private CountDownHudEntry countDownHudEntry;
+    private int i = 0;
 
-    private ClientTickHandler() {}
-
-    @Override
-    public int nextTickSpacing()
+    private ClientTickHandler()
     {
-        return 20;
+        FMLCommonHandler.instance().bus().register(this);
     }
 
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData)
+    @SubscribeEvent
+    public void tickEvent(TickEvent.ClientTickEvent event)
     {
+        if (event.phase != TickEvent.Phase.START) return;
+        if (i++ != 20) return;
+        i = 0;
+
         Iterator<QueEntry> rewardIterator = entries.iterator();
         while (rewardIterator.hasNext())
         {
@@ -75,24 +75,6 @@ public class ClientTickHandler implements IScheduledTickHandler
         {
             if (!Strings.isNullOrEmpty(countDownHudEntry.getHeader())) Helper.addWithEmptyLines(countDownHudEntry.lines, countDownHudEntry.getHeader());
         }
-    }
-
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData)
-    {
-
-    }
-
-    @Override
-    public EnumSet<TickType> ticks()
-    {
-        return EnumSet.of(TickType.CLIENT);
-    }
-
-    @Override
-    public String getLabel()
-    {
-        return MODID + "_ClientTicker";
     }
 
     public void add(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
@@ -125,7 +107,7 @@ public class ClientTickHandler implements IScheduledTickHandler
 
         public void send()
         {
-            reward.send(donation, actualReward);
+            PacketPipeline.PIPELINE.sendToServer(new RewardPacket(reward, donation, actualReward));
         }
     }
 }

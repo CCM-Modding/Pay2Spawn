@@ -205,7 +205,7 @@ public class Point
     public boolean canSpawn(Entity entity)
     {
         World world = entity.worldObj;
-        for (int y = 0; y < Math.ceil(entity.height); y++) if (world.isBlockOpaqueCube(intX(), intY() + y, intZ())) return false;
+        for (int y = 0; y < Math.ceil(entity.height); y++) if (world.isBlockNormalCubeDefault(intX(), intY() + y, intZ(), false)) return false;
         return true;
     }
 }

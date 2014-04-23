@@ -24,35 +24,62 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.util.EventHandler;
+import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.IIHasCallback;
 import ccm.pay2spawn.util.JsonNBTHelper;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
+import cpw.mods.fml.common.network.ByteBufUtils;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemFirework;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.util.ChatMessageComponent;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-
-import static ccm.pay2spawn.util.Constants.CHANNEL_NBT_REQUEST;
-
-public class NbtRequestPacket
+public class NbtRequestPacket extends AbstractPacket
 {
-    public static final byte ITEM     = 0;
-    public static final byte ENTITY   = 1;
-    public static final byte FIREWORK = 2;
     public static IIHasCallback callbackItemType;
     public static IIHasCallback callbackCustomEntityType;
     public static IIHasCallback callbackFireworksType;
+    private Type    type;
+    /**
+     * true = request
+     * false = response
+     */
+    private boolean request;
+    /**
+     * entityId only used for ITEM
+     */
+    private int     entityId;
+    /**
+     * Only used when response = false
+     */
+    private String  response;
+
+    public NbtRequestPacket()
+    {
+
+    }
+
+    public NbtRequestPacket(int entityId)
+    {
+        this.type = Type.ITEM;
+        this.request = true;
+        this.entityId = entityId;
+    }
+    public NbtRequestPacket(Type type)
+    {
+        this.type = type;
+        this.request = true;
+    }
+    public NbtRequestPacket(Type type, String response)
+    {
+        this.type = type;
+        this.request = false;
+        this.response = response;
+    }
 
     public static void requestEntity(IIHasCallback instance)
     {
@@ -62,164 +89,108 @@ public class NbtRequestPacket
 
     public static void requestByEntityID(int entityId)
     {
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
-        {
-            stream.writeByte(ENTITY);
-            stream.writeInt(entityId);
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
+        PacketPipeline.PIPELINE.sendToServer(new NbtRequestPacket(entityId));
     }
 
     public static void requestFirework(IIHasCallback instance)
     {
         callbackFireworksType = instance;
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
-        {
-            stream.writeByte(FIREWORK);
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
+        PacketPipeline.PIPELINE.sendToServer(new NbtRequestPacket(Type.FIREWORK));
     }
 
     public static void requestItem(IIHasCallback instance)
     {
         callbackItemType = instance;
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
-        {
-            stream.writeByte(ITEM);
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        PacketDispatcher.sendPacketToServer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()));
+        PacketPipeline.PIPELINE.sendToServer(new NbtRequestPacket(Type.ITEM));
     }
 
-    public static void reconstruct(Packet250CustomPayload packet, Player player)
+    @Override
+    public void encodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
     {
-        try
+        buffer.writeInt(type.ordinal());
+        buffer.writeBoolean(request);
+        if (request)
         {
-            ByteArrayInputStream streambyte = new ByteArrayInputStream(packet.data);
-            DataInputStream stream = new DataInputStream(streambyte);
-            switch (stream.readByte())
-            {
-                case ITEM:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackItemType.callback(stream.readUTF());
-                    else respondItem(player);
-                    break;
-                case ENTITY:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackCustomEntityType.callback(stream.readUTF());
-                    else respondEntity(player, stream.readInt());
-                    break;
-                case FIREWORK:
-                    if (FMLCommonHandler.instance().getEffectiveSide().isClient()) callbackFireworksType.callback(stream.readUTF());
-                    else respondFirework(player);
-                    break;
-            }
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-
-    private static void respondFirework(Player player)
-    {
-        ItemStack itemStack = ((EntityPlayer) player).inventory.getCurrentItem();
-        if (itemStack != null && itemStack.getItem() instanceof ItemFirework)
-        {
-            ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-            DataOutputStream stream = new DataOutputStream(streambyte);
-            try
-            {
-                stream.writeByte(FIREWORK);
-                stream.writeUTF(JsonNBTHelper.parseNBT(itemStack.writeToNBT(new NBTTagCompound())).toString());
-                stream.close();
-                streambyte.close();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
+            if (type == Type.ENTITY) buffer.writeInt(entityId);
         }
         else
         {
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "You are not holding an ItemFirework..."));
+            ByteBufUtils.writeUTF8String(buffer, response);
         }
     }
 
-    private static void respondEntity(Player player, int i)
+    @Override
+    public void decodeInto(ChannelHandlerContext ctx, ByteBuf buffer)
     {
-        ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-        DataOutputStream stream = new DataOutputStream(streambyte);
-        try
+        type = Type.values()[buffer.readInt()];
+        request = buffer.readBoolean();
+        if (request)
         {
-            stream.writeByte(ENTITY);
-            NBTTagCompound nbt = new NBTTagCompound();
-            Entity entity = ((EntityPlayer) player).worldObj.getEntityByID(i);
-            entity.writeToNBT(nbt);
-            entity.writeToNBTOptional(nbt);
-            stream.writeUTF(JsonNBTHelper.parseNBT(nbt).toString());
-            stream.close();
-            streambyte.close();
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
-        PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
-    }
-
-    private static void respondItem(Player player)
-    {
-        if (((EntityPlayer) player).inventory.getCurrentItem() != null)
-        {
-            ByteArrayOutputStream streambyte = new ByteArrayOutputStream();
-            DataOutputStream stream = new DataOutputStream(streambyte);
-            try
-            {
-                stream.writeByte(ITEM);
-                stream.writeUTF(JsonNBTHelper.parseNBT(((EntityPlayer) player).inventory.getCurrentItem().writeToNBT(new NBTTagCompound())).toString());
-                stream.close();
-                streambyte.close();
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-            }
-
-            PacketDispatcher.sendPacketToPlayer(PacketDispatcher.getPacket(CHANNEL_NBT_REQUEST, streambyte.toByteArray()), player);
+            if (type == Type.ENTITY) entityId = buffer.readInt();
         }
         else
         {
-            ((EntityPlayer) player).sendChatToPlayer(ChatMessageComponent.createFromText(EnumChatFormatting.RED + "You are not holding an item..."));
+            response = ByteBufUtils.readUTF8String(buffer);
         }
+    }
+
+    @Override
+    public void handleClientSide(EntityPlayer player)
+    {
+        switch (type)
+        {
+            case ENTITY:
+                callbackItemType.callback(response);
+                break;
+            case FIREWORK:
+                callbackItemType.callback(response);
+                break;
+            case ITEM:
+                callbackItemType.callback(response);
+                break;
+        }
+    }
+
+    @Override
+    public void handleServerSide(EntityPlayer player)
+    {
+        switch (type)
+        {
+            case ENTITY:
+                NBTTagCompound nbt = new NBTTagCompound();
+                Entity entity = player.worldObj.getEntityByID(entityId);
+                entity.writeToNBT(nbt);
+                entity.writeToNBTOptional(nbt);
+                PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(nbt).toString()), (EntityPlayerMP) player);
+                break;
+            case FIREWORK:
+                ItemStack itemStack = player.getHeldItem();
+                if (itemStack != null && itemStack.getItem() instanceof ItemFirework)
+                {
+                    PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(player.getHeldItem().writeToNBT(new NBTTagCompound())).toString()), (EntityPlayerMP) player);
+                }
+                else
+                {
+                    Helper.sendChatToPlayer(player, "You are not holding an ItemFirework...", EnumChatFormatting.RED);
+                }
+                break;
+            case ITEM:
+                if (player.getHeldItem() == null)
+                {
+                    PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(player.getHeldItem().writeToNBT(new NBTTagCompound())).toString()), (EntityPlayerMP) player);
+                }
+                else
+                {
+                    Helper.sendChatToPlayer(player, "You are not holding an item...", EnumChatFormatting.RED);
+                }
+                break;
+        }
+    }
+
+    public static enum Type
+    {
+        ITEM,
+        ENTITY,
+        FIREWORK
     }
 }

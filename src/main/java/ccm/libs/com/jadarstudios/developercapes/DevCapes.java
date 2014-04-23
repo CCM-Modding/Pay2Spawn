@@ -1,234 +1,299 @@
 /**
  * DeveloperCapes by Jadar
- * License: MIT License (https://raw.github.com/jadar/DeveloperCapes/master/LICENSE)
- * version 2.1
+ * License: MIT License
+ * (https://raw.github.com/jadar/DeveloperCapes/master/LICENSE)
+ * version 3.3.0.0
  */
 package ccm.libs.com.jadarstudios.developercapes;
 
-import cpw.mods.fml.common.registry.TickRegistry;
+import ccm.libs.com.jadarstudios.developercapes.user.DefaultUser;
+import ccm.libs.com.jadarstudios.developercapes.user.GroupUser;
+import ccm.libs.com.jadarstudios.developercapes.user.IUser;
+import com.google.common.io.ByteStreams;
+import com.google.gson.Gson;
+import com.google.gson.stream.MalformedJsonException;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IImageBuffer;
 import net.minecraft.client.renderer.ThreadDownloadImageData;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureObject;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.texture.ITextureObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
- * This library adds capes for people you specify.
- * Use DevCapesUtil to add your capes if you do not call the addFileUrl method
- * in a client proxy.
- *
+ * This library adds capes for people you specify
+ * 
  * @author Jadar
  */
+@SideOnly(Side.CLIENT)
 public class DevCapes
 {
-
-    private static DevCapes instance;
-    public static final double version = 2.2;
-
-    private HashMap<String, String>                  users;
-    private HashMap<String, ResourceLocation>        capeResources;
-    private HashMap<String, ThreadDownloadImageData> downloadThreads;
-
-    private DevCapesTickHandler tickHandler = null;
+    private static DevCapes    instance;
+    
+    public static final Logger logger = LogManager.getLogger("DevCapes");
+    
+    /**
+     * Gets the DevCapes instance
+     */
+    public static DevCapes getInstance()
+    {
+        if (instance == null)
+            instance = new DevCapes();
+        return instance;
+    }
+    
+    // name->group
+    private HashMap<String, IUser>          users;
+    // group->cape
+    private HashMap<String, ITextureObject> groups;
 
     /**
      * Object constructor.
      */
     private DevCapes()
     {
-        users = new HashMap<String, String>();
-        capeResources = new HashMap<String, ResourceLocation>();
-        downloadThreads = new HashMap<String, ThreadDownloadImageData>();
+        this.groups = new HashMap<String, ITextureObject>();
+        this.users = new HashMap<String, IUser>();
     }
 
     /**
-     * Get's the current DeveloperCapesAPI instance, or creates a new one if
-     * necessary.
+     * @param groupName
+     *            The name of the group that you wish to add
+     * @param texture
+     *            The {@link ITextureObject} that contains the texture of the
+     *            group's cape
      */
-    public static DevCapes getInstance()
+    public void addGroup(final String groupName, final ITextureObject texture)
     {
-        if (instance == null)
-        {
-            instance = new DevCapes();
-        }
-        return instance;
+        this.groups.put(groupName, texture);
     }
 
     /**
-     * <b>DO NOT CALL THIS UNLESS YOU KNOW IT IS BEING CALLED FROM A CLIENT ONLY CLASS/METHOD!</b><br>
-     * <b>USE <i>"DevCapesUtil.addFileUrl(String);"</i> INSTEAD!</b><p>
-     * Set up capes. All cape URLs are in the txt file passed in.<br>
-     * <a href="https://github.com/jadar/DeveloperCapesAPI/blob/master/SampleCape.txt">Sample Cape Config</a>
-     *
-     * @param parTxtUrl The URL of the .txt file containing the groups, members of
-     *                  said groups, and the group's cape URL.
+     * @param groupName
+     *            The name of the group that you wish to add
+     * @param capeUrl
+     *            The URL as a String of the cape that you wish to assign to the
+     *            group
      */
-    public void addFileUrl(String parTxtUrl)
+    public void addGroup(final String groupName, final String capeUrl)
+    {
+        this.addGroup(groupName, new ThreadDownloadImageData(capeUrl, null, new HDImageBuffer()));
+    }
+
+    /**
+     * @param username
+     *            The user name of the player that you wish to add to the group
+     * @param group
+     *            The group that you wish to add the user to
+     */
+    public void addGroupUser(final String username, final String group)
+    {
+        IUser user = this.users.get(username);
+        if (user == null)
+        {
+            user = new GroupUser(username, group);
+            this.users.put(username, user);
+            
+            // make sure to call this last
+            this.loadCape(username);
+        }
+    }
+    
+    /**
+     * @param username
+     *            The name of the user that you want to give a cape to
+     * @param capeUrl
+     *            The URL as a String of the cape that you wish to assign to the
+     *            user
+     */
+    public void addSingleUser(final String username, final String capeUrl)
+    {
+        IUser user = this.users.get(username);
+        if (user == null)
+        {
+            user = new DefaultUser(username, capeUrl);
+            this.users.put(username, user);
+            this.loadCape(username);
+        }
+    }
+    
+    /**
+     * @param group
+     *            The name of the group whose cape you want to get
+     * @return The {@link ITextureObject} that contains the group's cape
+     */
+    public ITextureObject getGroupTexture(final String group)
+    {
+        return this.groups.get(group);
+    }
+    
+    /**
+     * 
+     * @param username
+     *            The name of the user that you wish to get
+     * @return The {@link IUser} containing the information of the specified
+     *         user
+     */
+    public IUser getUser(final String username)
+    {
+        return this.users.get(username);
+    }
+    
+    /**
+     * @param username
+     *            The name of the user that you wish to get the group that they
+     *            belong in
+     * @return The group that the user is in. Null if the user is not in a group
+     */
+    public String getUserGroup(final String username)
+    {
+        return this.isPlayerInGroup(username) ? ((GroupUser) this.users.get(username)).group : null;
+    }
+    
+    /**
+     * 
+     * @param username
+     *            The name of the user that you wish to get the cape that is
+     *            assigned to them
+     * @return The {@link ITextureObject} that contains the user's cape
+     */
+    protected ITextureObject getUserTexture(final String username)
+    {
+        return this.getUser(username).getTexture();
+    }
+    
+    /**
+     * 
+     * @param username
+     *            The name of the user that you wish to see if they are in a
+     *            group
+     * @return true if the user is in a group
+     */
+    public boolean isPlayerInGroup(final String username)
+    {
+        return this.users.containsKey(username) && this.users.get(username) instanceof GroupUser;
+    }
+    
+    /**
+     * @param username
+     *            The name of the user whose cape you wish to load
+     * @return true of the cape was loaded properly
+     */
+    public boolean loadCape(final String username)
+    {
+        IUser user = this.users.get(username);
+        return Minecraft.getMinecraft().renderEngine.loadTexture(user.getResource(), user.getTexture());
+    }
+    
+    /**
+     * @param jsonFile
+     *            The {@link File} in Json format that you wish to add
+     * @param identifier
+     *            A unique Identifier, normally your mod id
+     */
+    public void registerConfig(final File jsonFile, final String identifier)
     {
         try
         {
-            URL url = new URL(parTxtUrl);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            String line;
-
-            String username = "";
-            String group = "";
-            String capeUrl = "";
-
-            while ((line = reader.readLine()) != null)
+            this.registerConfig(new FileInputStream(jsonFile), identifier);
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * @param input
+     *            An {@link InputStream} containing the Json data that you wish
+     *            to add
+     * @param identifier
+     *            A unique Identifier, normally your mod id
+     */
+    @SuppressWarnings("unchecked")
+    public void registerConfig(final InputStream input, final String identifier)
+    {
+        try
+        {
+            String data = new String(ByteStreams.toByteArray(input));
+            input.close();
+            
+            Map<String, Object> groups = new Gson().fromJson(data, Map.class);
+            for (Entry<String, Object> e : groups.entrySet())
             {
-
-                // excludes commented lines
-                if (!line.startsWith("#"))
+                final String nodeName = e.getKey();
+                final Object obj = e.getValue();
+                if (obj instanceof Map)
                 {
-                    // loops through characters.
-                    for (int i = 0; i < line.length(); i++)
-                    {
-                        // when char : is found do stuff.
-                        if (line.charAt(i) == '=')
-                        {
-                            group = line.substring(0, i);
-                            String subLine = line.substring(i + 1);
-
-                            if (subLine.startsWith("http"))
-                            {
-                                capeUrl = subLine;
-
-                                ResourceLocation r = new ResourceLocation("DevCapes/" + group);
-                                ThreadDownloadImageData t = makeDownloadThread(r, capeUrl, null, new DevCapesImageBufferDownload());
-
-                                this.addCapeResource(group, r);
-                                this.addDownloadThread(group, t);
-
-                                continue;
-                            }
-                            else
-                            {
-                                username = subLine.toLowerCase();
-                                addUser(username, group);
-                            }
-                        }
-                    }
+                    String groupName = nodeName + identifier;
+                    Map<String, Object> group = (Map<String, Object>) obj;
+                    
+                    String capeUrl = (String) group.get("capeUrl");
+                    
+                    this.addGroup(groupName, capeUrl);
+                    
+                    ArrayList<String> users = (ArrayList<String>) group.get("users");
+                    if (users != null)
+                        for (String username : users)
+                            this.addGroupUser(username, groupName);
                 }
+                else if (obj instanceof String)
+                    this.addSingleUser(nodeName, (String) obj);
             }
+            
+        }
+        catch (MalformedJsonException e)
+        {
+            e.printStackTrace();
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
-
-        // Makes sure to set up only one tick handler.
-        if (tickHandler == null)
-        {
-            // Creates the tick handler for capes.
-            tickHandler = new DevCapesTickHandler();
-            // Sets up the tick handler for capes.
-            TickRegistry.registerTickHandler(tickHandler, Side.CLIENT);
-        }
-
     }
-
+    
     /**
-     * Used to add user to users HashMap.
-     *
-     * @param parUsername The Username to add.
-     * @param parGroup    The group to add that Username to.
+     * @param jsonUrl
+     *            A {@link URL} that links to the Json file that you want to add
+     * @param identifier
+     *            A unique Identifier, normally your mod id
      */
-    public void addUser(String parUsername, String parGroup)
+    public void registerConfig(final URL jsonUrl, final String identifier)
     {
-        if (getUserGroup(parUsername) == null)
+        try
         {
-            users.put(parUsername, parGroup);
+            this.registerConfig(jsonUrl.openStream(), identifier);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
-
+    
     /**
-     * Used to get user from users HashMap.
-     *
-     * @param parUsername The Username to get from the users HashMap.
-     * @return The Username found in the users HashMap.
+     * @param jsonUrl
+     *            The URL as a String that links to the Json file that you want
+     *            to add
+     * @param identifier
+     *            A unique Identifier, normally your mod id
      */
-    public String getUserGroup(String parUsername)
+    public void registerConfig(final String jsonUrl, final String identifier)
     {
-        return users.get(parUsername.toLowerCase());
-    }
-
-    /**
-     * Adds a cape ResourceLocation that is predownloaded.
-     *
-     * @param parGroup
-     * @param parResource
-     */
-    public void addCapeResource(String parGroup, ResourceLocation parResource)
-    {
-        if (getCapeResource(parGroup) == null)
+        try
         {
-            capeResources.put(parGroup, parResource);
+            this.registerConfig(new URL(jsonUrl), identifier);
         }
-    }
-
-    /**
-     * Gets a cape ResourceLocation.
-     *
-     * @param parGroup
-     * @return
-     */
-    public ResourceLocation getCapeResource(String parGroup)
-    {
-        return capeResources.get(parGroup);
-    }
-
-    /**
-     * Adds an ThreadDownloadImageData. Needed to change cape.
-     *
-     * @param parGroup
-     * @param parResource
-     */
-    public void addDownloadThread(String parGroup, ThreadDownloadImageData parResource)
-    {
-        if (getDownloadThread(parGroup) == null)
+        catch (MalformedURLException e)
         {
-            downloadThreads.put(parGroup, parResource);
+            e.printStackTrace();
         }
-    }
-
-    /**
-     * Gets the ThreadDownloadImageData that is associated with the group.
-     *
-     * @param parGroup
-     * @return
-     */
-    public ThreadDownloadImageData getDownloadThread(String parGroup)
-    {
-        return downloadThreads.get(parGroup);
-    }
-
-    /**
-     * Used to download images. Copied from AbstractClientPlayer to remove
-     * a conditional.
-     *
-     * @param par0ResourceLocation
-     * @param par1Str
-     * @param par2ResourceLocation
-     * @param par3IImageBuffer
-     * @return
-     */
-    public static ThreadDownloadImageData makeDownloadThread(ResourceLocation par0ResourceLocation, String par1Str, ResourceLocation par2ResourceLocation, IImageBuffer par3IImageBuffer)
-    {
-        TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-
-        TextureObject object = new ThreadDownloadImageData(par1Str, par2ResourceLocation, par3IImageBuffer);
-        // Binds ResourceLocation to this.
-        texturemanager.loadTexture(par0ResourceLocation, object);
-
-        return (ThreadDownloadImageData) object;
     }
 }

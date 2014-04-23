@@ -41,16 +41,15 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class XPOrbsGui extends HelperGuiBase
 {
-    public JScrollPane scrollPane;
-    public JPanel      panel1;
-    public JTextPane   jsonPane;
-    public JButton     parseFromJsonButton;
-    public JButton     saveButton;
-    public JButton     updateJsonButton;
-    public JButton     testButton;
-
-    private JTextField amountField;
-    public  JTextField HTMLTextField;
+    public  JScrollPane scrollPane;
+    public  JPanel      panel1;
+    public  JTextPane   jsonPane;
+    public  JButton     parseFromJsonButton;
+    public  JButton     saveButton;
+    public  JButton     updateJsonButton;
+    public  JButton     testButton;
+    public  JTextField  HTMLTextField;
+    private JTextField  amountField;
 
     public XPOrbsGui(final int rewardID, final String name, final JsonObject inputData, final HashMap<String, String> typeMap)
     {
