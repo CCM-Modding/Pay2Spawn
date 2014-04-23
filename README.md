@@ -1,6 +1,8 @@
 Pay2Spawn for 1.7.2
 ===================
-** Please note: Sound rewards have been removed in the 1.7.2 version, until I can figure out how the new sound engine works. **<br>
+**Please note: Sound rewards have been removed in the 1.7.2 version, until I can figure out how the new sound engine works.**<br>
+*This project is in limbo, aka no new features mode. I will make effort to fix bugs and keep up with MC version changes, until I get more free time.*<br>
+
 Screw or help your favourite streamer!
 
 Featuring customisable item, entity, potion effects and much more spawning if a viewers donates.<br>
