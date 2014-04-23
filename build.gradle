@@ -24,7 +24,7 @@ apply plugin: "forge"
 apply plugin: "maven"
 
 group = "ccm.pay2spawn"
-version = "Beta2"
+version = "1.0.0"
 
 targetCompatibility = 1.7
 sourceCompatibility = 1.7
