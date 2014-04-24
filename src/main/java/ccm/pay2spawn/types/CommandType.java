@@ -25,9 +25,7 @@ package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.CommandTypeGui;
-import com.google.common.base.Throwables;
 import com.google.gson.JsonObject;
-import net.minecraft.command.CommandHandler;
 import net.minecraft.command.ICommand;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -36,11 +34,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.config.Configuration;
 
-import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Set;
 
 import static ccm.pay2spawn.util.Constants.*;
 
@@ -50,7 +46,6 @@ public class CommandType extends TypeBase
     public static final  HashMap<String, String> typeMap         = new HashMap<>();
     public static final  HashSet<String>         commands        = new HashSet<>();
     private static final String                  NAME            = "command";
-    private static       Field                   commandSetField = getHackField();
 
     static
     {
@@ -58,25 +53,7 @@ public class CommandType extends TypeBase
     }
 
     public boolean feedback = true;
-
-    /**
-     * Them cheaty ways...
-     */
-    private static Field getHackField()
-    {
-        try
-        {
-            Field f = CommandHandler.class.getDeclaredFields()[1];
-            f.setAccessible(true);
-            return f;
-        }
-        catch (Throwable t)
-        {
-            Throwables.propagate(t);
-        }
-        return null;
-    }
-
+    
     @Override
     public String getName()
     {
@@ -110,19 +87,11 @@ public class CommandType extends TypeBase
         MinecraftServer server = MinecraftServer.getServer();
         if (server != null)
         {
-            try
+            for (Object o : server.getCommandManager().getCommands().values())
             {
-                Set set = (Set) commandSetField.get(server.getCommandManager());
-                for (Object o : set)
-                {
-                    ICommand command = (ICommand) o;
-                    commands.add(command.getCommandName());
-                    nodes.add(new Node(NAME, command.getCommandName()));
-                }
-            }
-            catch (IllegalAccessException e)
-            {
-                e.printStackTrace();
+                ICommand command = (ICommand) o;
+                commands.add(command.getCommandName());
+                nodes.add(new Node(NAME, command.getCommandName()));
             }
         }
         else
