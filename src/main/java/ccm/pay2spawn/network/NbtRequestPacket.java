@@ -175,7 +175,7 @@ public class NbtRequestPacket extends AbstractPacket
                 }
                 break;
             case ITEM:
-                if (player.getHeldItem() == null)
+                if (player.getHeldItem() != null)
                 {
                     PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(player.getHeldItem().writeToNBT(new NBTTagCompound())).toString()), (EntityPlayerMP) player);
                 }
