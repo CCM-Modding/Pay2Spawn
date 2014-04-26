@@ -76,10 +76,10 @@ artifacts {
 }
 
 uploadArchives {
-    if (project.hasProperty("mavenUrl")) {
+    if (project.hasProperty("mavenUser") && project.hasProperty("mavenPassword")) {
         repositories {
             mavenDeployer {
-                repository(url: mavenUrl) {
+                repository(url: "http://maven.dries007.net/content/repositories/ccm/") {
                     authentication(userName: mavenUser, password: mavenPassword)
                 }
                 pom {
@@ -124,8 +124,8 @@ uploadArchives {
                             }
                         }
                     }
-               }
-           }
+                }
+            }
         }
     }
 }
