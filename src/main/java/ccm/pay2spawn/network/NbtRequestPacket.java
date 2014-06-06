@@ -65,7 +65,7 @@ public class NbtRequestPacket extends AbstractPacket
 
     public NbtRequestPacket(int entityId)
     {
-        this.type = Type.ITEM;
+        this.type = Type.ENTITY;
         this.request = true;
         this.entityId = entityId;
     }
@@ -140,10 +140,10 @@ public class NbtRequestPacket extends AbstractPacket
         switch (type)
         {
             case ENTITY:
-                callbackItemType.callback(response);
+                callbackCustomEntityType.callback(response);
                 break;
             case FIREWORK:
-                callbackItemType.callback(response);
+                callbackFireworksType.callback(response);
                 break;
             case ITEM:
                 callbackItemType.callback(response);
