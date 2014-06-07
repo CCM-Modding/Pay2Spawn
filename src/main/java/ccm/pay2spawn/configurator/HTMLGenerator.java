@@ -89,7 +89,11 @@ public class HTMLGenerator
         FileUtils.writeStringToFile(output, replace(text.substring(0, begin)), false);
 
         String loop = text.substring(begin + LOOP_START.length(), end);
-        for (Reward reward : sortedRewards) FileUtils.writeStringToFile(output, replace(loop, reward), true);
+        for (Reward reward : sortedRewards)
+        {
+            Pay2Spawn.getLogger().info("Adding " + reward + " to html file.");
+            FileUtils.writeStringToFile(output, replace(loop, reward), true);
+        }
 
         FileUtils.writeStringToFile(output, text.substring(end + LOOP_END.length(), text.length()), true);
     }
