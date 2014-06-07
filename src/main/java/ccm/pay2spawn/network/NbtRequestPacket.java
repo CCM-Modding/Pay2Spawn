@@ -31,6 +31,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemFirework;
@@ -161,6 +162,7 @@ public class NbtRequestPacket extends AbstractPacket
                 Entity entity = player.worldObj.getEntityByID(entityId);
                 entity.writeToNBT(nbt);
                 entity.writeToNBTOptional(nbt);
+                nbt.setString("id", EntityList.getEntityString(entity));
                 PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(nbt).toString()), (EntityPlayerMP) player);
                 break;
             case FIREWORK:
