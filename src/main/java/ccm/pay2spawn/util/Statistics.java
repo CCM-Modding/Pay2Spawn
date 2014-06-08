@@ -134,7 +134,7 @@ public class Statistics
         Hud.INSTANCE.set.add(spawnsStatisticsHudEntry);
         update(sortedSpawnsMap, spawnsStatisticsHudEntry);
 
-        totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated this session: $$amount");
+        totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated: $$amount", root.hasKey("donated") ? root.getDouble("donated") : 0);
         Hud.INSTANCE.set.add(totalDonationHudEntry);
     }
 
@@ -171,6 +171,7 @@ public class Statistics
             spawns.setInteger(name, spawnsMap.get(name));
         }
         root.setTag("spawns", spawns);
+        root.setDouble("donated", totalDonationHudEntry.getDonated());
 
         try
         {
