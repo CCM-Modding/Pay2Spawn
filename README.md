@@ -1,7 +1,6 @@
 Pay2Spawn for 1.7.2
 ===================
-**Please note: Sound rewards have been removed in the 1.7.2 version, until I can figure out how the new sound engine works.**<br>
-*This project is in limbo, aka no new features mode. I will make effort to fix bugs and keep up with MC version changes, until I get more free time.*<br>
+<b>Pay2Spawn 2.x is now being worked on.</b>
 
 Screw or help your favourite streamer!
 
@@ -27,11 +26,11 @@ Otherwise this will be used: [Y U NO POST CONFIG & STACKTRACE](http://dries007.n
 
 Problems guide
 -------------
-[If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/Problems.md)
+[If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/blob/master/Problems.md)
 
 Downloads
 ---------
-[Download link!](http://jenkins.dries007.net/job/Pay2Spawn/)
+[New download website!](http://dries007.net/ccm/p2s/)
 
 The idea & proper credit
 ------------------------
