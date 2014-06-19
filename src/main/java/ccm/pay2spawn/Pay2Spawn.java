@@ -24,12 +24,12 @@
 package ccm.pay2spawn;
 
 import ccm.libs.com.jadarstudios.developercapes.DevCapes;
+import ccm.pay2spawn.checkers.CheckerHandler;
 import ccm.pay2spawn.cmd.CommandP2S;
 import ccm.pay2spawn.cmd.CommandP2SPermissions;
 import ccm.pay2spawn.cmd.CommandP2SServer;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.configurator.HTMLGenerator;
-import ccm.pay2spawn.misc.DonationCheckerThread;
 import ccm.pay2spawn.misc.P2SConfig;
 import ccm.pay2spawn.misc.RewardsDB;
 import ccm.pay2spawn.network.PacketPipeline;
@@ -74,7 +74,6 @@ public class Pay2Spawn
     private P2SConfig             config;
     private File                  configFolder;
     private Logger                logger;
-    private DonationCheckerThread donationCheckerThread;
 
     public static String getVersion()
     {
@@ -96,8 +95,6 @@ public class Pay2Spawn
     }
 
     public static File getRewardDBFile() { return new File(instance.configFolder, NAME + ".json"); }
-
-    public static DonationCheckerThread getDonationCheckerThread() { return instance.donationCheckerThread; }
 
     public static void reloadDB()
     {
@@ -156,8 +153,7 @@ public class Pay2Spawn
 
         if (event.getSide().isClient())
         {
-            donationCheckerThread = new DonationCheckerThread();
-            donationCheckerThread.start();
+            CheckerHandler.init();
             new EventHandler();
             ClientCommandHandler.instance.registerCommand(new CommandP2S());
             DevCapes.getInstance().addGroup(Constants.MODID, Constants.CAPEURL);

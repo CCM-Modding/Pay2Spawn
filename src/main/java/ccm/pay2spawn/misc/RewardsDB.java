@@ -122,17 +122,16 @@ public class RewardsDB
         }
     }
 
-    public synchronized void process(JsonObject donation, boolean msg)
+    public synchronized void process(Donation donation, boolean msg)
     {
         double highestmatch = 0d;
-        double amount = donation.get("amount").getAsDouble();
 
         Reward reward = null;
-        if (map.containsKey(amount)) reward = RandomRegistry.getRandomFromSet(map.get(amount));
+        if (map.containsKey(donation.amount)) reward = RandomRegistry.getRandomFromSet(map.get(donation.amount));
         else
         {
             for (double key : map.keySet())
-                if (key < amount && highestmatch < key) highestmatch = key;
+                if (key < donation.amount && highestmatch < key) highestmatch = key;
 
             if (map.containsKey(highestmatch)) reward = RandomRegistry.getRandomFromSet(map.get(highestmatch));
         }

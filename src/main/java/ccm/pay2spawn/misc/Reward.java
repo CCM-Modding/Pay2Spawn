@@ -92,7 +92,7 @@ public class Reward
         return amount;
     }
 
-    public void addToCountdown(JsonObject donation, boolean addToHUD, Reward reward)
+    public void addToCountdown(Donation donation, boolean addToHUD, Reward reward)
     {
         if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation, reward == null ? this : reward));
         ClientTickHandler.INSTANCE.add(this, donation, addToHUD, reward);

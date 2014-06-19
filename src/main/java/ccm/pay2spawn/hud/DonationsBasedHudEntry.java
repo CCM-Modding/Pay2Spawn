@@ -23,33 +23,34 @@
 
 package ccm.pay2spawn.hud;
 
-import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.misc.Donation;
 import ccm.pay2spawn.util.Helper;
+import com.google.common.base.Strings;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
-public class JsonBasedHudEntry implements IHudEntry
+public class DonationsBasedHudEntry implements IHudEntry
 {
-    public final ArrayList<String> strings = new ArrayList<>();
+    final ArrayList<String> strings = new ArrayList<>();
+    List<Donation> donations = new ArrayList<>();
     final int position, amount;
     final String header, format;
+    final Comparator<Donation> comparator;
 
-    public JsonBasedHudEntry(String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader)
+    public DonationsBasedHudEntry(Configuration config, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {
-        int amount1;
-        Configuration config = Pay2Spawn.getConfig().configuration;
-
-        position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-        amount1 = config.get(P2SConfig.HUD + "." + configCat, "amount", defaultAmount).getInt(defaultAmount);
+        position = config.get(configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
+        int amount1 = config.get(configCat, "amount", defaultAmount, "maximum: " + maxAmount).getInt(defaultAmount);
         if (maxAmount != -1 && amount1 > maxAmount) amount1 = maxAmount;
         amount = amount1;
 
-        format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
-        header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
-
-        config.save();
+        format = Helper.formatColors(config.get(configCat, "format", defaultFormat).getString());
+        header = Helper.formatColors(config.get(configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
+        this.comparator = comparator;
     }
 
     @Override
@@ -84,4 +85,27 @@ public class JsonBasedHudEntry implements IHudEntry
             list.addAll(strings);
         }
     }
+
+    public void add(Donation donation)
+    {
+        donations.add(donation);
+        Collections.sort(donations, comparator);
+        update();
+    }
+
+    private void update()
+    {
+        while (donations.size() > getAmount())
+        {
+            donations.remove(donations.size() - 1);
+        }
+
+        strings.clear();
+        if (!Strings.isNullOrEmpty(this.getHeader())) Helper.addWithEmptyLines(this.strings, this.getHeader());
+        for (Donation donation : donations)
+        {
+            strings.add(Helper.formatText(this.getFormat(), donation, null));
+        }
+    }
 }
+

@@ -24,8 +24,8 @@
 package ccm.pay2spawn.cmd;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.checkers.CheckerHandler;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
-import ccm.pay2spawn.misc.DonationCheckerThread;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -113,15 +113,7 @@ public class CommandP2S extends CommandBase
                 else
                 {
                     double amount = CommandBase.parseDouble(sender, args[1]);
-                    DonationCheckerThread.fakeDonation(amount);
-                }
-                break;
-            case "redonate":
-                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s redonate <1-5>' to redo one of the last 5 donations.");
-                else
-                {
-                    int id = CommandBase.parseIntBounded(sender, args[1], 1, 5) - 1;
-                    DonationCheckerThread.redonate(id);
+                    CheckerHandler.fakeDonation(amount);
                 }
                 break;
             default:

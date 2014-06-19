@@ -24,14 +24,14 @@ apply plugin: "forge"
 apply plugin: "maven"
 
 group = "ccm.pay2spawn"
-version = "1.0.0"
+version = "2.0.Beta."
 
 targetCompatibility = 1.7
 sourceCompatibility = 1.7
 
 archivesBaseName = 'Pay2Spawn'
 minecraft {
-    version = "1.7.2-10.12.1.1061"
+    version = "1.7.2-10.12.2.1126"
     assetDir = "jars/assets"
 }
 
@@ -89,7 +89,7 @@ uploadArchives {
                     project {
                         name project.archivesBaseName
                         packaging 'jar'
-                        description 'Usefull core for CCM mods'
+                        description 'Pay2Spawn'
                         url 'https://github.com/CCM-Modding/Pay2Spawn'
 
                         scm {

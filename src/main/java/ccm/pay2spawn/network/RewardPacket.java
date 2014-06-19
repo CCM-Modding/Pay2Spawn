@@ -1,6 +1,7 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.misc.Donation;
 import ccm.pay2spawn.misc.Reward;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
@@ -32,7 +33,7 @@ public class RewardPacket extends AbstractPacket
 
     }
 
-    public RewardPacket(Reward reward, JsonObject donation, Reward actualReward)
+    public RewardPacket(Reward reward, Donation donation, Reward actualReward)
     {
         this.rewards = reward.getRewards();
         this.formattedData = Helper.formatText(rewards, donation, actualReward == null ? reward : actualReward).toString();

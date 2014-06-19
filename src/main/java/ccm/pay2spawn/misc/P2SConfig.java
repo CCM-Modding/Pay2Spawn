@@ -23,6 +23,7 @@
 
 package ccm.pay2spawn.misc;
 
+import ccm.pay2spawn.checkers.CheckerHandler;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
@@ -55,7 +56,6 @@ public class P2SConfig
     public Pattern[]    blacklist_Note_p;
     public Pattern[]    whitelist_Name_p;
     public Pattern[]    whitelist_Note_p;
-    public FileSettings file;
     public  String   subReward      = "-2";
     public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggered!";
     @SuppressWarnings("FieldCanBeLocal")
@@ -73,15 +73,10 @@ public class P2SConfig
 
         configuration.addCustomCategoryComment(MODID, "All config settings for " + NAME + "\nDon't forget the other files in this folder!\nFor all message type things (all text basically) use & for color codes!");
 
-        interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
-        channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
-        API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();
-        twitchToken = configuration.get(MODID, "twitchToken", twitchToken, "Get it from http://dries007.net/ccm/p2s/ ONLY WORKS IF YOU HAVE A SUB BUTTON.").getString();
-        min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
         forceP2S = configuration.get(MODID, "forceP2S", forceP2S, "If a client connects, kick it if there is no P2S. If there is, p2s will be locked in ON mode.").getBoolean(forceP2S);
-        subReward = configuration.get(MODID, "subReward", subReward, "The reward triggered by someone subscribing. You can use the random tags in here.").getString();
         serverMessage = configuration.get(MODID, "serverMessage", serverMessage, "Server config deferments the structure. Vars: $name, $amount, $note, $streamer, $reward_message, $reward_name, $reward_amount, $reward_countdown.").getString();
+
         try
         {
             //noinspection ResultOfMethodCallIgnored
@@ -110,35 +105,8 @@ public class P2SConfig
         whitelist_Note_p = new Pattern[whitelist_Note.length];
         for (int i = 0; i < whitelist_Note.length; i++) whitelist_Note_p[i] = Pattern.compile(Helper.removeQuotes(whitelist_Note[i]), Pattern.CASE_INSENSITIVE);
 
-        this.file = new FileSettings();
+        CheckerHandler.doConfig(configuration);
 
         configuration.save();
-    }
-
-    public class FileSettings
-    {
-        public final static String FILE = MODID + ".file";
-
-        public int    top           = 1;
-        public int    top_amount    = 5;
-        public String top_format    = "$name: $$amount";
-        public int    recent        = 1;
-        public int    recent_amount = 5;
-        public String recent_format = "$name: $$amount";
-
-        private FileSettings()
-        {
-            configuration.addCustomCategoryComment(FILE, "Donation lists on file!\nUse with OBS (or others) and a text on screen plugin.");
-
-            top = configuration.get(FILE, "top", top, "0 = off, 1 = 1 per line, 2 = all on 1 line").getInt();
-            top_amount = configuration.get(FILE, "top_amount", top_amount, "Amount of top donations, max = 5.").getInt();
-            if (top_amount > 5) top_amount = 5;
-            top_format = Helper.formatColors(configuration.get(FILE, "top_format", top_format, "Vars: $name, $amount, $note.").getString());
-
-            recent = configuration.get(FILE, "recent", recent, "0 = off, 1 = 1 per line, 2 = all on 1 line").getInt();
-            recent_amount = configuration.get(FILE, "recent_amount", recent_amount, "Amount of recent donations, max = 5.").getInt();
-            if (recent_amount > 5) recent_amount = 5;
-            recent_format = Helper.formatColors(configuration.get(FILE, "recent_format", recent_format, "Vars: $name, $amount, $note.").getString());
-        }
     }
 }

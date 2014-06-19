@@ -25,6 +25,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.hud.CountDownHudEntry;
 import ccm.pay2spawn.hud.Hud;
+import ccm.pay2spawn.misc.Donation;
 import ccm.pay2spawn.misc.Reward;
 import ccm.pay2spawn.network.PacketPipeline;
 import ccm.pay2spawn.network.RewardPacket;
@@ -77,7 +78,7 @@ public class ClientTickHandler
         }
     }
 
-    public void add(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
+    public void add(Reward reward, Donation donation, boolean addToHUD, Reward actualReward)
     {
         entries.add(new QueEntry(reward, donation, addToHUD, actualReward));
     }
@@ -91,12 +92,12 @@ public class ClientTickHandler
     public class QueEntry
     {
         int        remaining;
-        JsonObject donation;
+        Donation   donation;
         Reward     reward;
         Reward     actualReward;
         boolean    addToHUD;
 
-        public QueEntry(Reward reward, JsonObject donation, boolean addToHUD, Reward actualReward)
+        public QueEntry(Reward reward, Donation donation, boolean addToHUD, Reward actualReward)
         {
             this.remaining = reward.getCountdown();
             this.donation = donation;

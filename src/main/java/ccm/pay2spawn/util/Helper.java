@@ -23,11 +23,9 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.misc.Donation;
 import ccm.pay2spawn.misc.Point;
 import ccm.pay2spawn.misc.Reward;
-import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -50,7 +48,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.RANDOM;
 
 /**
  * Static helper functions with no other home
@@ -198,12 +196,11 @@ public class Helper
      *
      * @return the fully var-replaced string
      */
-    public static String formatText(String format, JsonObject donation, Reward reward)
+    public static String formatText(String format, Donation donation, Reward reward)
     {
-        donation = filter(donation);
-        if (donation.has(DONATION_USERNAME)) format = format.replace("$name", donation.get(DONATION_USERNAME).getAsString());
-        if (donation.has(DONATION_AMOUNT)) format = format.replace("$amount", donation.get(DONATION_AMOUNT).getAsString());
-        if (donation.has(DONATION_NOTE)) format = format.replace("$note", donation.get(DONATION_NOTE).getAsString());
+        format = format.replace("$name", donation.username);
+        format = format.replace("$amount", donation.amount + "");
+        format = format.replace("$note", donation.note);
         if (Minecraft.getMinecraft().thePlayer != null) format = format.replace("$streamer", Minecraft.getMinecraft().thePlayer.getCommandSenderName());
 
         if (reward != null)
@@ -217,56 +214,6 @@ public class Helper
         return format;
     }
 
-    public static JsonObject filter(JsonObject donation)
-    {
-        P2SConfig config = Pay2Spawn.getConfig();
-        if (donation.has(DONATION_USERNAME) && !donation.get(DONATION_USERNAME).getAsString().equalsIgnoreCase(ANONYMOUS))
-        {
-            for (Pattern p : config.blacklist_Name_p)
-            {
-                if (p.matcher(donation.get(DONATION_USERNAME).getAsString()).matches())
-                {
-                    donation.addProperty(DONATION_USERNAME, ANONYMOUS);
-                    break;
-                }
-            }
-        }
-        if (donation.has(DONATION_USERNAME) && !donation.get(DONATION_USERNAME).getAsString().equalsIgnoreCase(ANONYMOUS))
-        {
-            for (Pattern p : config.whitelist_Name_p)
-            {
-                if (!p.matcher(donation.get(DONATION_USERNAME).getAsString()).matches())
-                {
-                    donation.addProperty(DONATION_USERNAME, ANONYMOUS);
-                    break;
-                }
-            }
-        }
-
-        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).getAsString()))
-        {
-            for (Pattern p : config.blacklist_Note_p)
-            {
-                Matcher m = p.matcher(donation.get(DONATION_NOTE).getAsString());
-                donation.addProperty(DONATION_NOTE, m.replaceAll(""));
-            }
-        }
-
-        if (donation.has(DONATION_NOTE) && !Strings.isNullOrEmpty(donation.get(DONATION_NOTE).getAsString()))
-        {
-            for (Pattern p : config.whitelist_Note_p)
-            {
-                if (!p.matcher(donation.get(DONATION_NOTE).getAsString()).matches())
-                {
-                    donation.addProperty(DONATION_NOTE, "");
-                    break;
-                }
-            }
-        }
-
-        return donation;
-    }
-
     /**
      * Fill in variables from a donation
      *
@@ -275,7 +222,7 @@ public class Helper
      *
      * @return the fully var-replaced JsonElement
      */
-    public static JsonElement formatText(JsonElement dataToFormat, JsonObject donation, Reward reward)
+    public static JsonElement formatText(JsonElement dataToFormat, Donation donation, Reward reward)
     {
         if (dataToFormat.isJsonPrimitive() && dataToFormat.getAsJsonPrimitive().isString())
         {
