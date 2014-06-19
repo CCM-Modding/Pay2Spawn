@@ -77,7 +77,7 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         ClientID = configuration.get(CAT, "ClientID", ClientID).getString();
         ClientAccessToken = configuration.get(CAT, "ClientAccessToken", ClientAccessToken).getString();
-        interval = configuration.get(CAT, "interval", interval).getInt();
+        interval = configuration.get(CAT, "interval", interval, "The time in between polls (in seconds).").getInt();
 
         recentDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".recentDonations", -1, 2, 5, "$name: $$amount", "-- Recent donations --", CheckerHandler.RECENT_DONATION_COMPARATOR);
         topDonationsBasedHudEntry = new DonationsBasedHudEntry(configuration, CAT + ".topDonations", -1, 1, 5, "$name: $$amount", "-- Top donations --", CheckerHandler.AMOUNT_DONATION_COMPARATOR);
