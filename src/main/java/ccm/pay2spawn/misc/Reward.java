@@ -131,4 +131,10 @@ public class Reward
     {
         return rewards;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Reward[" + name + ", " + hashCode() + "]";
+    }
 }

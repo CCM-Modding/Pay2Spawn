@@ -24,7 +24,7 @@ apply plugin: "forge"
 apply plugin: "maven"
 
 group = "ccm.pay2spawn"
-version = "Beta2"
+version = "1.0.0"
 
 targetCompatibility = 1.7
 sourceCompatibility = 1.7
@@ -76,10 +76,10 @@ artifacts {
 }
 
 uploadArchives {
-    if (project.hasProperty("mavenUrl")) {
+    if (project.hasProperty("mavenUser") && project.hasProperty("mavenPassword")) {
         repositories {
             mavenDeployer {
-                repository(url: mavenUrl) {
+                repository(url: "http://maven.dries007.net/content/repositories/ccm/") {
                     authentication(userName: mavenUser, password: mavenPassword)
                 }
                 pom {
@@ -124,8 +124,8 @@ uploadArchives {
                             }
                         }
                     }
-               }
-           }
+                }
+            }
         }
     }
 }

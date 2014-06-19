@@ -57,7 +57,7 @@ public class P2SConfig
     public Pattern[]    whitelist_Note_p;
     public FileSettings file;
     public  String   subReward      = "-2";
-    public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggerd!";
+    public  String   serverMessage  = "$streamer got $$amount from $name and $reward_name was triggered!";
     @SuppressWarnings("FieldCanBeLocal")
     private String[] blacklist_Name = {"fuck", "cunt", "dick", "shit"};
     @SuppressWarnings("FieldCanBeLocal")
@@ -80,7 +80,7 @@ public class P2SConfig
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
         forceP2S = configuration.get(MODID, "forceP2S", forceP2S, "If a client connects, kick it if there is no P2S. If there is, p2s will be locked in ON mode.").getBoolean(forceP2S);
-        subReward = configuration.get(MODID, "subReward", subReward, "The reward triggerd by someone subscribing. You can use the random tags in here.").getString();
+        subReward = configuration.get(MODID, "subReward", subReward, "The reward triggered by someone subscribing. You can use the random tags in here.").getString();
         serverMessage = configuration.get(MODID, "serverMessage", serverMessage, "Server config deferments the structure. Vars: $name, $amount, $note, $streamer, $reward_message, $reward_name, $reward_amount, $reward_countdown.").getString();
         try
         {

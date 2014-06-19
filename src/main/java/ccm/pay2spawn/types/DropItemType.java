@@ -120,8 +120,7 @@ public class DropItemType extends TypeBase
         switch (id)
         {
             case "type":
-                int i = Integer.getInteger(jsonObject.get(TYPE_KEY).getAsString().replace("INT:", ""));
-                switch (i)
+                switch (Integer.parseInt(jsonObject.get(TYPE_KEY).getAsString().split(":", 2)[1]))
                 {
                     case HOLDING_1:
                         return "one of the selected items";

@@ -31,6 +31,7 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemFirework;
@@ -65,7 +66,7 @@ public class NbtRequestPacket extends AbstractPacket
 
     public NbtRequestPacket(int entityId)
     {
-        this.type = Type.ITEM;
+        this.type = Type.ENTITY;
         this.request = true;
         this.entityId = entityId;
     }
@@ -140,10 +141,10 @@ public class NbtRequestPacket extends AbstractPacket
         switch (type)
         {
             case ENTITY:
-                callbackItemType.callback(response);
+                callbackCustomEntityType.callback(response);
                 break;
             case FIREWORK:
-                callbackItemType.callback(response);
+                callbackFireworksType.callback(response);
                 break;
             case ITEM:
                 callbackItemType.callback(response);
@@ -161,6 +162,7 @@ public class NbtRequestPacket extends AbstractPacket
                 Entity entity = player.worldObj.getEntityByID(entityId);
                 entity.writeToNBT(nbt);
                 entity.writeToNBTOptional(nbt);
+                nbt.setString("id", EntityList.getEntityString(entity));
                 PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(nbt).toString()), (EntityPlayerMP) player);
                 break;
             case FIREWORK:
@@ -175,7 +177,7 @@ public class NbtRequestPacket extends AbstractPacket
                 }
                 break;
             case ITEM:
-                if (player.getHeldItem() == null)
+                if (player.getHeldItem() != null)
                 {
                     PacketPipeline.PIPELINE.sendTo(new NbtRequestPacket(type, JsonNBTHelper.parseNBT(player.getHeldItem().writeToNBT(new NBTTagCompound())).toString()), (EntityPlayerMP) player);
                 }

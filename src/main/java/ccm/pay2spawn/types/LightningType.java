@@ -178,7 +178,7 @@ public class LightningType extends TypeBase
         switch (id)
         {
             case "target":
-                switch (jsonObject.get(TYPE_KEY).getAsInt())
+                switch (Integer.parseInt(jsonObject.get(TYPE_KEY).getAsString().split(":", 2)[1]))
                 {
                     case PLAYER_ENTITY:
                         return "the streamer";

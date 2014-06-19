@@ -1,45 +1,38 @@
-Pay2Spawn
-=========
+Pay2Spawn for 1.7.2
+===================
+<b>Pay2Spawn 2.x is now being worked on.</b>
 
-Screw or help your favorite streamer!
+Screw or help your favourite streamer!
 
-Featuring customisable item, entity or potion effect spawning if a viewers donates.<br>
+Featuring customisable item, entity, potion effects and much more spawning if a viewers donates.<br>
 The reward is based on the donation amount.<br>
 
 Forge required, mod needed server side.<br>
-If you encounter issues with other mods, please make a bugreport!
+**If you encounter issues with other mods, please make a bugreport!**
+
+I can't demand this, but I ask for respect and gratitude for the time and effort put into the project by all developers, testers, designers and documenters. ~~Dries007
 
 Configuration
 -------------
-*Untill the ingame configurator is 100% done, you can edit the json manually (see ConfigReadme.md).<br>*
-The configurator can't edit everything, but please test all the other functions!
-Use /p2s configure to get started.
+Step 1: Fill in your API key and channel name in config/Pay2Spawn/
+Step 2: Make your rewards using "/p2s configure".
+Step 3: ???
+Step 4: Profit!
 
-Issues & bugreports
+Issues & bug reports
 -------------------
 **Make sure you post the JSON file and the error log.**<br>
 Otherwise this will be used: [Y U NO POST CONFIG & STACKTRACE](http://dries007.net/downloads/configAndStacktrace.jpg)
 
-Streamer help
--------------
-
-You need to make an account on http://donationtrack.nightdev.com/ !<br>
-You'll need the API key and channel name from there to enter in your config file.
-
-You can customise the rewards in the .json file in the config folder.<br>
-Use this config file to make a nice webpage so your viewers can see what they can donate for.
-
 Problems guide
 -------------
-[If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/Problems.md)
+[If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/blob/master/Problems.md)
 
-BETA Downloads
---------------
-You can use the beta on 1 condition. You report bugs!
-[Link!](http://jenkins.dries007.net/job/Pay2Spawn/)
+Downloads
+---------
+[New download website!](http://dries007.net/ccm/p2s/)
 
 The idea & proper credit
 ------------------------
- 
 MazeXD and DSlacky made a similar mod first, they should receive all credit for the idea.
 It seems like production on there mod has halted, if someone finds an up to date link, let us know.

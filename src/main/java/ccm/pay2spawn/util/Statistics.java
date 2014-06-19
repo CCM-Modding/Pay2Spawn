@@ -26,6 +26,7 @@ package ccm.pay2spawn.util;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.hud.StatisticsHudEntry;
+import ccm.pay2spawn.hud.TotalDonationHudEntry;
 import com.google.common.base.Strings;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTBase;
@@ -51,8 +52,14 @@ public class Statistics
     private static TreeMap<String, Integer> sortedSpawnsMap = new TreeMap<>(new ValueComparator(spawnsMap));
 
     private static StatisticsHudEntry killsStatisticsHudEntry, spawnsStatisticsHudEntry;
+    private static TotalDonationHudEntry totalDonationHudEntry;
 
     private Statistics() {}
+
+    public static void addToDonationAmount(double amount)
+    {
+        totalDonationHudEntry.addToDonationamount(amount);
+    }
 
     public static void handleKill(NBTTagCompound data)
     {
@@ -126,6 +133,9 @@ public class Statistics
         spawnsStatisticsHudEntry = new StatisticsHudEntry("topSpawned", -1, 2, 5, "$amount x $name", "-- Top spawned rewards: --");
         Hud.INSTANCE.set.add(spawnsStatisticsHudEntry);
         update(sortedSpawnsMap, spawnsStatisticsHudEntry);
+
+        totalDonationHudEntry = new TotalDonationHudEntry("totalDonation", 1, "Total amount donated: $$amount", root.hasKey("donated") ? root.getDouble("donated") : 0);
+        Hud.INSTANCE.set.add(totalDonationHudEntry);
     }
 
     private static void update(TreeMap<String, Integer> map, StatisticsHudEntry hudEntry)
@@ -161,6 +171,7 @@ public class Statistics
             spawns.setInteger(name, spawnsMap.get(name));
         }
         root.setTag("spawns", spawns);
+        root.setDouble("donated", totalDonationHudEntry.getDonated());
 
         try
         {
