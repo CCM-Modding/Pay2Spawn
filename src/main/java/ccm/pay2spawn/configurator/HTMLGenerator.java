@@ -24,6 +24,7 @@
 package ccm.pay2spawn.configurator;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.checkers.TwitchChecker;
 import ccm.pay2spawn.misc.Reward;
 import ccm.pay2spawn.types.TypeRegistry;
 import org.apache.commons.io.FileUtils;
@@ -120,7 +121,7 @@ public class HTMLGenerator
         switch (parts[0])
         {
             case "channel":
-                return Pay2Spawn.getConfig().channel;
+                return TwitchChecker.INSTANCE.getChannel();
             case "reward":
                 switch (parts[1])
                 {

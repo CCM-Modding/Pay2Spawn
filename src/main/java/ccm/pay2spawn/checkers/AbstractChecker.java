@@ -12,6 +12,8 @@ import java.util.HashSet;
 
 public abstract class AbstractChecker
 {
+    protected AbstractChecker() {}
+
     public abstract String getName();
 
     public abstract void init();

@@ -48,10 +48,6 @@ public class P2SConfig
     public boolean forceServerconfig = true;
     public boolean forceP2S          = false;
     public double  min_donation      = 1;
-    public int     interval          = 10;
-    public String  API_Key           = "";
-    public String  channel           = "";
-    public String  twitchToken       = "";
     public Pattern[]    blacklist_Name_p;
     public Pattern[]    blacklist_Note_p;
     public Pattern[]    whitelist_Name_p;

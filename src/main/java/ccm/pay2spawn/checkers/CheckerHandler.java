@@ -33,8 +33,9 @@ public class CheckerHandler
     private static HashMap<String, AbstractChecker> map = new HashMap<>();
     static
     {
-        register(new StreamtipChecker());
-        register(new ChildsplayChecker());
+        register(StreamtipChecker.INSTANCE);
+        register(ChildsplayChecker.INSTANCE);
+        register(TwitchChecker.INSTANCE);
     }
 
     public static void register(AbstractChecker abstractChecker)

@@ -21,16 +21,22 @@ import static ccm.pay2spawn.util.Constants.MODID;
 
 public class StreamtipChecker extends AbstractChecker implements Runnable
 {
+    public static final StreamtipChecker INSTANCE = new StreamtipChecker();
     public final static String NAME = "streamtip";
-    public final static String CAT = MODID + '.' + NAME;
-    public final static String URL = "https://streamtip.com/api/tips?";
+    public final static String CAT  = MODID + '.' + NAME;
+    public final static String URL  = "https://streamtip.com/api/tips?";
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
     DonationsBasedHudEntry[] donationsBasedHudEntries = {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
 
-    String          ClientID = "", ClientAccessToken = "";
+    String ClientID = "", ClientAccessToken = "";
     boolean enabled  = true;
     int     interval = 3;
+
+    private StreamtipChecker()
+    {
+        super();
+    }
 
     @Override
     public String getName()

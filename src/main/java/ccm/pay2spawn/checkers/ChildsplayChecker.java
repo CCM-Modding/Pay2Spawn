@@ -30,6 +30,7 @@ import static ccm.pay2spawn.util.Constants.MODID;
 
 public class ChildsplayChecker extends AbstractChecker implements Runnable
 {
+    public static final ChildsplayChecker INSTANCE = new ChildsplayChecker();
     public final static String NAME = "childsplay";
     public final static String CAT = MODID + '.' + NAME;
     public final static String ENDPOINT = "donate.childsplaycharity.org";
@@ -43,9 +44,14 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
     DonationsBasedHudEntry[] donationsBasedHudEntries = {recentDonationsBasedHudEntry};
 
-    String            APIKey  = "", APIsecret = "";
+    String APIKey = "", APIsecret = "";
     boolean enabled  = true;
     int     interval = 3;
+
+    private ChildsplayChecker()
+    {
+        super();
+    }
 
     @Override
     public String getName()
@@ -70,7 +76,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     @Override
     public void doConfig(Configuration configuration)
     {
-        configuration.addCustomCategoryComment(CAT, "This is the checker for streamtip.com");
+        configuration.addCustomCategoryComment(CAT, "This is the checker for ChildsPlay Charity\nYou need to get your API key from them.");
 
         enabled = configuration.get(CAT, "enabled", enabled).getBoolean(enabled);
         APIKey = configuration.get(CAT, "APIKey", APIKey).getString();
