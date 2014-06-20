@@ -1,10 +1,15 @@
 package ccm.pay2spawn.checkers;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.misc.Donation;
+import ccm.pay2spawn.util.Helper;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class CheckerHandler
 {
@@ -29,6 +34,7 @@ public class CheckerHandler
     static
     {
         register(new StreamtipChecker());
+        register(new ChildsplayChecker());
     }
 
     public static void register(AbstractChecker abstractChecker)
@@ -55,10 +61,8 @@ public class CheckerHandler
 
     public static void fakeDonation(double amount)
     {
-        for (AbstractChecker abstractChecker : map.values())
-        {
-            if (abstractChecker.enabled())
-                abstractChecker.fakeDonation(amount);
-        }
+        Donation donation = new Donation(UUID.randomUUID().toString(), amount, new Date().getTime());
+        Helper.msg(EnumChatFormatting.GOLD + "[P2S] Faking donation of " + amount + ".");
+        Pay2Spawn.getRewardsDB().process(donation, false);
     }
 }
