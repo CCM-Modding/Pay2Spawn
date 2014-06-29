@@ -42,7 +42,6 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     }
 
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
-    DonationsBasedHudEntry[] donationsBasedHudEntries = {recentDonationsBasedHudEntry};
 
     String APIKey = "", APIsecret = "";
     boolean enabled  = true;
@@ -89,7 +88,7 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return donationsBasedHudEntries;
+        return new DonationsBasedHudEntry[] {recentDonationsBasedHudEntry};
     }
 
     @Override

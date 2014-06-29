@@ -27,7 +27,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     public final static String URL  = "https://streamtip.com/api/tips?";
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
-    DonationsBasedHudEntry[] donationsBasedHudEntries = {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
 
     String ClientID = "", ClientAccessToken = "";
     boolean enabled  = true;
@@ -76,7 +75,7 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return donationsBasedHudEntries;
+        return new DonationsBasedHudEntry[] {topDonationsBasedHudEntry, recentDonationsBasedHudEntry};
     }
 
     @Override

@@ -25,7 +25,6 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     HashMap<String, String> subs = new HashMap<>();
 
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
-    DonationsBasedHudEntry[] donationsBasedHudEntries = {recentDonationsBasedHudEntry};
 
     String  APIKey   = "";
     boolean enabled  = true;
@@ -88,7 +87,7 @@ public class TwitchChecker extends AbstractChecker implements Runnable
     @Override
     public DonationsBasedHudEntry[] getDonationsBasedHudEntries()
     {
-        return donationsBasedHudEntries;
+        return new DonationsBasedHudEntry[] {recentDonationsBasedHudEntry};
     }
 
     @Override

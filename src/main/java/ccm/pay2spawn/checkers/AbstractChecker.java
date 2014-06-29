@@ -58,14 +58,20 @@ public abstract class AbstractChecker
             if (donation.amount < Pay2Spawn.getConfig().min_donation) return;
             try
             {
-                for (DonationsBasedHudEntry donationsBasedHudEntry : getDonationsBasedHudEntries())
-                    donationsBasedHudEntry.add(donation);
+                if (this.getDonationsBasedHudEntries() != null)
+                {
+                    for (DonationsBasedHudEntry donationsBasedHudEntry : this.getDonationsBasedHudEntries())
+                    {
+                        if (donationsBasedHudEntry != null) donationsBasedHudEntry.add(donation);
+                        else Pay2Spawn.getLogger().warn("DonationsBasedHudEntry was null" + this.getName());
+                    }
+                }
 
                 Pay2Spawn.getRewardsDB().process(donation, msg);
             }
             catch (Exception e)
             {
-                Pay2Spawn.getLogger().warn("Error processing a donation.");
+                Pay2Spawn.getLogger().warn("Error processing a donation with " + this.getName());
                 e.printStackTrace();
             }
         }
