@@ -1,3 +1,5 @@
+Quick note: Pay2Spawn 1.x for 1.6.4 will be patched up to work with streamtips due to popular request :p
+
 Pay2Spawn for 1.7.2
 ===================
 <b>Pay2Spawn 2.x is now being worked on.</b>
