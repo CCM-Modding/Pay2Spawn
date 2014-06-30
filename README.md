@@ -1,4 +1,4 @@
-Quick note: Pay2Spawn 1.x for 1.6.4 will be patched up to work with streamtips due to popular request :p
+[Pay2Spawn for 1.6.4 (including with Streamtips support) here!](http://dries007.net/ccm/p2s/archive/1.6.4/)
 
 Pay2Spawn for 1.7.2
 ===================
