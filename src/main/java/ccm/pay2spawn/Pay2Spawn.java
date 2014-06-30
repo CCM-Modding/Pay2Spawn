@@ -107,7 +107,7 @@ public class Pay2Spawn
 
     public static boolean isConfiguredProperly()
     {
-        return !Strings.isNullOrEmpty(getConfig().channel) && !Strings.isNullOrEmpty(getConfig().API_Key) && !getDonationCheckerThread().firstrun;
+        return !Strings.isNullOrEmpty(getConfig().client_id) && !Strings.isNullOrEmpty(getConfig().access_token) && !getDonationCheckerThread().firstrun;
     }
 
     @Mod.EventHandler

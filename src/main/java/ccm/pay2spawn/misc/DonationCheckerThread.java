@@ -44,7 +44,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
@@ -58,8 +57,10 @@ public class DonationCheckerThread extends Thread
     public static JsonBasedHudEntry topJsonBasedHudEntry, recentJsonBasedHudEntry;
     final int    interval;
     final String channel;
-    final URL    donationsUrl;
-    final URL    subsUrl;
+    final String client_id;
+    final URL donationsUrlLatest;
+    final URL donationsUrlTop;
+    final URL subsUrl;
     public boolean firstrun = true;
     JsonArray latest;
     HashMap<String, String> subs = new HashMap<>();
@@ -69,7 +70,9 @@ public class DonationCheckerThread extends Thread
         super(DonationCheckerThread.class.getSimpleName());
         this.interval = Pay2Spawn.getConfig().interval;
         this.channel = Pay2Spawn.getConfig().channel;
-        this.donationsUrl = new URL("http://www.streamdonations.net/api/poll?channel=" + channel + "&key=" + Pay2Spawn.getConfig().API_Key);
+        this.client_id = Pay2Spawn.getConfig().client_id;
+        this.donationsUrlLatest = new URL("https://streamtip.com/api/tips?client_id=" + client_id + "&access_token=" + Pay2Spawn.getConfig().access_token + "&limit=5");
+        this.donationsUrlTop = new URL("https://streamtip.com/api/tips?client_id=" + client_id + "&access_token=" + Pay2Spawn.getConfig().access_token + "&limit=5&sort_by=amount");
         this.subsUrl = new URL("https://api.twitch.tv/kraken/channels/" + channel + "/subscriptions?limit=100&oauth_token=" + Pay2Spawn.getConfig().twitchToken);
 
         topJsonBasedHudEntry = new JsonBasedHudEntry("topDonations", 5, 1, 5, "$name: $$amount", "-- Top donations --");
@@ -93,7 +96,7 @@ public class DonationCheckerThread extends Thread
         {
             try
             {
-                if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().API_Key)) doDonations();
+                if (!Strings.isNullOrEmpty(Pay2Spawn.getConfig().access_token) && !Strings.isNullOrEmpty(Pay2Spawn.getConfig().client_id)) doDonations();
             }
             catch (Exception e)
             {
@@ -118,19 +121,14 @@ public class DonationCheckerThread extends Thread
     {
         for (JsonObject donation : backlog) process(donation, true);
 
-        JsonObject root = JSON_PARSER.parse(Helper.readUrl(donationsUrl)).getAsJsonObject();
+        JsonObject root = new JsonObject();
 
-        if (root.get("status").getAsString().equals("success"))
-        {
-            root = JsonNBTHelper.fixNulls(root);
-            doFileAndHud(root);
-            latest = root.getAsJsonArray("mostRecent");
-            for (JsonElement donation : root.getAsJsonArray("mostRecent")) process(donation.getAsJsonObject(), true);
-        }
-        else
-        {
-            throw new IllegalArgumentException(root.get("error").getAsString());
-        }
+        root.add("top", JsonNBTHelper.fixNulls(JSON_PARSER.parse(Helper.readUrl(donationsUrlTop)).getAsJsonObject()).getAsJsonArray("tips"));
+        root.add("mostRecent", JsonNBTHelper.fixNulls(JSON_PARSER.parse(Helper.readUrl(donationsUrlLatest)).getAsJsonObject()).getAsJsonArray("tips"));
+
+        doFileAndHud(root);
+        latest = root.getAsJsonArray("mostRecent");
+        for (JsonElement donation : latest) process(donation.getAsJsonObject(), true);
     }
 
     private void doSubs() throws Exception
@@ -177,14 +175,14 @@ public class DonationCheckerThread extends Thread
 
     private void process(JsonObject donation, boolean msg)
     {
-        if (firstrun) doneIDs.add(donation.get("transactionID").getAsString());
+        if (firstrun) doneIDs.add(donation.get("transactionId").getAsString());
         if (Minecraft.getMinecraft().thePlayer == null || !Pay2Spawn.enable)
         {
             if (!backlog.contains(donation)) backlog.add(donation);
         }
-        else if (!doneIDs.contains(donation.get("transactionID").getAsString()))
+        else if (!doneIDs.contains(donation.get("transactionId").getAsString()))
         {
-            doneIDs.add(donation.get("transactionID").getAsString());
+            doneIDs.add(donation.get("transactionId").getAsString());
             MetricsHelper.totalMoney += donation.get("amount").getAsDouble();
             if (donation.get("amount").getAsDouble() < Pay2Spawn.getConfig().min_donation) return;
             try

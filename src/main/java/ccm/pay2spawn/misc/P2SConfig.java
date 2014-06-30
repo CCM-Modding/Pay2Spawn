@@ -48,9 +48,10 @@ public class P2SConfig
     public  boolean  forceP2S          = false;
     public  double   min_donation      = 1;
     public  int      interval          = 10;
-    public  String   API_Key           = "";
+    public  String   access_token      = "";
     public  String   channel           = "";
     public  String   twitchToken       = "";
+    public  String   client_id         = "";
     private String[] blacklist_Name    = {"fuck", "cunt", "dick", "shit"};
     private String[] blacklist_Note    = {"fuck", "cunt", "dick", "shit"};
     private String[] whitelist_Name    = {"\"[\\w-]*\""};
@@ -66,6 +67,7 @@ public class P2SConfig
     public String subReward = "-2";
     public String serverMessage = "$streamer got $$amount from $name and $reward_name was triggerd!";
 
+
     public P2SConfig(File file)
     {
         configuration = new Configuration(file);
@@ -73,8 +75,9 @@ public class P2SConfig
         configuration.addCustomCategoryComment(MODID, "All config settings for " + NAME + "\nDon't forget the other files in this folder!\nFor all message type things (all text basically) use & for color codes!");
 
         interval = configuration.get(MODID, "interval", interval, "Amount of seconds in between each pull.").getInt();
-        channel = configuration.get(MODID, "channel", channel, "Your channel name, see http://donationtrack.nightdev.com/").getString();
-        API_Key = configuration.get(MODID, "API_Key", API_Key, "Your API Key, see http://donationtrack.nightdev.com/").getString();
+        channel = configuration.get(MODID, "channel", channel, "Your channel name.").getString();
+        access_token = configuration.get(MODID, "access_token", access_token, "Your access token, see http://streamtip.com/account").getString();
+        client_id = configuration.get(MODID, "client_id", client_id, "Your client id, see http://streamtip.com/account").getString();
         twitchToken = configuration.get(MODID, "twitchToken", twitchToken, "Get it from http://dries007.net/ccm/p2s/ ONLY WORKS IF YOU HAVE A SUB BUTTON.").getString();
         min_donation = configuration.get(MODID, "min_donation", min_donation, "Below this threshold no donations will be resisted. Set to 0 to disable.").getDouble(min_donation);
         forceServerconfig = configuration.get(MODID, "forceServerconfig", forceServerconfig, "If a client connects, force the config from the server to the client.").getBoolean(forceServerconfig);
