@@ -2,7 +2,7 @@
 
 Pay2Spawn for 1.7.2
 ===================
-<b>Pay2Spawn 2.x is now being worked on.</b>
+<b>Pay2Spawn 2.x is now done!</b>
 
 Screw or help your favourite streamer!
 
@@ -29,6 +29,10 @@ Otherwise this will be used: [Y U NO POST CONFIG & STACKTRACE](http://dries007.n
 Problems guide
 -------------
 [If you crash and want help reporting/solving a bug, click here.](https://github.com/CCM-Modding/Pay2Spawn/blob/master/Problems.md)
+
+Donate
+------
+If you want to donate to me (dries007), you can [paypal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=M6XDAP29UDX7Q) or [patreon](http://www.patreon.com/dries007) me.
 
 Downloads
 ---------
