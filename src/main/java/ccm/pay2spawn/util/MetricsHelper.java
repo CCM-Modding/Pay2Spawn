@@ -25,6 +25,10 @@ package ccm.pay2spawn.util;
 
 import ccm.libs.org.mcstats.Metrics;
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.checkers.AbstractChecker;
+import ccm.pay2spawn.checkers.CheckerHandler;
+import ccm.pay2spawn.checkers.TwitchChecker;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 import java.io.IOException;
 
@@ -38,22 +42,49 @@ import static ccm.pay2spawn.util.Constants.NAME;
 public class MetricsHelper
 {
     public static  double  totalMoney;
-    private static Metrics metrics;
+    public static Metrics metrics;
 
     public static void init()
     {
         if (metrics != null) return;
         try
         {
-            metrics = new Metrics(NAME, Pay2Spawn.getVersion());
-            metrics.createGraph("Money").addPlotter(new Metrics.Plotter()
+            metrics = new Metrics(NAME + "2", Pay2Spawn.getVersion());
+            if (FMLCommonHandler.instance().getEffectiveSide().isClient())
             {
-                @Override
-                public int getValue()
+                metrics.createGraph("RewardCount").addPlotter(new Metrics.Plotter() {
+                    @Override
+                    public int getValue()
+                    {
+                        return Pay2Spawn.getRewardsDB().getRewards().size();
+                    }
+                });
+                metrics.createGraph("MaxReward").addPlotter(new Metrics.Plotter() {
+                    @Override
+                    public int getValue()
+                    {
+                        return (int) (Helper.findMax(Pay2Spawn.getRewardsDB().getAmounts()));
+                    }
+                });
+                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(TwitchChecker.INSTANCE.getChannel()) {
+                    @Override
+                    public int getValue()
+                    {
+                        return 1;
+                    }
+                });
+                Metrics.Graph graph = metrics.createGraph("Providers");
+                for (final AbstractChecker abstractChecker : CheckerHandler.getAbstractCheckers())
                 {
-                    return (int) totalMoney;
+                    graph.addPlotter(new Metrics.Plotter(abstractChecker.getName()) {
+                        @Override
+                        public int getValue()
+                        {
+                            return abstractChecker.enabled() ? 1 : 0;
+                        }
+                    });
                 }
-            });
+            }
             metrics.start();
         }
         catch (IOException e)

@@ -6,10 +6,7 @@ import ccm.pay2spawn.util.Helper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 public class CheckerHandler
 {
@@ -36,6 +33,11 @@ public class CheckerHandler
         register(StreamtipChecker.INSTANCE);
         register(ChildsplayChecker.INSTANCE);
         register(TwitchChecker.INSTANCE);
+    }
+
+    public static Collection<AbstractChecker> getAbstractCheckers()
+    {
+        return map.values();
     }
 
     public static void register(AbstractChecker abstractChecker)

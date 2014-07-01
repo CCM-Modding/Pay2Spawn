@@ -25,6 +25,7 @@ package ccm.pay2spawn;
 
 import ccm.libs.com.jadarstudios.developercapes.DevCapes;
 import ccm.pay2spawn.checkers.CheckerHandler;
+import ccm.pay2spawn.checkers.TwitchChecker;
 import ccm.pay2spawn.cmd.CommandP2S;
 import ccm.pay2spawn.cmd.CommandP2SPermissions;
 import ccm.pay2spawn.cmd.CommandP2SServer;
@@ -38,6 +39,7 @@ import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.*;
+import com.google.common.base.Strings;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -132,8 +134,16 @@ public class Pay2Spawn
         configFolder.mkdirs();
 
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
+        MetricsHelper.init();
 
-        logger.warn("Make sure you configure your PayPal account correctly BEFORE making bug reports!");
+        if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient())
+        {
+            logger.warn("########################################################################################################################################################################");
+            logger.warn("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
+            logger.warn("########################################################################################################################################################################");
+
+            throw new RuntimeException("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
+        }
 
         TypeRegistry.preInit();
         Statistics.preInit();
@@ -149,7 +159,6 @@ public class Pay2Spawn
         config.configuration.save();
 
         rewardsDB = new RewardsDB(getRewardDBFile());
-        MetricsHelper.init();
 
         if (event.getSide().isClient())
         {

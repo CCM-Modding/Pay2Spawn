@@ -43,6 +43,7 @@ import net.minecraft.util.EnumChatFormatting;
 import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -325,6 +326,17 @@ public class Helper
         {
             return false;
         }
+    }
+
+    public static  double findMax(Collection<Double> vals)
+    {
+        double max = Double.MIN_VALUE;
+
+        for (double d : vals) {
+            if (d > max) max = d;
+        }
+
+        return max;
     }
 
     public static void sendChatToPlayer(ICommandSender player, String message, EnumChatFormatting chatFormatting)
