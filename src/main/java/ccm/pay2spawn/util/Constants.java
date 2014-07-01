@@ -61,7 +61,7 @@ public class Constants
     /**
      * Donation data
      */
-    public static final String DONATION_USERNAME = "twitchUsername";
+    public static final String DONATION_USERNAME = "username";
     public static final String DONATION_AMOUNT   = "amount";
     public static final String DONATION_NOTE     = "note";
     public static final String ANONYMOUS         = "Anonymous";

@@ -150,7 +150,7 @@ public class DonationCheckerThread extends Thread
                 JsonObject donation = new JsonObject();
                 donation.addProperty("amount", Double.parseDouble(RandomRegistry.solveRandom(DOUBLE, Pay2Spawn.getConfig().subReward)));
                 donation.addProperty("note", "");
-                donation.addProperty("twitchUsername", newSubs.get(sub));
+                donation.addProperty("username", newSubs.get(sub));
                 try
                 {
                     Pay2Spawn.getRewardsDB().process(donation, true);
