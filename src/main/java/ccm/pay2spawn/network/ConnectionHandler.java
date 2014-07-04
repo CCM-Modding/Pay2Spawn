@@ -52,7 +52,7 @@ public class ConnectionHandler
     public void playerLoggedIn(PlayerEvent.PlayerLoggedInEvent event)
     {
         if (event.player instanceof EntityPlayerMP) // Cheap server detection
-            StatusPacket.sendHandshakeToPlayer((EntityPlayerMP) event.player);
+            StatusMessage.sendHandshakeToPlayer((EntityPlayerMP) event.player);
     }
 
     @SubscribeEvent
@@ -66,7 +66,7 @@ public class ConnectionHandler
                 @Override
                 public void run()
                 {
-                    if (!StatusPacket.doesPlayerHaveValidConfig(username)) MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
+                    if (!StatusMessage.doesPlayerHaveValidConfig(username)) MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(username).playerNetServerHandler.kickPlayerFromServer("Pay2Spawn is required on this server.\nIt needs to be configured properly.");
                 }
             }, 5 * 1000);
         }
@@ -76,13 +76,13 @@ public class ConnectionHandler
     public void disconnect(FMLNetworkEvent.ClientDisconnectionFromServerEvent event)
     {
         Pay2Spawn.reloadDB();
-        StatusPacket.resetServerStatus();
+        StatusMessage.resetServerStatus();
         new Timer().schedule(new TimerTask()
         {
             @Override
             public void run()
             {
-                if (!StatusPacket.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
+                if (!StatusMessage.doesServerHaveMod()) Helper.msg(EnumChatFormatting.RED + NAME + " isn't on the server. No rewards will spawn!");
             }
         }, 5 * 1000);
     }

@@ -24,8 +24,8 @@
 package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.network.NbtRequestPacket;
-import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.network.NbtRequestMessage;
+import ccm.pay2spawn.network.TestMessage;
 import ccm.pay2spawn.util.IIHasCallback;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
@@ -157,7 +157,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
-                TestPacket.sendToServer(name, data);
+                TestMessage.sendToServer(name, data);
             }
         });
         saveButton.addActionListener(new ActionListener()
@@ -201,7 +201,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.requestFirework(instance);
+                NbtRequestMessage.requestFirework(instance);
             }
         });
         addExplosionManuallyButton.addActionListener(new ActionListener()

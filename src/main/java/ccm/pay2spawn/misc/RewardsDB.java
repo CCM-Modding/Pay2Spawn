@@ -24,8 +24,7 @@
 package ccm.pay2spawn.misc;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.network.MessagePacket;
-import ccm.pay2spawn.network.PacketPipeline;
+import ccm.pay2spawn.network.MessageMessage;
 import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
@@ -150,7 +149,7 @@ public class RewardsDB
             RandomRegistry.getRandomFromSet(map.get(-1D)).addToCountdown(donation, false, reward);
         }
 
-        PacketPipeline.PIPELINE.sendToServer(new MessagePacket(reward, donation));
+        Pay2Spawn.getSnw().sendToServer(new MessageMessage(reward, donation));
     }
 
     public Set<Double> getAmounts()

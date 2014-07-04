@@ -24,8 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.network.MusicPacket;
-import ccm.pay2spawn.network.PacketPipeline;
+import ccm.pay2spawn.network.MusicMessage;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.MusicTypeGui;
 import ccm.pay2spawn.util.Constants;
@@ -78,7 +77,7 @@ public class MusicType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
-        PacketPipeline.PIPELINE.sendTo(new MusicPacket(dataFromClient.getString(SOUND_KEY)), (EntityPlayerMP) player);
+        Pay2Spawn.getSnw().sendTo(new MusicMessage(dataFromClient.getString(SOUND_KEY)), (EntityPlayerMP) player);
     }
 
     @Override

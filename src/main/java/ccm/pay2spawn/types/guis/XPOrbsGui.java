@@ -24,7 +24,7 @@
 package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.network.TestMessage;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
@@ -67,7 +67,7 @@ public class XPOrbsGui extends HelperGuiBase
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
-                TestPacket.sendToServer(name, data);
+                TestMessage.sendToServer(name, data);
             }
         });
         saveButton.addActionListener(new ActionListener()

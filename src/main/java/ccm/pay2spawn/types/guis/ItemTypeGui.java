@@ -24,8 +24,8 @@
 package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
-import ccm.pay2spawn.network.NbtRequestPacket;
-import ccm.pay2spawn.network.TestPacket;
+import ccm.pay2spawn.network.NbtRequestMessage;
+import ccm.pay2spawn.network.TestMessage;
 import ccm.pay2spawn.util.IIHasCallback;
 import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
@@ -83,7 +83,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
             public void actionPerformed(ActionEvent e)
             {
                 updateJson();
-                TestPacket.sendToServer(name, data);
+                TestMessage.sendToServer(name, data);
             }
         });
         saveButton.addActionListener(new ActionListener()
@@ -127,7 +127,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.requestItem(instance);
+                NbtRequestMessage.requestItem(instance);
             }
         });
     }

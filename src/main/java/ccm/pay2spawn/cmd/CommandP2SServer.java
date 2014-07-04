@@ -24,7 +24,7 @@
 package ccm.pay2spawn.cmd;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.network.StatusPacket;
+import ccm.pay2spawn.network.StatusMessage;
 import ccm.pay2spawn.util.Constants;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -117,7 +117,7 @@ public class CommandP2SServer extends CommandBase
                 break;
             case "hasmod":
                 if (args.length == 1) sendChatToPlayer(sender, "Use '/p2sserver hasmod <player>'.", EnumChatFormatting.RED);
-                else sendChatToPlayer(sender, args[1] + (StatusPacket.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.", EnumChatFormatting.AQUA);
+                else sendChatToPlayer(sender, args[1] + (StatusMessage.doesPlayerHaveValidConfig(args[1]) ? " does " : " doesn't ") + "have P2S.", EnumChatFormatting.AQUA);
                 break;
             default:
                 sendChatToPlayer(sender, "Unknown command. Protip: Use tab completion!", EnumChatFormatting.RED);

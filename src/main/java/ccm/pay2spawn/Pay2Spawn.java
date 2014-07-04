@@ -33,8 +33,7 @@ import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.configurator.HTMLGenerator;
 import ccm.pay2spawn.misc.P2SConfig;
 import ccm.pay2spawn.misc.RewardsDB;
-import ccm.pay2spawn.network.PacketPipeline;
-import ccm.pay2spawn.network.StatusPacket;
+import ccm.pay2spawn.network.*;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
@@ -46,6 +45,9 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.Logger;
 
@@ -76,6 +78,7 @@ public class Pay2Spawn
     private P2SConfig             config;
     private File                  configFolder;
     private Logger                logger;
+    private SimpleNetworkWrapper  snw;
 
     public static String getVersion()
     {
@@ -96,6 +99,11 @@ public class Pay2Spawn
         return instance.configFolder;
     }
 
+    public static SimpleNetworkWrapper getSnw()
+    {
+        return instance.snw;
+    }
+
     public static File getRewardDBFile() { return new File(instance.configFolder, NAME + ".json"); }
 
     public static void reloadDB()
@@ -114,8 +122,8 @@ public class Pay2Spawn
 
     public static void reloadDB_Server() throws Exception
     {
-        StatusPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
-        StatusPacket.sendConfigToAllPlayers();
+        StatusMessage.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
+        StatusMessage.sendConfigToAllPlayers();
     }
 
     public static void reloadDBFromServer(String input)
@@ -145,6 +153,18 @@ public class Pay2Spawn
             throw new RuntimeException("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
         }
 
+        int id = 0;
+        snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+        snw.registerMessage(KilldataMessage.Handler.class, KilldataMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(MessageMessage.Handler.class, MessageMessage.class, id++, Side.SERVER);
+        snw.registerMessage(MusicMessage.Handler.class, MusicMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(NbtRequestMessage.Handler.class, NbtRequestMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(NbtRequestMessage.Handler.class, NbtRequestMessage.class, id++, Side.SERVER);
+        snw.registerMessage(RewardMessage.Handler.class, RewardMessage.class, id++, Side.SERVER);
+        snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.SERVER);
+        snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.CLIENT);
+        snw.registerMessage(TestMessage.Handler.class, TestMessage.class, id++, Side.SERVER);
+
         TypeRegistry.preInit();
         Statistics.preInit();
     }
@@ -152,7 +172,6 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) throws MalformedURLException
     {
-        PacketPipeline.PIPELINE.initialise();
         ServerTickHandler.INSTANCE.init();
 
         TypeRegistry.doConfig(config.configuration);
@@ -174,7 +193,6 @@ public class Pay2Spawn
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-        PacketPipeline.PIPELINE.postInitialise();
         for (TypeBase base : TypeRegistry.getAllTypes()) base.printHelpList(configFolder);
 
         TypeRegistry.registerPermissions();
@@ -195,7 +213,7 @@ public class Pay2Spawn
         PermissionsHandler.init();
         try
         {
-            StatusPacket.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
+            StatusMessage.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
         }
         catch (FileNotFoundException e)
         {

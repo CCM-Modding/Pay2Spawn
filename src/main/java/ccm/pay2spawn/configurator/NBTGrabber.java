@@ -23,7 +23,7 @@
 
 package ccm.pay2spawn.configurator;
 
-import ccm.pay2spawn.network.NbtRequestPacket;
+import ccm.pay2spawn.network.NbtRequestMessage;
 import ccm.pay2spawn.util.IIHasCallback;
 
 import javax.swing.*;
@@ -68,7 +68,7 @@ public class NBTGrabber implements IIHasCallback
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.requestEntity(instance);
+                NbtRequestMessage.requestEntity(instance);
             }
         });
 
@@ -77,7 +77,7 @@ public class NBTGrabber implements IIHasCallback
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                NbtRequestPacket.requestItem(instance);
+                NbtRequestMessage.requestItem(instance);
             }
         });
     }

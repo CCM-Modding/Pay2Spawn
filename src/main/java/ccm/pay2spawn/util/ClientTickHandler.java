@@ -23,14 +23,13 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.CountDownHudEntry;
 import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.misc.Donation;
 import ccm.pay2spawn.misc.Reward;
-import ccm.pay2spawn.network.PacketPipeline;
-import ccm.pay2spawn.network.RewardPacket;
+import ccm.pay2spawn.network.RewardMessage;
 import com.google.common.base.Strings;
-import com.google.gson.JsonObject;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
@@ -108,7 +107,7 @@ public class ClientTickHandler
 
         public void send()
         {
-            PacketPipeline.PIPELINE.sendToServer(new RewardPacket(reward, donation, actualReward));
+            Pay2Spawn.getSnw().sendToServer(new RewardMessage(reward, donation, actualReward));
         }
     }
 }

@@ -23,10 +23,10 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.Hud;
-import ccm.pay2spawn.network.KilldataPacket;
-import ccm.pay2spawn.network.NbtRequestPacket;
-import ccm.pay2spawn.network.PacketPipeline;
+import ccm.pay2spawn.network.KilldataMessage;
+import ccm.pay2spawn.network.NbtRequestMessage;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -74,7 +74,7 @@ public class EventHandler
         if (entityTracking)
         {
             entityTracking = false;
-            NbtRequestPacket.requestByEntityID(event.target.getEntityId());
+            NbtRequestMessage.requestByEntityID(event.target.getEntityId());
         }
     }
 
@@ -88,7 +88,7 @@ public class EventHandler
             {
                 NBTTagCompound data = entityDamageSource.getEntity().getEntityData().getCompoundTag(Constants.NAME);
                 data.setString("mob", EntityList.getEntityString(entityDamageSource.getEntity()));
-                PacketPipeline.PIPELINE.sendTo(new KilldataPacket(data), (EntityPlayerMP) event.entity);
+                Pay2Spawn.getSnw().sendTo(new KilldataMessage(data), (EntityPlayerMP) event.entity);
             }
         }
     }
