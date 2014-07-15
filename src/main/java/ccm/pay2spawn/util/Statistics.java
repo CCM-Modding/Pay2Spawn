@@ -58,6 +58,7 @@ public class Statistics
 
     public static void addToDonationAmount(double amount)
     {
+        MetricsHelper.totalMoney += amount;
         totalDonationHudEntry.addToDonationamount(amount);
     }
 

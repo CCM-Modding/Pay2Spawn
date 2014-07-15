@@ -3,7 +3,6 @@ package ccm.pay2spawn.checkers;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.DonationsBasedHudEntry;
 import ccm.pay2spawn.misc.Donation;
-import ccm.pay2spawn.util.MetricsHelper;
 import ccm.pay2spawn.util.Statistics;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.config.Configuration;
@@ -55,7 +54,6 @@ public abstract class AbstractChecker
             doneIDs.add(donation.id);
             if (donation.amount > 0) // Only do these things for real donation amounts.
             {
-                MetricsHelper.totalMoney += donation.amount;
                 Statistics.addToDonationAmount(donation.amount);
                 if (donation.amount < Pay2Spawn.getConfig().min_donation) return;
             }
