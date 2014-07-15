@@ -33,6 +33,7 @@ public class CheckerHandler
         register(StreamtipChecker.INSTANCE);
         register(ChildsplayChecker.INSTANCE);
         register(TwitchChecker.INSTANCE);
+        register(DonationTrackerChecker.INSTANCE);
     }
 
     public static Collection<AbstractChecker> getAbstractCheckers()

@@ -98,4 +98,10 @@ public class Donation
         result = 31 * result + (int) (time ^ (time >>> 32));
         return result;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Donation[" + id + ", " + amount + ", " + username + ", " + note + ", " + time + ']';
+    }
 }
