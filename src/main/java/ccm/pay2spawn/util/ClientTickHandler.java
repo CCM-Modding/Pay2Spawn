@@ -56,6 +56,8 @@ public class ClientTickHandler
         if (i++ != 20) return;
         i = 0;
 
+        countDownHudEntry.lines.clear();
+
         Iterator<QueEntry> rewardIterator = entries.iterator();
         while (rewardIterator.hasNext())
         {
