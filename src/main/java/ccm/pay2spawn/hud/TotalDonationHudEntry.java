@@ -1,7 +1,7 @@
 package ccm.pay2spawn.hud;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
@@ -23,7 +23,7 @@ public class TotalDonationHudEntry implements IHudEntry
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
         this.amount = amount;
 
-        config.save();
+        Pay2Spawn.getConfig().save();
     }
 
     @Override

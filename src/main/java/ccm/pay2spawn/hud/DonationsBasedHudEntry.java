@@ -23,7 +23,7 @@
 
 package ccm.pay2spawn.hud;
 
-import ccm.pay2spawn.misc.Donation;
+import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Helper;
 import com.google.common.base.Strings;
 import net.minecraftforge.common.config.Configuration;

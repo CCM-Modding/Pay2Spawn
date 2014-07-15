@@ -24,8 +24,8 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.Point;
-import ccm.pay2spawn.misc.Vector3;
+import ccm.pay2spawn.util.Point;
+import ccm.pay2spawn.util.Vector3;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;

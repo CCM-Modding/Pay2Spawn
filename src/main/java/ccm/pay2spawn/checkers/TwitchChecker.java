@@ -2,7 +2,7 @@ package ccm.pay2spawn.checkers;
 
 import ccm.pay2spawn.hud.DonationsBasedHudEntry;
 import ccm.pay2spawn.hud.Hud;
-import ccm.pay2spawn.misc.Donation;
+import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

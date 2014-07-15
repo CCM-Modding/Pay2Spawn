@@ -24,7 +24,7 @@
 package ccm.pay2spawn.hud;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.P2SConfig;
+import ccm.pay2spawn.P2SConfig;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
 
@@ -49,7 +49,7 @@ public class StatisticsHudEntry implements IHudEntry
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
         header = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "header", defaultHeader, "Empty for no header. Use \\n for a blank line.").getString()).trim();
 
-        config.save();
+        Pay2Spawn.getConfig().save();
     }
 
     @Override

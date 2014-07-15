@@ -31,8 +31,6 @@ import ccm.pay2spawn.cmd.CommandP2SPermissions;
 import ccm.pay2spawn.cmd.CommandP2SServer;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.configurator.HTMLGenerator;
-import ccm.pay2spawn.misc.P2SConfig;
-import ccm.pay2spawn.misc.RewardsDB;
 import ccm.pay2spawn.network.*;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
@@ -48,6 +46,7 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.Logger;
 
@@ -144,18 +143,8 @@ public class Pay2Spawn
         config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
         MetricsHelper.init();
 
-        if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient())
-        {
-            logger.warn("########################################################################################################################################################################");
-            logger.warn("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
-            logger.warn("########################################################################################################################################################################");
-
-            throw new RuntimeException("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
-        }
-
         int id = 0;
         snw = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
-        snw.registerMessage(KilldataMessage.Handler.class, KilldataMessage.class, id++, Side.CLIENT);
         snw.registerMessage(MessageMessage.Handler.class, MessageMessage.class, id++, Side.SERVER);
         snw.registerMessage(MusicMessage.Handler.class, MusicMessage.class, id++, Side.CLIENT);
         snw.registerMessage(NbtRequestMessage.Handler.class, NbtRequestMessage.class, id++, Side.CLIENT);
@@ -175,7 +164,7 @@ public class Pay2Spawn
         ServerTickHandler.INSTANCE.init();
 
         TypeRegistry.doConfig(config.configuration);
-        config.configuration.save();
+        config.save();
 
         rewardsDB = new RewardsDB(getRewardDBFile());
 
@@ -204,6 +193,17 @@ public class Pay2Spawn
         {
             logger.warn("Error initializing the HTMLGenerator.");
             e.printStackTrace();
+        }
+
+        boolean deobf = Launch.blackboard.containsKey("fml.deobfuscatedEnvironment") ? Boolean.valueOf(Launch.blackboard.get("fml.deobfuscatedEnvironment").toString()) : false;
+
+        if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
+        {
+            logger.warn("########################################################################################################################################################################");
+            logger.warn("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
+            logger.warn("########################################################################################################################################################################");
+
+            throw new RuntimeException("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
         }
     }
 

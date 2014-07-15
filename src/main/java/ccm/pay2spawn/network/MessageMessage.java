@@ -1,8 +1,8 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.Donation;
-import ccm.pay2spawn.misc.Reward;
+import ccm.pay2spawn.util.Donation;
+import ccm.pay2spawn.util.Reward;
 import ccm.pay2spawn.util.Helper;
 import com.google.common.base.Strings;
 import cpw.mods.fml.common.network.ByteBufUtils;

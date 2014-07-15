@@ -1,7 +1,7 @@
 package ccm.pay2spawn.checkers;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.misc.Donation;
+import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Helper;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;

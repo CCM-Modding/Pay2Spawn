@@ -26,8 +26,6 @@ package ccm.pay2spawn.util;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.CountDownHudEntry;
 import ccm.pay2spawn.hud.Hud;
-import ccm.pay2spawn.misc.Donation;
-import ccm.pay2spawn.misc.Reward;
 import ccm.pay2spawn.network.RewardMessage;
 import com.google.common.base.Strings;
 import cpw.mods.fml.common.FMLCommonHandler;

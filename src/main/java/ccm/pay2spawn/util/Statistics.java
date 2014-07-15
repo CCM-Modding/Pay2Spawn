@@ -51,7 +51,7 @@ public class Statistics
     private static HashMap<String, Integer> spawnsMap       = new HashMap<>();
     private static TreeMap<String, Integer> sortedSpawnsMap = new TreeMap<>(new ValueComparator(spawnsMap));
 
-    private static StatisticsHudEntry killsStatisticsHudEntry, spawnsStatisticsHudEntry;
+    private static StatisticsHudEntry spawnsStatisticsHudEntry;
     private static TotalDonationHudEntry totalDonationHudEntry;
 
     private Statistics() {}
@@ -74,8 +74,6 @@ public class Statistics
         killsMap.put(name, i + 1);
 
         sortedKillsMap.putAll(killsMap);
-
-        update(sortedKillsMap, killsStatisticsHudEntry);
 
         save();
     }
@@ -126,10 +124,6 @@ public class Statistics
                 sortedSpawnsMap.putAll(spawnsMap);
             }
         }
-
-        killsStatisticsHudEntry = new StatisticsHudEntry("topKillers", -1, 1, 5, "$amount x $name", "-- Top kills by mobs: --");
-        Hud.INSTANCE.set.add(killsStatisticsHudEntry);
-        update(sortedKillsMap, killsStatisticsHudEntry);
 
         spawnsStatisticsHudEntry = new StatisticsHudEntry("topSpawned", -1, 2, 5, "$amount x $name", "-- Top spawned rewards: --");
         Hud.INSTANCE.set.add(spawnsStatisticsHudEntry);

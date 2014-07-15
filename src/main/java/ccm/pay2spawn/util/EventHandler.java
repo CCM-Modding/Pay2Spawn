@@ -23,21 +23,13 @@
 
 package ccm.pay2spawn.util;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.Hud;
-import ccm.pay2spawn.network.KilldataMessage;
 import ccm.pay2spawn.network.NbtRequestMessage;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
 
 import java.util.ArrayList;
@@ -75,21 +67,6 @@ public class EventHandler
         {
             entityTracking = false;
             NbtRequestMessage.requestByEntityID(event.target.getEntityId());
-        }
-    }
-
-    @SubscribeEvent
-    public void event(LivingDeathEvent event)
-    {
-        if (event.entity instanceof EntityPlayer && event.source instanceof EntityDamageSource)
-        {
-            EntityDamageSource entityDamageSource = (EntityDamageSource) event.source;
-            if (entityDamageSource.getEntity().getEntityData().hasKey(Constants.NAME))
-            {
-                NBTTagCompound data = entityDamageSource.getEntity().getEntityData().getCompoundTag(Constants.NAME);
-                data.setString("mob", EntityList.getEntityString(entityDamageSource.getEntity()));
-                Pay2Spawn.getSnw().sendTo(new KilldataMessage(data), (EntityPlayerMP) event.entity);
-            }
         }
     }
 
