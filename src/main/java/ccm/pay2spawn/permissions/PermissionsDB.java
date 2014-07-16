@@ -137,6 +137,7 @@ public class PermissionsDB
 
     public Player getPlayer(String name)
     {
+        if (!playerDB.containsKey(name)) newPlayer(name);
         return playerDB.get(name);
     }
 
