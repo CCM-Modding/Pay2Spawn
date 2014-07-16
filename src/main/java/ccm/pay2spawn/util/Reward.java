@@ -68,6 +68,7 @@ public class Reward
         catch (Exception e)
         {
             Pay2Spawn.getLogger().warn("ERROR TYPE 2: Error in reward " + name + "'s NBT data.");
+            Pay2Spawn.getLogger().warn(rewards.toString());
             throw e;
         }
     }

@@ -37,7 +37,7 @@ import static ccm.pay2spawn.util.Constants.*;
  */
 public class RndBoolean implements IRandomResolver
 {
-    private static final Pattern PATTERN = Pattern.compile("\\$random");
+    private static final Pattern PATTERN = Pattern.compile("\\$random\\(\\)");
 
     @Override
     public String getIdentifier()
