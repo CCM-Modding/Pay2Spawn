@@ -26,19 +26,19 @@ package ccm.pay2spawn.random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.RANDOM;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Picks a random number in between 2 given numbers, int or double
  * Expected syntax: $random(x,y)
  * Format: A random number between x and y
- * Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE
+ * Works with: BYTE, SHORT, INT, LONG, FLOAT, DOUBLE, STRING
  *
  * @author Dries007
  */
 public class RndNumberRange implements IRandomResolver
 {
-    private final static Pattern PATTERN = Pattern.compile("^\\$random\\((-?\\w+),(-?\\w+)\\)$");
+    private final static Pattern PATTERN = Pattern.compile("\\$random\\((-?\\w+), ?(-?\\w+)\\)");
 
     @Override
     public String getIdentifier()
@@ -53,21 +53,22 @@ public class RndNumberRange implements IRandomResolver
         matcher.find();
         switch (type)
         {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
+            case BYTE:
+            case SHORT:
+            case INT:
+            case LONG:
+            case STRING:
             {
                 int begin = Integer.parseInt(matcher.group(1));
                 int end = Integer.parseInt(matcher.group(2));
-                return "" + (begin + RANDOM.nextInt(end - begin));
+                return matcher.replaceFirst("" + (begin + RANDOM.nextInt(end - begin)));
             }
-            case 5:
-            case 6:
+            case FLOAT:
+            case DOUBLE:
             {
                 double begin = Double.parseDouble(matcher.group(1));
                 double end = Double.parseDouble(matcher.group(2));
-                return "" + (begin + (end - begin) * RANDOM.nextDouble());
+                return matcher.replaceFirst("" + (begin + (end - begin) * RANDOM.nextDouble()));
             }
         }
         return value;
@@ -76,6 +77,6 @@ public class RndNumberRange implements IRandomResolver
     @Override
     public boolean matches(int type, String value)
     {
-        return type != 7 && type != 8 && type != 9 && type != 11 && PATTERN.matcher(value).matches();
+        return type != BYTE_ARRAY && type != LIST && type != INT_ARRAY && PATTERN.matcher(value).find();
     }
 }

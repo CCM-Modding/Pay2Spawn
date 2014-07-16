@@ -27,6 +27,8 @@ import net.minecraft.entity.EntityList;
 
 import java.util.regex.Pattern;
 
+import static ccm.pay2spawn.util.Constants.*;
+
 /**
  * Picks a random entity name (see EntityList.txt)
  * Expected syntax: $randomEntity
@@ -37,7 +39,7 @@ import java.util.regex.Pattern;
  */
 public class RndEntity implements IRandomResolver
 {
-    private static final Pattern PATTERN = Pattern.compile("^\\$randomEntity$");
+    private static final Pattern PATTERN = Pattern.compile("\\$randomEntity");
 
     @Override
     public String getIdentifier()
@@ -48,12 +50,12 @@ public class RndEntity implements IRandomResolver
     @Override
     public String solverRandom(int type, String value)
     {
-        return EntityList.getStringFromID((Integer) RandomRegistry.getRandomFromSet(EntityList.entityEggs.keySet()));
+        return PATTERN.matcher(value).replaceFirst(EntityList.getStringFromID((Integer) RandomRegistry.getRandomFromSet(EntityList.entityEggs.keySet())));
     }
 
     @Override
     public boolean matches(int type, String value)
     {
-        return type == 8 && PATTERN.matcher(value).matches();
+        return type == STRING && PATTERN.matcher(value).find();
     }
 }

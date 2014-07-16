@@ -70,7 +70,10 @@ public class RandomRegistry
     {
         for (IRandomResolver resolver : RANDOM_RESOLVERS.values())
         {
-            if (resolver.matches(type, value)) return resolver.solverRandom(type, value);
+            while (resolver.matches(type, value))
+            {
+                value = resolver.solverRandom(type, value);
+            }
         }
         return value;
     }

@@ -27,6 +27,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ccm.pay2spawn.util.Constants.*;
+
 /**
  * Picks 1 value from a list
  * Expected syntax: $random[value1, value2, value3, value4, ..., valueN]
@@ -37,7 +39,7 @@ import java.util.regex.Pattern;
  */
 public class RndListValue implements IRandomResolver
 {
-    private final static Pattern PATTERN = Pattern.compile("^\\$random\\[(.+)\\]$");
+    private final static Pattern PATTERN = Pattern.compile("\\$random\\[(.+)\\]");
 
     @Override
     public String getIdentifier()
@@ -50,12 +52,12 @@ public class RndListValue implements IRandomResolver
     {
         Matcher matcher = PATTERN.matcher(value);
         matcher.find();
-        return RandomRegistry.getRandomFromSet(Arrays.asList(matcher.group(1).split(", ?")));
+        return matcher.replaceFirst(RandomRegistry.getRandomFromSet(Arrays.asList(matcher.group(1).split(", ?"))));
     }
 
     @Override
     public boolean matches(int type, String value)
     {
-        return type != 7 && type != 11 && PATTERN.matcher(value).matches();
+        return type != BYTE_ARRAY && type != INT_ARRAY && PATTERN.matcher(value).find();
     }
 }

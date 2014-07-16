@@ -29,19 +29,19 @@ import com.google.gson.JsonPrimitive;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.RANDOM;
+import static ccm.pay2spawn.util.Constants.*;
 
 /**
  * Produces a random color array
  * Expected syntax: $randomRGB(x)
  * Format: An int array with x amount of random colors
- * Works with: INT[]
+ * Works with: INT[], INT, STRING
  *
  * @author Dries007
  */
 public class RndColors implements IRandomResolver
 {
-    private static final Pattern PATTERN = Pattern.compile("^\\$randomRGB\\((\\w+)\\)$");
+    private static final Pattern PATTERN = Pattern.compile("\\$randomRGB\\((\\w+)\\)");
 
     @Override
     public String getIdentifier()
@@ -52,16 +52,23 @@ public class RndColors implements IRandomResolver
     @Override
     public String solverRandom(int type, String value)
     {
-        JsonArray colors = new JsonArray();
         Matcher mRGB = PATTERN.matcher(value);
-        mRGB.find();
-        for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((RANDOM.nextInt(200) << 16) + (RANDOM.nextInt(200) << 8) + RANDOM.nextInt(200)));
-        return colors.toString();
+        if (type == INT_ARRAY)
+        {
+            JsonArray colors = new JsonArray();
+            mRGB.find();
+            for (int i = 0; i < Integer.parseInt(mRGB.group(1)); i++) colors.add(new JsonPrimitive((RANDOM.nextInt(200) << 16) + (RANDOM.nextInt(200) << 8) + RANDOM.nextInt(200)));
+            return mRGB.replaceFirst(colors.toString());
+        }
+        else
+        {
+            return mRGB.replaceFirst("" + ((RANDOM.nextInt(200) << 16) + (RANDOM.nextInt(200) << 8) + RANDOM.nextInt(200)));
+        }
     }
 
     @Override
     public boolean matches(int type, String value)
     {
-        return type == 11 && PATTERN.matcher(value).matches();
+        return (type == INT_ARRAY || type == INT || type == STRING) && PATTERN.matcher(value).find();
     }
 }
