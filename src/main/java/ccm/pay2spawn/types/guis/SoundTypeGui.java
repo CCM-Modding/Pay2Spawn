@@ -136,7 +136,7 @@
 //        pitchTextField.setText(readValue(PITCH_KEY, data));
 //        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 //
-//        playAtEveryoneCheckBox.setSelected(readValue(PLAYTOALL_KEY, data).equals("1"));
+//        playAtEveryoneCheckBox.setSelected(readValue(PLAYTOALL_KEY, data).equals(TRUE_BYTE));
 //
 //        jsonPane.setText(GSON.toJson(data));
 //    }
@@ -148,7 +148,7 @@
 //        storeValue(VOLUME_KEY, data, volumeTextField.getText());
 //        storeValue(PITCH_KEY, data, pitchTextField.getText());
 //
-//        storeValue(PLAYTOALL_KEY, data, playAtEveryoneCheckBox.isSelected() ? "1" : "0");
+//        storeValue(PLAYTOALL_KEY, data, playAtEveryoneCheckBox.isSelected() ? TRUE_BYTE : FALSE_BYTE);
 //        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 //
 //        jsonPane.setText(GSON.toJson(data));

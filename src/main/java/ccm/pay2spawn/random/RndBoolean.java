@@ -42,7 +42,7 @@ public class RndBoolean implements IRandomResolver
     @Override
     public String getIdentifier()
     {
-        return "$random";
+        return "$random()";
     }
 
     @Override

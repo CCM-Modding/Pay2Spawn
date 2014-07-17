@@ -78,14 +78,14 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         String ride = readValue(RIDETHISMOB_KEY, data);
-        dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
-        rideThisMobRadioButton.setSelected(ride.equals("1"));
-        randomlyRideMob.setSelected(ride.startsWith("$random"));
+        dontRidemob.setSelected(ride.equals(FALSE_BYTE) || ride.equals(""));
+        rideThisMobRadioButton.setSelected(ride.equals(TRUE_BYTE));
+        randomlyRideMob.setSelected(ride.startsWith(RANDOM_BOOLEAN));
 
         String thrownS = readValue(THROWTOWARDSPLAYER_KEY, data);
-        dontThrown.setSelected(thrownS.equals("0") || thrownS.equals(""));
-        thrown.setSelected(thrownS.equals("1"));
-        RndThrown.setSelected(thrownS.startsWith("$random"));
+        dontThrown.setSelected(thrownS.equals(FALSE_BYTE) || thrownS.equals(""));
+        thrown.setSelected(thrownS.equals(TRUE_BYTE));
+        RndThrown.setSelected(thrownS.startsWith(RANDOM_BOOLEAN));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -96,8 +96,8 @@ public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
         storeValue(SPAWNRADIUS_KEY, data, spawnRadiusTextField.getText());
         storeValue(AMOUNT_KEY, data, amountTextField.getText());
 
-        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisMobRadioButton.isSelected() ? "1" : "0");
-        storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? "$random" : thrown.isSelected() ? "1" : "0");
+        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? RANDOM_BOOLEAN : rideThisMobRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+        storeValue(THROWTOWARDSPLAYER_KEY, data, RndThrown.isSelected() ? RANDOM_BOOLEAN : thrown.isSelected() ? TRUE_BYTE : FALSE_BYTE);
 
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 

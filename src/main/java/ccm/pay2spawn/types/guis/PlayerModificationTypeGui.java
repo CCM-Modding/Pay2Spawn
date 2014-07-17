@@ -142,8 +142,8 @@ public class PlayerModificationTypeGui extends HelperGuiBase
     @Override
     public void updateJson()
     {
-        if (healthRadioButton.isSelected()) storeValue(TYPE_KEY, data, "0");
-        if (hungerRadioButton.isSelected()) storeValue(TYPE_KEY, data, "1");
+        if (healthRadioButton.isSelected()) storeValue(TYPE_KEY, data, FALSE_BYTE);
+        if (hungerRadioButton.isSelected()) storeValue(TYPE_KEY, data, TRUE_BYTE);
         if (saturationRadioButton.isSelected()) storeValue(TYPE_KEY, data, "2");
         if (XPRadioButton.isSelected()) storeValue(TYPE_KEY, data, "3");
         if (XPLevelsRadioButton.isSelected()) storeValue(TYPE_KEY, data, "4");

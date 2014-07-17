@@ -75,14 +75,14 @@ public class ExplosionGui extends HelperGuiBase
         colorsTextField.setText(readValue(COLORS_KEY, data));
 
         String flicker = readValue(FLICKER_KEY, data);
-        noFlickerRadioButton.setSelected(flicker.equals("0") || flicker.equals(""));
-        flickerRadioButton.setSelected(flicker.equals("1"));
-        randomFlickerRadioButton.setSelected(flicker.startsWith("$random"));
+        noFlickerRadioButton.setSelected(flicker.equals(FALSE_BYTE) || flicker.equals(""));
+        flickerRadioButton.setSelected(flicker.equals(TRUE_BYTE));
+        randomFlickerRadioButton.setSelected(flicker.startsWith(RANDOM_BOOLEAN));
 
         String trail = readValue(TRAIL_KEY, data);
-        noTrailRadioButton.setSelected(trail.equals("0") || trail.equals(""));
-        trailRadioButton.setSelected(trail.equals("1"));
-        randomTrailRadioButton.setSelected(trail.startsWith("$random"));
+        noTrailRadioButton.setSelected(trail.equals(FALSE_BYTE) || trail.equals(""));
+        trailRadioButton.setSelected(trail.equals(TRUE_BYTE));
+        randomTrailRadioButton.setSelected(trail.startsWith(RANDOM_BOOLEAN));
     }
 
     @Override
@@ -95,13 +95,13 @@ public class ExplosionGui extends HelperGuiBase
 
         storeValue(COLORS_KEY, data, colorsTextField.getText());
 
-        if (flickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, "1");
-        if (noFlickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, "0");
-        if (randomFlickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, "$random");
+        if (flickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, TRUE_BYTE);
+        if (noFlickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, FALSE_BYTE);
+        if (randomFlickerRadioButton.isSelected()) storeValue(FLICKER_KEY, data, RANDOM_BOOLEAN);
 
-        if (trailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, "1");
-        if (noTrailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, "0");
-        if (randomTrailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, "$random");
+        if (trailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, TRUE_BYTE);
+        if (noTrailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, FALSE_BYTE);
+        if (randomTrailRadioButton.isSelected()) storeValue(TRAIL_KEY, data, RANDOM_BOOLEAN);
     }
 
     @Override

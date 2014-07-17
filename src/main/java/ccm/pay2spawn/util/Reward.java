@@ -24,6 +24,7 @@
 package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.random.RandomRegistry;
 import ccm.pay2spawn.types.TypeRegistry;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
@@ -35,6 +36,7 @@ import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
+import static ccm.pay2spawn.util.Constants.STRING;
 
 public class Reward
 {
@@ -92,7 +94,7 @@ public class Reward
 
     public void addToCountdown(Donation donation, boolean addToHUD, Reward reward)
     {
-        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(Helper.formatText(message, donation, reward == null ? this : reward));
+        if (!Strings.isNullOrEmpty(message) && addToHUD) Helper.msg(RandomRegistry.solveRandom(STRING, Helper.formatText(message, donation, reward == null ? this : reward)));
         ClientTickHandler.INSTANCE.add(this, donation, addToHUD, reward);
     }
 

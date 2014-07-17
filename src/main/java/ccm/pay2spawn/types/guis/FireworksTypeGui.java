@@ -111,9 +111,9 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         flightMultiplierTextField.setText(readValue(FLIGHT_KEY, fireworks));
 
         String ride = readValue(RIDETHISMOB_KEY, data);
-        dontRidemob.setSelected(ride.equals("0") || ride.equals(""));
-        rideThisFireworkRadioButton.setSelected(ride.equals("1"));
-        randomlyRideMob.setSelected(ride.startsWith("$random"));
+        dontRidemob.setSelected(ride.equals(FALSE_BYTE) || ride.equals(""));
+        rideThisFireworkRadioButton.setSelected(ride.equals(TRUE_BYTE));
+        randomlyRideMob.setSelected(ride.startsWith(RANDOM_BOOLEAN));
 
         explosionList.updateUI();
 
@@ -127,7 +127,7 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         storeValue(AMOUNT_KEY, data, amountTextField.getText());
         storeValue(RADIUS_KEY, data, radiusTextField.getText());
 
-        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? "$random" : rideThisFireworkRadioButton.isSelected() ? "1" : "0");
+        storeValue(RIDETHISMOB_KEY, data, randomlyRideMob.isSelected() ? RANDOM_BOOLEAN : rideThisFireworkRadioButton.isSelected() ? TRUE_BYTE : FALSE_BYTE);
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         explosionList.updateUI();
