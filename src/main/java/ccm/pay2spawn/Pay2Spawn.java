@@ -121,7 +121,7 @@ public class Pay2Spawn
 
     public static void reloadDB_Server() throws Exception
     {
-        StatusMessage.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
+        StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
         StatusMessage.sendConfigToAllPlayers();
     }
 
@@ -213,7 +213,7 @@ public class Pay2Spawn
         PermissionsHandler.init();
         try
         {
-            StatusMessage.serverConfig = JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))).toString();
+            StatusMessage.serverConfig = GSON_NOPP.toJson(JSON_PARSER.parse(new FileReader(new File(instance.configFolder, NAME + ".json"))));
         }
         catch (FileNotFoundException e)
         {

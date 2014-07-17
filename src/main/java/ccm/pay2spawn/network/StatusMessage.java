@@ -127,8 +127,9 @@ public class StatusMessage implements IMessage
                     case HANDSHAKE:
                         PermissionsHandler.getDB().newPlayer(ctx.getServerHandler().playerEntity.getCommandSenderName());
                         playersWithValidConfig.add(ctx.getServerHandler().playerEntity.getCommandSenderName());
-                        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) return new StatusMessage(Type.CONFIGSYNC, serverConfig);
-                        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S) return new StatusMessage(Type.FORCE);
+                        // Can't use return statement here cause you can't return multiple packets
+                        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceServerconfig) sendConfigToPlayer(ctx.getServerHandler().playerEntity);
+                        if (MinecraftServer.getServer().isDedicatedServer() && Pay2Spawn.getConfig().forceP2S) sendForceToPlayer(ctx.getServerHandler().playerEntity);
                         break;
                     case CONFIGSYNC:
                         // Noop
