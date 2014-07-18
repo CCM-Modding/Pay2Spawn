@@ -47,7 +47,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.relauncher.Side;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.Logger;
 
@@ -118,7 +117,6 @@ public class Pay2Spawn
         {
             e.printStackTrace();
         }
-        Helper.msg(EnumChatFormatting.GREEN + "Reload done!");
     }
 
     public static void reloadDB_Server() throws Exception

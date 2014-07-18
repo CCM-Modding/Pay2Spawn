@@ -82,7 +82,11 @@ public class CommandP2S extends CommandBase
         switch (args[0])
         {
             case "reload":
-                if (Pay2Spawn.getRewardsDB().editable) Pay2Spawn.reloadDB();
+                if (Pay2Spawn.getRewardsDB().editable)
+                {
+                    Pay2Spawn.reloadDB();
+                    Helper.msg(EnumChatFormatting.GREEN + "Reload done!");
+                }
                 else Helper.msg(EnumChatFormatting.RED + "[P2S] If you are OP, use the server side command for this.");
                 break;
             case "configure":
