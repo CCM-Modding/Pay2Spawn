@@ -136,5 +136,6 @@ public class TypeRegistry
         TypeRegistry.register(new PlayerModificationType());
         TypeRegistry.register(new MusicType());
         TypeRegistry.register(new DeleteworldType());
+        TypeRegistry.register(new StructureType());
     }
 }

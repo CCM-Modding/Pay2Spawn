@@ -70,7 +70,7 @@ public class MusicType extends TypeBase
     public NBTTagCompound getExample()
     {
         NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setString(SOUND_KEY, "Rick Astley - Never Gonna Give You Up.mp3");
+        nbt.setString(SOUND_KEY, "Rickroll.mp3");
         return nbt;
     }
 

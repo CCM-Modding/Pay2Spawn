@@ -23,26 +23,31 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.types.StructureType;
+import ccm.pay2spawn.util.shapes.IShape;
+import ccm.pay2spawn.util.shapes.PointI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -276,12 +281,12 @@ public class Helper
         else return s;
     }
 
-    public static boolean rndSpawnPoint(ArrayList<Point> points, Entity entity)
+    public static boolean rndSpawnPoint(ArrayList<PointD> pointDs, Entity entity)
     {
-        Collections.shuffle(points, RANDOM);
-        for (Point p : points)
+        Collections.shuffle(pointDs, RANDOM);
+        for (PointD p : pointDs)
         {
-            Collections.shuffle(points, RANDOM);
+            Collections.shuffle(pointDs, RANDOM);
             if (p.canSpawn(entity))
             {
                 p.setPosition(entity);
@@ -344,5 +349,119 @@ public class Helper
     public static void sendChatToPlayer(EntityPlayer player, String message)
     {
         player.addChatMessage(new ChatComponentText(message));
+    }
+
+    private static class BlockData
+    {
+        int id, meta;
+        NBTTagCompound te = null;
+
+        private BlockData(int[] data)
+        {
+            this.id = data[0];
+            if (data.length > 1) this.meta = data[1];
+
+            for (String bannedPair : StructureType.bannedBlocks)
+            {
+                String[] strings = bannedPair.split(":");
+                if (Integer.parseInt(strings[0]) == id || (strings.length > 1 && Integer.parseInt(strings[1]) == meta))
+                    throw new RuntimeException("You are trying to place a banned block. Stop it.");
+            }
+        }
+
+        private BlockData(int[] data, NBTTagCompound te)
+        {
+            this.id = data[0];
+            if (data.length > 1) this.meta = data[1];
+            this.te = te;
+
+            for (String bannedPair : StructureType.bannedBlocks)
+            {
+                String[] strings = bannedPair.split(":");
+                if (Integer.parseInt(strings[0]) == id || (strings.length > 1 && Integer.parseInt(strings[1]) == meta))
+                    throw new RuntimeException("You are trying to place a banned block. Stop it.");
+            }
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (!(o instanceof BlockData)) return false;
+
+            BlockData data = (BlockData) o;
+
+            return id == data.id && meta == data.meta && !(te != null ? !te.equals(data.te) : data.te != null);
+        }
+
+        @Override
+        public int hashCode()
+        {
+            int result = id;
+            result = 31 * result + meta;
+            result = 31 * result + (te != null ? te.hashCode() : 0);
+            return result;
+        }
+    }
+
+    public static void applyShape(IShape shape, EntityPlayer player, NBTTagCompound[] te, String[] blockData)
+    {
+        try
+        {
+            int[][] output = new int[blockData.length][];
+            for (int j = 0; j < blockData.length; j++)
+            {
+                String[] split2 = blockData[j].split(":");
+                int[] ints = new int[split2.length];
+                for (int i = 0; i < split2.length; i++)
+                {
+                    ints[i] = Integer.parseInt(split2[i]);
+                }
+                output[j] = ints;
+            }
+            applyShape(shape, player, te, output);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Pay2Spawn.getLogger().warn("Error spawning in shape.");
+            Pay2Spawn.getLogger().warn("Shape: " + shape.toString());
+            Pay2Spawn.getLogger().warn("Player: " + player);
+            Pay2Spawn.getLogger().warn("NBT array: " + Arrays.toString(te));
+            Pay2Spawn.getLogger().warn("BlockData array: " + Arrays.toString(blockData));
+        }
+    }
+
+    public static void applyShape(IShape shape, EntityPlayer player, NBTTagCompound[] te, int[][] blockData)
+    {
+        ArrayList<BlockData> blocks = new ArrayList<>();
+        for (int j = 0; j < blockData.length; j++)
+        {
+            if (blockData[j].length == 3)
+                for (int i = 0; i < blockData[j][2]; i++)
+                    blocks.add(new BlockData(blockData[j], te == null ? null : te[j]));
+            else
+                blocks.add(new BlockData(blockData[j], te == null ? null : te[j]));
+        }
+
+        int x = round(player.posX), y = round(player.posY), z = round(player.posZ);
+        Collection<PointI> points = shape.move(x, y, z).getPoints();
+        for (PointI p : points)
+        {
+            if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
+            {
+                BlockData block = blockData.length == 1 ? blocks.get(0) : RandomRegistry.getRandomFromSet(blocks);
+
+                player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), Block.getBlockById(block.id), block.meta, 2);
+                if (block.te != null) player.worldObj.setTileEntity(p.getX(), p.getY(), p.getZ(), TileEntity.createAndLoadEntity(block.te));
+            }
+        }
+    }
+
+    private static int round(double d)
+    {
+        if (d > 0) return MathHelper.ceiling_double_int(d);
+        if (d < 0) return MathHelper.floor_double(d);
+        return 0;
     }
 }

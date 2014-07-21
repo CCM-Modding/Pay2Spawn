@@ -24,7 +24,7 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.Point;
+import ccm.pay2spawn.util.PointD;
 import ccm.pay2spawn.util.Vector3;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
@@ -114,7 +114,7 @@ public class CustomEntityType extends TypeBase
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
         if (!dataFromClient.hasKey(SPAWNRADIUS_KEY)) dataFromClient.setInteger(SPAWNRADIUS_KEY, 10);
-        ArrayList<Point> points = new Point(player).getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
+        ArrayList<PointD> pointDs = new PointD(player).getCylinder(dataFromClient.getInteger(SPAWNRADIUS_KEY), 6);
         NBTTagCompound p2sTag = new NBTTagCompound();
         p2sTag.setString("Type", getName());
         if (rewardData.hasKey("name")) p2sTag.setString("Reward", rewardData.getString("name"));
@@ -131,7 +131,7 @@ public class CustomEntityType extends TypeBase
                 if (getSpawnLimit() != -1 && count > getSpawnLimit()) break;
 
                 entity.setPosition(player.posX, player.posY, player.posZ);
-                Helper.rndSpawnPoint(points, entity);
+                Helper.rndSpawnPoint(pointDs, entity);
 
                 if (dataFromClient.getBoolean(AGRO_KEY) && entity instanceof EntityLiving) ((EntityLiving) entity).setAttackTarget(player);
 

@@ -13,14 +13,14 @@ import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
 
+import static ccm.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
-import static ccm.pay2spawn.util.Constants.MODID;
 
 public class TwitchChecker extends AbstractChecker implements Runnable
 {
     public static final TwitchChecker INSTANCE = new TwitchChecker();
     public final static String NAME = "twitchsubs";
-    public final static String CAT = MODID + '.' + NAME;
+    public final static String CAT = BASECAT_TRACKERS + '.' + NAME;
     public final static String URL = "https://streamtip.com/api/tips?";
     HashMap<String, String> subs = new HashMap<>();
 

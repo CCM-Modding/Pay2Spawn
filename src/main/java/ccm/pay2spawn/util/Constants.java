@@ -41,6 +41,7 @@ public class Constants
 {
     public static final String   NAME                = "Pay2Spawn";
     public static final String   MODID               = "P2S";
+    public static final String   BASECAT_TRACKERS    = "P2S_trackers";
     /**
      * Network related
      */

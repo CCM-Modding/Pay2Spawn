@@ -43,7 +43,7 @@ public class MusicMessage implements IMessage
     public static class Handler implements IMessageHandler<MusicMessage, IMessage>
     {
         @Override
-        public IMessage onMessage(MusicMessage message, MessageContext ctx)
+        public IMessage onMessage(final MusicMessage message, MessageContext ctx)
         {
             if (ctx.side.isClient())
             {
@@ -59,13 +59,17 @@ public class MusicMessage implements IMessage
                         @Override
                         public boolean accept(File dir, String name)
                         {
-                            return name.startsWith(name);
+                            return name.startsWith(message.name);
                         }
                     });
 
                     if (files.length == 1)
                     {
                         play(files[0]);
+                    }
+                    else if (files.length == 0)
+                    {
+                        Pay2Spawn.getLogger().warn("MUSIC FILE NOT FOUND: " + message.name);
                     }
                     else
                     {

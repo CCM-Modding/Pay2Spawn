@@ -16,14 +16,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static ccm.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
-import static ccm.pay2spawn.util.Constants.MODID;
 
 public class StreamtipChecker extends AbstractChecker implements Runnable
 {
     public static final StreamtipChecker INSTANCE = new StreamtipChecker();
     public final static String NAME = "streamtip";
-    public final static String CAT  = MODID + '.' + NAME;
+    public final static String CAT  = BASECAT_TRACKERS + '.' + NAME;
     public final static String URL  = "https://streamtip.com/api/tips?";
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;

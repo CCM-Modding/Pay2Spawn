@@ -24,15 +24,13 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import static ccm.pay2spawn.util.Constants.ANONYMOUS;
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
-import static ccm.pay2spawn.util.Constants.MODID;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class ChildsplayChecker extends AbstractChecker implements Runnable
 {
     public static final ChildsplayChecker INSTANCE = new ChildsplayChecker();
     public final static String NAME = "childsplay";
-    public final static String CAT = MODID + '.' + NAME;
+    public final static String CAT = BASECAT_TRACKERS + '.' + NAME;
     public final static String ENDPOINT = "donate.childsplaycharity.org";
     public final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss zzz", Locale.US);
 

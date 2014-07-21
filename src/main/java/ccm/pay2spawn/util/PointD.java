@@ -33,25 +33,32 @@ import java.util.ArrayList;
  *
  * @author Dries007
  */
-public class Point
+public class PointD
 {
     private double x, y, z;
 
-    public Point(Entity entity)
+    public PointD(Entity entity)
     {
         x = entity.posX;
         y = entity.posY;
         z = entity.posZ;
     }
 
-    public Point(double x, double y, double z)
+    public PointD(double x, double y, double z)
     {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
-    public Point makeNiceForBlock()
+    public PointD()
+    {
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+    }
+
+    public PointD makeNiceForBlock()
     {
         x = intX() + 0.5;
         y = intY();
@@ -90,57 +97,57 @@ public class Point
         this.y = y;
     }
 
-    public ArrayList<Point> getCircle(int rad)
+    public ArrayList<PointD> getCircle(int rad)
     {
-        ArrayList<Point> points = new ArrayList<>();
+        ArrayList<PointD> pointDs = new ArrayList<>();
         for (int x = -rad; x < rad; x++)
         {
             for (int z = -rad; z < rad; z++)
             {
-                Point p = new Point(this.x + x, this.y, this.z + z);
-                if (distanceTo(p) < rad) points.add(p);
+                PointD p = new PointD(this.x + x, this.y, this.z + z);
+                if (distanceTo(p) < rad) pointDs.add(p);
             }
         }
-        return points;
+        return pointDs;
     }
 
-    public ArrayList<Point> getCylinder(int rad, int height)
+    public ArrayList<PointD> getCylinder(int rad, int height)
     {
         height = height / 2;
-        ArrayList<Point> points = new ArrayList<>();
-        for (Point p : getCircle(rad))
+        ArrayList<PointD> pointDs = new ArrayList<>();
+        for (PointD p : getCircle(rad))
         {
             for (int dy = -height; dy < height; dy++)
             {
-                points.add(new Point(p.x, p.y + dy, p.z));
+                pointDs.add(new PointD(p.x, p.y + dy, p.z));
             }
         }
-        return points;
+        return pointDs;
     }
 
-    public ArrayList<Point> getSphere(int rad)
+    public ArrayList<PointD> getSphere(int rad)
     {
-        ArrayList<Point> points = new ArrayList<>();
-        for (Point p : getCylinder(rad, rad)) if (distanceTo(p) < rad) points.add(p);
-        return points;
+        ArrayList<PointD> pointDs = new ArrayList<>();
+        for (PointD p : getCylinder(rad, rad)) if (distanceTo(p) < rad) pointDs.add(p);
+        return pointDs;
     }
 
-    public double distanceTo(Point p)
+    public double distanceTo(PointD p)
     {
         return Math.sqrt((diffX(p) * diffX(p)) + (diffY(p) * diffY(p)) + (diffZ(p) * diffZ(p)));
     }
 
-    public double diffX(Point p)
+    public double diffX(PointD p)
     {
         return this.x - p.x;
     }
 
-    public double diffY(Point p)
+    public double diffY(PointD p)
     {
         return this.y - p.y;
     }
 
-    public double diffZ(Point p)
+    public double diffZ(PointD p)
     {
         return this.z - p.z;
     }
@@ -162,10 +169,9 @@ public class Point
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Point point = (Point) o;
+        PointD pointD = (PointD) o;
 
-        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0 && Double.compare(point.z, z) == 0;
-
+        return Double.compare(pointD.x, x) == 0 && Double.compare(pointD.y, y) == 0 && Double.compare(pointD.z, z) == 0;
     }
 
     @Override

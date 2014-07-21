@@ -18,14 +18,14 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static ccm.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
-import static ccm.pay2spawn.util.Constants.MODID;
 
 public class DonationTrackerChecker extends AbstractChecker implements Runnable
 {
     public static final DonationTrackerChecker INSTANCE     = new DonationTrackerChecker();
     public final static String                 NAME         = "donation-tracker";
-    public final static String                 CAT          = MODID + '.' + NAME;
+    public final static String                 CAT          = BASECAT_TRACKERS + '.' + NAME;
     public final static String                 URL          = "https://www.donation-tracker.com/customapi/?";
     public final static Pattern                HTML_REGEX   = Pattern.compile("<td.*?>(.+?)<\\/td.*?>");
     public final static Pattern                AMOUNT_REGEX = Pattern.compile(".?(\\d+(?:\\.|,)\\d\\d)\\w?.?");

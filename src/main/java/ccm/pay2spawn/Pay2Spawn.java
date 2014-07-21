@@ -50,6 +50,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.ClientCommandHandler;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -78,6 +79,7 @@ public class Pay2Spawn
     private File                  configFolder;
     private Logger                logger;
     private SimpleNetworkWrapper  snw;
+    private boolean newConfig;
 
     public static String getVersion()
     {
@@ -140,7 +142,9 @@ public class Pay2Spawn
         //noinspection ResultOfMethodCallIgnored
         configFolder.mkdirs();
 
-        config = new P2SConfig(new File(configFolder, NAME + ".cfg"));
+        File configFile = new File(configFolder, NAME + ".cfg");
+        newConfig = !configFile.exists();
+        config = new P2SConfig(configFile);
         MetricsHelper.init();
 
         int id = 0;
@@ -195,15 +199,42 @@ public class Pay2Spawn
             e.printStackTrace();
         }
 
+        if (newConfig)
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
+                    "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
+                    "If you need help with the configuring of your rewards, contact us!",
+                    "Please configure Pay2Spawn!",
+                    JOptionPane.WARNING_MESSAGE);
+
+            System.exit(1);
+        }
+
+        if (Pay2Spawn.getConfig().majorConfigVersionChange)
+        {
+            JOptionPane.showMessageDialog(null,
+                    "Please reconfigure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
+                            "There have been major config changes.\n" +
+                            "We made a backup for you, you should start fresh to avoid clutter.",
+                    "Please reconfigure Pay2Spawn!",
+                    JOptionPane.WARNING_MESSAGE);
+
+            System.exit(1);
+        }
+
         boolean deobf = Launch.blackboard.containsKey("fml.deobfuscatedEnvironment") ? Boolean.valueOf(Launch.blackboard.get("fml.deobfuscatedEnvironment").toString()) : false;
 
         if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
         {
-            logger.warn("########################################################################################################################################################################");
-            logger.warn("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
-            logger.warn("########################################################################################################################################################################");
+            JOptionPane.showMessageDialog(null,
+                    "You must provide your channel in the config for statistics.\n" +
+                            "If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\n\n" +
+                            "Important note: Don't send the PluginMetrics config to other users, that will screw up analytics.",
+                    "Please configure Pay2Spawn!",
+                    JOptionPane.WARNING_MESSAGE);
 
-            throw new RuntimeException("You must provide your channel for statistics. If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\nImportant nore: Don't send the PluginMetrics config to other users.");
+            System.exit(1);
         }
     }
 

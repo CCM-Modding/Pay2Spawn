@@ -1,15 +1,16 @@
 package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.Donation;
-import ccm.pay2spawn.util.Reward;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
+import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
+import ccm.pay2spawn.util.Reward;
+import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -21,7 +22,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
-import static ccm.pay2spawn.util.Constants.JSON_PARSER;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class RewardMessage implements IMessage
 {
@@ -45,14 +46,23 @@ public class RewardMessage implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        rewards = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonArray();
+        // Cause the ByteBufUtils method doesn't like big strings
+        byte[] string = new byte[buf.readInt()];
+        buf.readBytes(string);
+        rewards = JSON_PARSER.parse(new String(string, Charsets.UTF_8)).getAsJsonArray();
+
+        //rewards = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonArray();
         rewardData = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        ByteBufUtils.writeUTF8String(buf, formattedData);
+        // Cause the ByteBufUtils method doesn't like big strings
+        buf.writeInt(formattedData.length());
+        buf.writeBytes(formattedData.getBytes(Charsets.UTF_8));
+
+        //ByteBufUtils.writeUTF8String(buf, formattedData);
         ByteBufUtils.writeTag(buf, rewardData);
     }
 
