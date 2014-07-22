@@ -31,6 +31,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,7 @@ import java.util.ArrayList;
  */
 public class EventHandler
 {
-    static boolean entityTracking = false;
+    static boolean entityTracking = false, blockTracking = false;
 
     public EventHandler()
     {
@@ -58,6 +59,24 @@ public class EventHandler
     public static void addEntityTracking()
     {
         entityTracking = true;
+    }
+
+    public static void addBlockTracker()
+    {
+        blockTracking = true;
+    }
+
+    @SubscribeEvent
+    public void event(PlayerInteractEvent e)
+    {
+        if (blockTracking)
+        {
+            blockTracking = false;
+
+            NbtRequestMessage.requestBlock(e.x, e.y, e.z, e.world.provider.dimensionId);
+
+            e.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

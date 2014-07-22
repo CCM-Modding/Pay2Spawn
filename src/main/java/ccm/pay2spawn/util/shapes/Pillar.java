@@ -1,13 +1,27 @@
 package ccm.pay2spawn.util.shapes;
 
+import ccm.pay2spawn.types.guis.StructureTypeGui;
+import ccm.pay2spawn.types.guis.shapes.PillarGui;
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
+
 public class Pillar extends AbstractShape
 {
     int height = 0;
+
+    public static final String HEIGHT_KEY = "height";
+
+    static
+    {
+        typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
+    }
+
 
     public Pillar(int height)
     {
@@ -51,6 +65,12 @@ public class Pillar extends AbstractShape
         if (this.height == 0) points.add(new PointI(this.center.x, this.center.y, this.center.z));
 
         return points;
+    }
+
+    @Override
+    public void openGui(int i, JsonObject jsonObject, StructureTypeGui instance)
+    {
+        new PillarGui(i, jsonObject, instance, typeMap);
     }
 
     @Override

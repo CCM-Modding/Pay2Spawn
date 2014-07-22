@@ -2,12 +2,14 @@ package ccm.pay2spawn.util.shapes;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Shapes
 {
     public static final  String                  SHAPE_KEY     = "shape";
-    private static final HashMap<String, IShape> MAP = new HashMap<>();
+    public static final HashMap<String, IShape> MAP = new HashMap<>();
+    public static final ArrayList<String> LIST = new ArrayList<>();
 
     static
     {
@@ -20,6 +22,7 @@ public class Shapes
 
     private static void register(IShape shape)
     {
+        LIST.add(shape.getClass().getSimpleName());
         MAP.put(shape.getClass().getSimpleName(), shape);
     }
 

@@ -23,45 +23,49 @@
 
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.configurator.Configurator;
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.Node;
+import ccm.pay2spawn.random.RandomRegistry;
+import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.shapes.*;
 import com.google.gson.JsonObject;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraftforge.common.config.Configuration;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import static ccm.pay2spawn.util.Constants.*;
 
 public class StructureType extends TypeBase
 {
-    public static final  HashMap<String, String> typeMap         = new HashMap<>();
-    private static final String                  NAME            = "structure";
+    private static final String NAME = "structure";
 
-    public static final  String                  SHAPES_KEY     = "shapes";
+    public static final String SHAPES_KEY    = "shapes";
+    public static final String BLOCKDATA_KEY = "blockData";
+    public static final String TEDATA_KEY    = "tileEntityData";
+    public static final String BLOCKID_KEY   = "blockID";
+    public static final String META_KEY      = "meta";
+    public static final String WEIGHT_KEY    = "weight";
 
-    public static final  String                  BLOCKDATA_KEY  = "blockData";
-    public static final  String                  TEDATA_KEY     = "tileEntityData";
+    public static final HashMap<String, String> typeMap = new HashMap<>();
 
     static
     {
-        typeMap.put(SHAPES_KEY, NBTTypes[LIST]);
-
-        typeMap.put(BLOCKDATA_KEY, NBTTypes[LIST]);
-        typeMap.put(TEDATA_KEY, NBTTypes[LIST]);
+        typeMap.put(BLOCKID_KEY, NBTTypes[INT]);
+        typeMap.put(META_KEY, NBTTypes[INT]);
+        typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
     }
 
     public static String[] bannedBlocks = {};
@@ -78,112 +82,150 @@ public class StructureType extends TypeBase
         NBTTagCompound root = new NBTTagCompound();
         NBTTagList shapesList = new NBTTagList();
 
+        // Sphere
         {
-            // Sphere
+            NBTTagCompound shapeNbt = Shapes.storeShape(new Sphere(10).setHollow(true).setReplaceableOnly(true));
+
+            NBTTagList blockDataNbt = new NBTTagList();
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new Sphere(10).setHollow(true).setReplaceableOnly(true));
-
-                NBTTagList blockDataNbt = new NBTTagList();
-                blockDataNbt.appendTag(new NBTTagString("35:0:4"));
-                blockDataNbt.appendTag(new NBTTagString("35:5"));
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-
-                shapesList.appendTag(shapeNbt);
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 35);
+                compound.setInteger(WEIGHT_KEY, 5);
+                blockDataNbt.appendTag(compound);
+            }
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 35);
+                compound.setInteger(META_KEY, 5);
+                blockDataNbt.appendTag(compound);
             }
 
-            // Box
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
+
+            shapesList.appendTag(shapeNbt);
+        }
+
+        // Box
+        {
+            NBTTagCompound shapeNbt = Shapes.storeShape(new Box(new PointI(-2, -3, 5), 5, 2, 3).setReplaceableOnly(true));
+
+            NBTTagList blockDataNbt = new NBTTagList();
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new Box(new PointI(-2, -3, 5), 5, 2, 3).setReplaceableOnly(true));
-
-                NBTTagList blockDataNbt = new NBTTagList();
-                blockDataNbt.appendTag(new NBTTagString("98"));
-                blockDataNbt.appendTag(new NBTTagString("98:1"));
-                blockDataNbt.appendTag(new NBTTagString("98:2"));
-                blockDataNbt.appendTag(new NBTTagString("98:3"));
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-
-                shapesList.appendTag(shapeNbt);
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 98);
+                blockDataNbt.appendTag(compound);
             }
-
-            // Cylinder
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new Cylinder(new PointI(0, 3, 0), 12));
-
-                NBTTagList blockDataNbt = new NBTTagList();
-                blockDataNbt.appendTag(new NBTTagString("99:14"));
-                blockDataNbt.appendTag(new NBTTagString("100:14:10"));
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-
-                shapesList.appendTag(shapeNbt);
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 98);
+                compound.setInteger(META_KEY, 1);
+                blockDataNbt.appendTag(compound);
             }
-
-            // Pillar
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new Pillar(new PointI(-2, 0, -6), 15));
-
-                NBTTagList blockDataNbt = new NBTTagList();
-                blockDataNbt.appendTag(new NBTTagString("159:0"));
-                blockDataNbt.appendTag(new NBTTagString("159:1"));
-                blockDataNbt.appendTag(new NBTTagString("159:2"));
-                blockDataNbt.appendTag(new NBTTagString("159:3"));
-                blockDataNbt.appendTag(new NBTTagString("159:4"));
-                blockDataNbt.appendTag(new NBTTagString("159:5"));
-                blockDataNbt.appendTag(new NBTTagString("159:6"));
-                blockDataNbt.appendTag(new NBTTagString("159:7"));
-                blockDataNbt.appendTag(new NBTTagString("159:8"));
-                blockDataNbt.appendTag(new NBTTagString("159:9"));
-                blockDataNbt.appendTag(new NBTTagString("159:10"));
-                blockDataNbt.appendTag(new NBTTagString("159:11"));
-                blockDataNbt.appendTag(new NBTTagString("159:12"));
-                blockDataNbt.appendTag(new NBTTagString("159:13"));
-                blockDataNbt.appendTag(new NBTTagString("159:14"));
-                blockDataNbt.appendTag(new NBTTagString("159:15"));
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-
-                shapesList.appendTag(shapeNbt);
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 98);
+                compound.setInteger(META_KEY, 2);
+                blockDataNbt.appendTag(compound);
             }
-
-            // Point
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new PointI(0, 0, 0));
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 98);
+                compound.setInteger(META_KEY, 3);
+                blockDataNbt.appendTag(compound);
+            }
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
 
-                NBTTagList blockDataNbt = new NBTTagList();
-                blockDataNbt.appendTag(new NBTTagString("54"));
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
+            shapesList.appendTag(shapeNbt);
+        }
 
-                NBTTagList teDataNbt = new NBTTagList();
+        // Cylinder
+        {
+            NBTTagCompound shapeNbt = Shapes.storeShape(new Cylinder(new PointI(0, 3, 0), 12));
+
+            NBTTagList blockDataNbt = new NBTTagList();
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 99);
+                compound.setInteger(META_KEY, 14);
+                blockDataNbt.appendTag(compound);
+            }
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 100);
+                compound.setInteger(META_KEY, 14);
+                blockDataNbt.appendTag(compound);
+            }
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
+
+            shapesList.appendTag(shapeNbt);
+        }
+
+        // Pillar
+        {
+            NBTTagCompound shapeNbt = Shapes.storeShape(new Pillar(new PointI(-2, 0, -6), 15));
+
+            NBTTagList blockDataNbt = new NBTTagList();
+            for (int meta = 0; meta < 16; meta++)
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 159);
+                compound.setInteger(META_KEY, meta);
+                blockDataNbt.appendTag(compound);
+            }
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
+
+            shapesList.appendTag(shapeNbt);
+        }
+
+        // Point
+        {
+            NBTTagCompound shapeNbt = Shapes.storeShape(new PointI(0, 0, 0));
+
+            NBTTagList blockDataNbt = new NBTTagList();
+            {
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 54);
+
                 TileEntityChest chest = new TileEntityChest();
                 chest.setInventorySlotContents(13, new ItemStack(Items.golden_apple));
                 NBTTagCompound chestNbt = new NBTTagCompound();
                 chest.writeToNBT(chestNbt);
-                teDataNbt.appendTag(chestNbt);
-                shapeNbt.setTag(TEDATA_KEY, teDataNbt);
+                compound.setTag(TEDATA_KEY, chestNbt);
 
-                shapesList.appendTag(shapeNbt);
+                blockDataNbt.appendTag(compound);
             }
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
 
-            // Point
+            shapesList.appendTag(shapeNbt);
+        }
+
+        // Point
+        {
+            NBTTagCompound shapeNbt = Shapes.storeShape(new PointI(-1, -2, -1));
+
+            NBTTagList blockDataNbt = new NBTTagList();
+            for (Object mob : EntityList.entityEggs.keySet())
             {
-                NBTTagCompound shapeNbt = Shapes.storeShape(new PointI(-1, -2, -1));
+                NBTTagCompound compound = new NBTTagCompound();
+                compound.setInteger(BLOCKID_KEY, 52);
 
-                NBTTagList blockDataNbt = new NBTTagList();
-                NBTTagList teDataNbt = new NBTTagList();
-                for (Object mob : EntityList.entityEggs.keySet())
-                {
-                    TileEntityMobSpawner mobSpawner = new TileEntityMobSpawner();
-                    mobSpawner.func_145881_a().setEntityName(EntityList.getStringFromID((Integer) mob));
-                    NBTTagCompound spawnerNbt = new NBTTagCompound();
-                    mobSpawner.writeToNBT(spawnerNbt);
-                    teDataNbt.appendTag(spawnerNbt);
+                TileEntityMobSpawner mobSpawner = new TileEntityMobSpawner();
+                mobSpawner.func_145881_a().setEntityName(EntityList.getStringFromID((Integer) mob));
+                NBTTagCompound spawnerNbt = new NBTTagCompound();
+                mobSpawner.writeToNBT(spawnerNbt);
 
-                    blockDataNbt.appendTag(new NBTTagString("52"));
-                }
+                // Removes some clutter, not really necessary though
+                spawnerNbt.removeTag("x");
+                spawnerNbt.removeTag("y");
+                spawnerNbt.removeTag("z");
 
-                shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
-                shapeNbt.setTag(TEDATA_KEY, teDataNbt);
+                compound.setTag(TEDATA_KEY, spawnerNbt);
 
-                shapesList.appendTag(shapeNbt);
+                blockDataNbt.appendTag(compound);
             }
+            shapeNbt.setTag(BLOCKDATA_KEY, blockDataNbt);
+
+            shapesList.appendTag(shapeNbt);
         }
 
         root.setTag(SHAPES_KEY, shapesList);
@@ -198,31 +240,103 @@ public class StructureType extends TypeBase
         {
             NBTTagCompound shapeNbt = list.getCompoundTagAt(i);
 
-            NBTTagList blockDataNbt = shapeNbt.getTagList(BLOCKDATA_KEY, STRING);
-            String[] blockData = new String[blockDataNbt.tagCount()];
+            ArrayList<NBTTagCompound> blockDataList = new ArrayList<>();
+            NBTTagList blockDataNbt = shapeNbt.getTagList(BLOCKDATA_KEY, COMPOUND);
             for (int j = 0; j < blockDataNbt.tagCount(); j++)
+                blockDataList.add(blockDataNbt.getCompoundTagAt(j));
+
+            applyShape(Shapes.loadShape(shapeNbt), player, blockDataList);
+        }
+    }
+
+    public static class BlockData
+    {
+        final int id, meta, weight;
+        final NBTTagCompound te;
+
+        private BlockData(NBTTagCompound compound)
+        {
+            id = compound.getInteger(BLOCKID_KEY);
+            meta = compound.getInteger(META_KEY);
+            weight = compound.hasKey(WEIGHT_KEY) ? compound.getInteger(WEIGHT_KEY) : 1;
+
+            te = compound.hasKey(TEDATA_KEY) ? compound.getCompoundTag(TEDATA_KEY) : null;
+
+            if (id == 0) System.out.println(compound.toString());
+        }
+
+        @Override
+        public boolean equals(Object o)
+        {
+            if (this == o) return true;
+            if (!(o instanceof BlockData)) return false;
+
+            BlockData data = (BlockData) o;
+
+            return id == data.id && meta == data.meta && !(te != null ? !te.equals(data.te) : data.te != null);
+        }
+
+        @Override
+        public String toString()
+        {
+            return "BlockData{" +
+                    "id=" + id +
+                    ", meta=" + meta +
+                    ", weight=" + weight +
+                    ", te=" + te +
+                    '}';
+        }
+    }
+
+    public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList)
+    {
+        try
+        {
+            ArrayList<BlockData> blockDataList = new ArrayList<>();
+            for (NBTTagCompound compound : blockDataNbtList)
             {
-                blockData[j] = blockDataNbt.getStringTagAt(j);
+                BlockData blockData = new BlockData(compound);
+                for (int i = 0; i <= blockData.weight; i++)
+                    blockDataList.add(blockData);
             }
 
-            NBTTagCompound[] teArray = null;
-            if (shapeNbt.hasKey(TEDATA_KEY))
+            int x = Helper.round(player.posX), y = Helper.round(player.posY), z = Helper.round(player.posZ);
+            Collection<PointI> points = shape.move(x, y, z).getPoints();
+            for (PointI p : points)
             {
-                NBTTagList teNbt = shapeNbt.getTagList(TEDATA_KEY, COMPOUND);
-                teArray = new NBTTagCompound[teNbt.tagCount()];
-                for (int j = 0; j < teNbt.tagCount(); j++)
-                    teArray[j] = teNbt.getCompoundTagAt(j);
-            }
+                if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
+                {
+                    BlockData block = blockDataList.size() == 1 ? blockDataList.get(0) : RandomRegistry.getRandomFromSet(blockDataList);
 
-            Helper.applyShape(Shapes.loadShape(shapeNbt), player, teArray, blockData);
+                    Block block1 = Block.getBlockById(block.id);
+                    if (block1 == Blocks.air) System.out.println(block);
+                    player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), block1, block.meta, 2);
+                    if (block.te != null)
+                    {
+                        TileEntity tileEntity = TileEntity.createAndLoadEntity(block.te);
+                        tileEntity.setWorldObj(player.worldObj);
+                        tileEntity.xCoord = p.getX();
+                        tileEntity.yCoord = p.getY();
+                        tileEntity.zCoord = p.getZ();
+                        player.worldObj.setTileEntity(p.getX(), p.getY(), p.getZ(), tileEntity);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Pay2Spawn.getLogger().warn("Error spawning in shape.");
+            Pay2Spawn.getLogger().warn("Shape: " + shape.toString());
+            Pay2Spawn.getLogger().warn("Player: " + player);
+            Pay2Spawn.getLogger().warn("BlockData array: " + Arrays.deepToString(blockDataNbtList.toArray()));
         }
     }
 
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-        //TODO: make gui -_-
-        Configurator.instance.callback(rewardID, NAME, data);
+        new StructureTypeGui(rewardID, NAME, data, typeMap);
     }
 
     @Override

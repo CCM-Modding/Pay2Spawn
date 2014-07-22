@@ -225,7 +225,6 @@ public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
         });
     }
 
-
     @Override
     public void callback(Object... data)
     {

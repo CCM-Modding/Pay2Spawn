@@ -1,5 +1,7 @@
 package ccm.pay2spawn.util.shapes;
 
+import ccm.pay2spawn.types.guis.StructureTypeGui;
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -25,4 +27,6 @@ public interface IShape
     IShape setReplaceableOnly(boolean replaceableOnly);
 
     boolean getReplaceableOnly();
+
+    void openGui(int i, JsonObject jsonObject, StructureTypeGui instance);
 }

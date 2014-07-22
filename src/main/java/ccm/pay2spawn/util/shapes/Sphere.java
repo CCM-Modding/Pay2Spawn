@@ -1,13 +1,26 @@
 package ccm.pay2spawn.util.shapes;
 
+import ccm.pay2spawn.types.guis.StructureTypeGui;
+import ccm.pay2spawn.types.guis.shapes.SphereGui;
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
+
 public class Sphere extends AbstractShape
 {
     int radius;
+
+    public static final String RADIUS_KEY = "radius";
+
+    static
+    {
+        typeMap.put(RADIUS_KEY, NBTTypes[INT]);
+    }
 
     public Sphere(int radius)
     {
@@ -30,7 +43,7 @@ public class Sphere extends AbstractShape
     public NBTTagCompound toNBT()
     {
         NBTTagCompound compound = super.toNBT();
-        compound.setInteger("radius", radius);
+        compound.setInteger(RADIUS_KEY, radius);
         return compound;
     }
 
@@ -38,7 +51,7 @@ public class Sphere extends AbstractShape
     public IShape fromNBT(NBTTagCompound compound)
     {
         super.fromNBT(compound);
-        radius = compound.getInteger("radius");
+        radius = compound.getInteger(RADIUS_KEY);
         return this;
     }
 
@@ -62,6 +75,12 @@ public class Sphere extends AbstractShape
         if (hollow) points.removeAll(new Sphere(center, radius - 1).getPoints());
 
         return points;
+    }
+
+    @Override
+    public void openGui(int i, JsonObject jsonObject, StructureTypeGui instance)
+    {
+        new SphereGui(i, jsonObject, instance, typeMap);
     }
 
     @Override

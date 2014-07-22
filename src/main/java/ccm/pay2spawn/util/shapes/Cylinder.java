@@ -1,13 +1,28 @@
 package ccm.pay2spawn.util.shapes;
 
+import ccm.pay2spawn.types.guis.StructureTypeGui;
+import ccm.pay2spawn.types.guis.shapes.CylinderGui;
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
+
 public class Cylinder extends AbstractShape
 {
     int radius, height = 0;
+
+    public static final String RADIUS_KEY = "radius";
+    public static final String HEIGHT_KEY = "height";
+
+    static
+    {
+        typeMap.put(RADIUS_KEY, NBTTypes[INT]);
+        typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
+    }
 
     public Cylinder(int radius)
     {
@@ -44,8 +59,8 @@ public class Cylinder extends AbstractShape
     public NBTTagCompound toNBT()
     {
         NBTTagCompound compound = super.toNBT();
-        compound.setInteger("radius", radius);
-        compound.setInteger("height", height);
+        compound.setInteger(RADIUS_KEY, radius);
+        compound.setInteger(HEIGHT_KEY, height);
         return compound;
     }
 
@@ -53,8 +68,8 @@ public class Cylinder extends AbstractShape
     public IShape fromNBT(NBTTagCompound compound)
     {
         super.fromNBT(compound);
-        this.radius = compound.getInteger("radius");
-        this.height = compound.getInteger("height");
+        this.radius = compound.getInteger(RADIUS_KEY);
+        this.height = compound.getInteger(HEIGHT_KEY);
         return this;
     }
 
@@ -83,6 +98,12 @@ public class Cylinder extends AbstractShape
         if (hollow) points.removeAll(new Cylinder(center, radius - 1, height - 1).getPoints());
 
         return points;
+    }
+
+    @Override
+    public void openGui(int i, JsonObject jsonObject, StructureTypeGui instance)
+    {
+        new CylinderGui(i, jsonObject, instance, typeMap);
     }
 
     @Override

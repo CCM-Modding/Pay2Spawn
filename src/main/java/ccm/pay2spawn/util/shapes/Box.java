@@ -1,13 +1,30 @@
 package ccm.pay2spawn.util.shapes;
 
+import ccm.pay2spawn.types.guis.StructureTypeGui;
+import ccm.pay2spawn.types.guis.shapes.BoxGui;
+import com.google.gson.JsonObject;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
+
 public class Box extends AbstractShape
 {
     int x, y, z;
+
+    public static final String X_KEY = "x";
+    public static final String Y_KEY = "y";
+    public static final String Z_KEY = "z";
+
+    static
+    {
+        typeMap.put(X_KEY, NBTTypes[INT]);
+        typeMap.put(Y_KEY, NBTTypes[INT]);
+        typeMap.put(Z_KEY, NBTTypes[INT]);
+    }
 
     public Box(int x, int y, int z)
     {
@@ -34,9 +51,9 @@ public class Box extends AbstractShape
     public NBTTagCompound toNBT()
     {
         NBTTagCompound compound = super.toNBT();
-        compound.setInteger("x", x);
-        compound.setInteger("y", y);
-        compound.setInteger("z", z);
+        compound.setInteger(X_KEY, x);
+        compound.setInteger(Y_KEY, y);
+        compound.setInteger(Z_KEY, z);
         return compound;
     }
 
@@ -44,9 +61,9 @@ public class Box extends AbstractShape
     public IShape fromNBT(NBTTagCompound compound)
     {
         super.fromNBT(compound);
-        x = compound.getInteger("x");
-        y = compound.getInteger("y");
-        z = compound.getInteger("z");
+        x = compound.getInteger(X_KEY);
+        y = compound.getInteger(Y_KEY);
+        z = compound.getInteger(Z_KEY);
         return this;
     }
 
@@ -69,6 +86,12 @@ public class Box extends AbstractShape
         if (hollow) points.removeAll(new Box(center, x - 1, y - 1, z - 1).getPoints());
 
         return points;
+    }
+
+    @Override
+    public void openGui(int index, JsonObject jsonObject, StructureTypeGui instance)
+    {
+        new BoxGui(index, jsonObject, instance, typeMap);
     }
 
     @Override

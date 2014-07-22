@@ -2,10 +2,26 @@ package ccm.pay2spawn.util.shapes;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.util.HashMap;
+
+import static ccm.pay2spawn.util.Constants.NBTTypes;
+import static ccm.pay2spawn.util.Constants.*;
+
 public abstract class AbstractShape implements IShape
 {
     PointI center = new PointI();
     boolean hollow, replaceableOnly;
+
+    public static final HashMap<String, String> typeMap = new HashMap<>();
+    public static final String CENTER_KEY = "center";
+    public static final String HOLLOWCENTER_KEY = "hollow";
+    public static final String REPLACEABLEONLY_KEY = "replaceableOnly";
+
+    static
+    {
+        typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
+        typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
+    }
 
     public AbstractShape(PointI center)
     {
@@ -20,9 +36,9 @@ public abstract class AbstractShape implements IShape
     @Override
     public IShape fromNBT(NBTTagCompound compound)
     {
-        center.fromNBT(compound.getCompoundTag("center"));
-        hollow = compound.getBoolean("hollow");
-        replaceableOnly = compound.getBoolean("replaceableOnly");
+        center.fromNBT(compound.getCompoundTag(CENTER_KEY));
+        hollow = compound.getBoolean(HOLLOWCENTER_KEY);
+        replaceableOnly = compound.getBoolean(REPLACEABLEONLY_KEY);
         return this;
     }
 
@@ -30,9 +46,9 @@ public abstract class AbstractShape implements IShape
     public NBTTagCompound toNBT()
     {
         NBTTagCompound compound = new NBTTagCompound();
-        compound.setTag("center", center.toNBT());
-        compound.setBoolean("hollow", hollow);
-        compound.setBoolean("replaceableOnly", replaceableOnly);
+        compound.setTag(CENTER_KEY, center.toNBT());
+        compound.setBoolean(HOLLOWCENTER_KEY, hollow);
+        compound.setBoolean(REPLACEABLEONLY_KEY, replaceableOnly);
         return compound;
     }
 
