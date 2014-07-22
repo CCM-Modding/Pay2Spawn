@@ -22,15 +22,16 @@ import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 public class StreamtipChecker extends AbstractChecker implements Runnable
 {
     public static final StreamtipChecker INSTANCE = new StreamtipChecker();
-    public final static String NAME = "streamtip";
-    public final static String CAT  = BASECAT_TRACKERS + '.' + NAME;
-    public final static String URL  = "https://streamtip.com/api/tips?";
+    public final static String           NAME     = "streamtip";
+    public final static String           CAT      = BASECAT_TRACKERS + '.' + NAME;
+    public final static String           URL      = "https://streamtip.com/api/tips?";
 
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
     String ClientID = "", ClientAccessToken = "";
     boolean enabled  = true;
     int     interval = 3;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 
     private StreamtipChecker()
     {
@@ -140,7 +141,6 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
         }
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
     private Donation getDonation(JsonObject jsonObject)
     {
         long time = new Date().getTime();

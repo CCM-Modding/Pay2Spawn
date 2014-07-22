@@ -43,10 +43,10 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class CommandType extends TypeBase
 {
-    public static final  String                  COMMAND_KEY     = "command";
-    public static final  HashMap<String, String> typeMap         = new HashMap<>();
-    public static final  HashSet<String>         commands        = new HashSet<>();
-    private static final String                  NAME            = "command";
+    public static final  String                  COMMAND_KEY = "command";
+    public static final  HashMap<String, String> typeMap     = new HashMap<>();
+    public static final  HashSet<String>         commands    = new HashSet<>();
+    private static final String                  NAME        = "command";
 
     static
     {
@@ -54,7 +54,7 @@ public class CommandType extends TypeBase
     }
 
     public boolean feedback = true;
-    
+
     @Override
     public String getName()
     {

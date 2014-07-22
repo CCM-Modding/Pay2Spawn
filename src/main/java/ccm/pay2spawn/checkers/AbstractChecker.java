@@ -11,6 +11,9 @@ import java.util.HashSet;
 
 public abstract class AbstractChecker
 {
+    protected HashSet<String>   doneIDs = new HashSet<>();
+    protected HashSet<Donation> backlog = new HashSet<>();
+
     protected AbstractChecker() {}
 
     public abstract String getName();
@@ -37,9 +40,6 @@ public abstract class AbstractChecker
             e.printStackTrace();
         }
     }
-
-    protected HashSet<String>   doneIDs = new HashSet<>();
-    protected HashSet<Donation> backlog = new HashSet<>();
 
     protected void process(Donation donation, boolean msg)
     {

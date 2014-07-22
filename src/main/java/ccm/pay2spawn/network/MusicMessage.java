@@ -28,6 +28,25 @@ public class MusicMessage implements IMessage
 
     }
 
+    private static void play(final File file)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    new ccm.libs.javazoom.jl.player.Player(new FileInputStream(file)).play();
+                }
+                catch (JavaLayerException | FileNotFoundException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }, "Pay2Spawn music thread").start();
+    }
+
     @Override
     public void fromBytes(ByteBuf buf)
     {
@@ -80,24 +99,5 @@ public class MusicMessage implements IMessage
             }
             return null;
         }
-    }
-
-    private static void play(final File file)
-    {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                try
-                {
-                    new ccm.libs.javazoom.jl.player.Player(new FileInputStream(file)).play();
-                }
-                catch (JavaLayerException | FileNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }, "Pay2Spawn music thread").start();
     }
 }

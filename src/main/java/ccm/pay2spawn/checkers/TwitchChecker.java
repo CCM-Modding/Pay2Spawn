@@ -19,9 +19,9 @@ import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 public class TwitchChecker extends AbstractChecker implements Runnable
 {
     public static final TwitchChecker INSTANCE = new TwitchChecker();
-    public final static String NAME = "twitchsubs";
-    public final static String CAT = BASECAT_TRACKERS + '.' + NAME;
-    public final static String URL = "https://streamtip.com/api/tips?";
+    public final static String        NAME     = "twitchsubs";
+    public final static String        CAT      = BASECAT_TRACKERS + '.' + NAME;
+    public final static String        URL      = "https://streamtip.com/api/tips?";
     HashMap<String, String> subs = new HashMap<>();
 
     DonationsBasedHudEntry recentDonationsBasedHudEntry;

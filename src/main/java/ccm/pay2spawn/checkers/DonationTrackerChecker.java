@@ -37,6 +37,7 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     String Channel = "", APIKey = "";
     boolean enabled  = true;
     int     interval = 3;
+    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
 
     private DonationTrackerChecker()
     {
@@ -128,7 +129,6 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
         }
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
     private Donation getDonation(String html)
     {
         ArrayList<String> htmlMatches = new ArrayList<>();

@@ -12,7 +12,7 @@ public class Donation
     public double amount;
     public String username;
     public String note;
-    public long time;
+    public long   time;
 
     public Donation(String id, double amount, long time)
     {

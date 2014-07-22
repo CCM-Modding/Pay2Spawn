@@ -34,9 +34,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
-import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
-import static ccm.pay2spawn.util.Constants.STRING;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class Reward
 {

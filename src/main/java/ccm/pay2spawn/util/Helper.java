@@ -326,11 +326,12 @@ public class Helper
         }
     }
 
-    public static  double findMax(Collection<Double> vals)
+    public static double findMax(Collection<Double> vals)
     {
         double max = Double.MIN_VALUE;
 
-        for (double d : vals) {
+        for (double d : vals)
+        {
             if (d > max) max = d;
         }
 

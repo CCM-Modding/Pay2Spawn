@@ -7,9 +7,9 @@ import java.util.HashMap;
 
 public class Shapes
 {
-    public static final  String                  SHAPE_KEY     = "shape";
-    public static final HashMap<String, IShape> MAP = new HashMap<>();
-    public static final ArrayList<String> LIST = new ArrayList<>();
+    public static final String                  SHAPE_KEY = "shape";
+    public static final HashMap<String, IShape> MAP       = new HashMap<>();
+    public static final ArrayList<String>       LIST      = new ArrayList<>();
 
     static
     {

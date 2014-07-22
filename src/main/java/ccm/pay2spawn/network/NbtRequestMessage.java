@@ -24,26 +24,26 @@ import net.minecraftforge.common.DimensionManager;
 
 public class NbtRequestMessage implements IMessage
 {
-    public static IIHasCallback callbackItemType;
-    public static IIHasCallback callbackCustomEntityType;
-    public static IIHasCallback callbackFireworksType;
+    public static  IIHasCallback callbackItemType;
+    public static  IIHasCallback callbackCustomEntityType;
+    public static  IIHasCallback callbackFireworksType;
     private static IIHasCallback callbackBlockType;
-    private Type    type;
+    private        Type          type;
     /**
      * true = request
      * false = response
      */
-    private boolean request;
+    private        boolean       request;
     /**
      * entityId only used for ITEM
      */
-    private int     entityId;
+    private        int           entityId;
     /**
      * Only used when response = false
      */
-    private String  response;
+    private        String        response;
 
-    private int     x, y, z, dim;
+    private int x, y, z, dim;
 
     public NbtRequestMessage()
     {
@@ -158,6 +158,14 @@ public class NbtRequestMessage implements IMessage
         }
     }
 
+    public static enum Type
+    {
+        ITEM,
+        BLOCK,
+        ENTITY,
+        FIREWORK
+    }
+
     public static class Handler implements IMessageHandler<NbtRequestMessage, IMessage>
     {
         @Override
@@ -230,13 +238,5 @@ public class NbtRequestMessage implements IMessage
             }
             return null;
         }
-    }
-
-    public static enum Type
-    {
-        ITEM,
-        BLOCK,
-        ENTITY,
-        FIREWORK
     }
 }

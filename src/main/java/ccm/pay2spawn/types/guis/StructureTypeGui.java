@@ -30,7 +30,7 @@ public class StructureTypeGui extends HelperGuiBase
     public JButton       testButton;
     public JButton       addShapeButton;
     public JList<String> shapeList;
-    public JButton removeShapeButton;
+    public JButton       removeShapeButton;
     public StructureTypeGui instance = this;
 
     public JsonArray shapes;

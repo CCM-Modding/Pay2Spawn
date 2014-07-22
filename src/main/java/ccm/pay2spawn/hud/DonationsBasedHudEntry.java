@@ -36,10 +36,10 @@ import java.util.List;
 public class DonationsBasedHudEntry implements IHudEntry
 {
     final ArrayList<String> strings = new ArrayList<>();
-    List<Donation> donations = new ArrayList<>();
     final int position, amount;
     final String header, format;
     final Comparator<Donation> comparator;
+    List<Donation> donations = new ArrayList<>();
 
     public DonationsBasedHudEntry(Configuration config, String configCat, int maxAmount, int defaultPosition, int defaultAmount, String defaultFormat, String defaultHeader, Comparator<Donation> comparator)
     {

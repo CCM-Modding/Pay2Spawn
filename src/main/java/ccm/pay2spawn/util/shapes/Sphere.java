@@ -13,14 +13,12 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 public class Sphere extends AbstractShape
 {
-    int radius;
-
     public static final String RADIUS_KEY = "radius";
-
     static
     {
         typeMap.put(RADIUS_KEY, NBTTypes[INT]);
     }
+    int radius;
 
     public Sphere(int radius)
     {

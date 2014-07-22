@@ -27,7 +27,8 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.BYTE_ARRAY;
+import static ccm.pay2spawn.util.Constants.INT_ARRAY;
 
 /**
  * Picks 1 value from a list

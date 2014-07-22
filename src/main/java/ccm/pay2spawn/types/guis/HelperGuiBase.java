@@ -34,8 +34,8 @@ import java.util.HashMap;
 public abstract class HelperGuiBase
 {
     public static final String RANDOM_BOOLEAN = "$random()";
-    public static final String TRUE_BYTE = "1";
-    public static final String FALSE_BYTE = "0";
+    public static final String TRUE_BYTE      = "1";
+    public static final String FALSE_BYTE     = "0";
 
     public final String                  name;
     public final int                     rewardID;

@@ -9,22 +9,16 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 
-import static ccm.pay2spawn.util.Constants.BYTE;
-import static ccm.pay2spawn.util.Constants.INT;
-import static ccm.pay2spawn.util.Constants.NBTTypes;
+import static ccm.pay2spawn.util.Constants.*;
 
 public class PointI implements IShape
 {
-    int x, y, z;
-    boolean hollow, replaceableOnly;
-
-    public static final HashMap<String, String> typeMap = new HashMap<>();
-    public static final String HOLLOWCENTER_KEY = "hollow";
-    public static final String REPLACEABLEONLY_KEY = "replaceableOnly";
-    public static final String                  X_KEY   = "x";
-    public static final String                  Y_KEY   = "y";
-    public static final String                  Z_KEY   = "z";
-
+    public static final HashMap<String, String> typeMap             = new HashMap<>();
+    public static final String                  HOLLOWCENTER_KEY    = "hollow";
+    public static final String                  REPLACEABLEONLY_KEY = "replaceableOnly";
+    public static final String                  X_KEY               = "x";
+    public static final String                  Y_KEY               = "y";
+    public static final String                  Z_KEY               = "z";
     static
     {
         typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
@@ -34,6 +28,8 @@ public class PointI implements IShape
         typeMap.put(Y_KEY, NBTTypes[INT]);
         typeMap.put(Z_KEY, NBTTypes[INT]);
     }
+    int x, y, z;
+    boolean hollow, replaceableOnly;
 
     public PointI(int x, int y, int z)
     {

@@ -2,8 +2,8 @@ package ccm.pay2spawn.network;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.util.Donation;
-import ccm.pay2spawn.util.Reward;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.Reward;
 import com.google.common.base.Strings;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -20,9 +20,9 @@ public class MessageMessage implements IMessage
 {
     private Reward   reward;
     private Donation donation;
-    private String message, name;
+    private String   message, name;
     private double amount;
-    private int countdown;
+    private int    countdown;
 
     public MessageMessage(Reward reward, Donation donation)
     {
@@ -40,7 +40,7 @@ public class MessageMessage implements IMessage
     {
         message = ByteBufUtils.readUTF8String(buf);
         name = ByteBufUtils.readUTF8String(buf);
-        amount =  buf.readDouble();
+        amount = buf.readDouble();
         countdown = buf.readInt();
 
         donation = GSON.fromJson(ByteBufUtils.readUTF8String(buf), Donation.class);

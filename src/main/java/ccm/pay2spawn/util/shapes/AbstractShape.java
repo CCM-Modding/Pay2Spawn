@@ -4,24 +4,22 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.HashMap;
 
+import static ccm.pay2spawn.util.Constants.BYTE;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
-import static ccm.pay2spawn.util.Constants.*;
 
 public abstract class AbstractShape implements IShape
 {
-    PointI center = new PointI();
-    boolean hollow, replaceableOnly;
-
-    public static final HashMap<String, String> typeMap = new HashMap<>();
-    public static final String CENTER_KEY = "center";
-    public static final String HOLLOWCENTER_KEY = "hollow";
-    public static final String REPLACEABLEONLY_KEY = "replaceableOnly";
-
+    public static final HashMap<String, String> typeMap             = new HashMap<>();
+    public static final String                  CENTER_KEY          = "center";
+    public static final String                  HOLLOWCENTER_KEY    = "hollow";
+    public static final String                  REPLACEABLEONLY_KEY = "replaceableOnly";
     static
     {
         typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
         typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
     }
+    PointI center = new PointI();
+    boolean hollow, replaceableOnly;
 
     public AbstractShape(PointI center)
     {

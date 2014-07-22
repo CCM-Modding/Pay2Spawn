@@ -27,7 +27,7 @@ import net.minecraft.entity.EntityList;
 
 import java.util.regex.Pattern;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.STRING;
 
 /**
  * Picks a random entity name (see EntityList.txt)

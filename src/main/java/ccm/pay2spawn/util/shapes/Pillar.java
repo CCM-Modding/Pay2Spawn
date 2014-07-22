@@ -13,14 +13,12 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 public class Pillar extends AbstractShape
 {
-    int height = 0;
-
     public static final String HEIGHT_KEY = "height";
-
     static
     {
         typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
     }
+    int height = 0;
 
 
     public Pillar(int height)

@@ -27,7 +27,7 @@ public class BlockDataGui extends HelperGuiBase implements IIHasCallback
     public        JTextField   weightField;
     public        JButton      parseFromJsonButton;
     public        JButton      updateJsonButton;
-    public JButton importNextBlockRightButton;
+    public        JButton      importNextBlockRightButton;
     public BlockDataGui instance = this;
 
     public BlockDataGui(int rewardID, JsonObject inputData, ShapeGuiBase callback)

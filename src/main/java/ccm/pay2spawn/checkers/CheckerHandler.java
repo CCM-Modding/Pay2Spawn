@@ -10,7 +10,8 @@ import java.util.*;
 
 public class CheckerHandler
 {
-    public static final Comparator<Donation> RECENT_DONATION_COMPARATOR = new Comparator<Donation>() {
+    public static final Comparator<Donation> RECENT_DONATION_COMPARATOR = new Comparator<Donation>()
+    {
         @Override
         public int compare(Donation o1, Donation o2)
         {
@@ -18,7 +19,8 @@ public class CheckerHandler
             return o1.time > o2.time ? -1 : 1;
         }
     };
-    public static final Comparator<Donation> AMOUNT_DONATION_COMPARATOR = new Comparator<Donation>() {
+    public static final Comparator<Donation> AMOUNT_DONATION_COMPARATOR = new Comparator<Donation>()
+    {
         @Override
         public int compare(Donation o1, Donation o2)
         {
@@ -28,6 +30,7 @@ public class CheckerHandler
     };
 
     private static HashMap<String, AbstractChecker> map = new HashMap<>();
+
     static
     {
         register(StreamtipChecker.INSTANCE);
@@ -58,8 +61,7 @@ public class CheckerHandler
     {
         for (AbstractChecker abstractChecker : map.values())
         {
-            if (abstractChecker.enabled())
-                abstractChecker.init();
+            if (abstractChecker.enabled()) abstractChecker.init();
         }
     }
 

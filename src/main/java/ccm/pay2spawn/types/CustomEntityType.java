@@ -24,14 +24,14 @@
 package ccm.pay2spawn.types;
 
 import ccm.pay2spawn.Pay2Spawn;
-import ccm.pay2spawn.util.PointD;
-import ccm.pay2spawn.util.Vector3;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
 import ccm.pay2spawn.types.guis.CustomEntityTypeGui;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.PointD;
+import ccm.pay2spawn.util.Vector3;
 import com.google.gson.JsonObject;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;

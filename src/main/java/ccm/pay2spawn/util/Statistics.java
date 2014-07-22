@@ -51,7 +51,7 @@ public class Statistics
     private static HashMap<String, Integer> spawnsMap       = new HashMap<>();
     private static TreeMap<String, Integer> sortedSpawnsMap = new TreeMap<>(new ValueComparator(spawnsMap));
 
-    private static StatisticsHudEntry spawnsStatisticsHudEntry;
+    private static StatisticsHudEntry    spawnsStatisticsHudEntry;
     private static TotalDonationHudEntry totalDonationHudEntry;
 
     private Statistics() {}

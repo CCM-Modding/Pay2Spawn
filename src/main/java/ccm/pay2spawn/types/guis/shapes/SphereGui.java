@@ -18,8 +18,6 @@ import static ccm.pay2spawn.types.StructureType.BLOCKDATA_KEY;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 import static ccm.pay2spawn.util.shapes.AbstractShape.*;
-import static ccm.pay2spawn.util.shapes.AbstractShape.HOLLOWCENTER_KEY;
-import static ccm.pay2spawn.util.shapes.AbstractShape.REPLACEABLEONLY_KEY;
 import static ccm.pay2spawn.util.shapes.Cylinder.RADIUS_KEY;
 
 public class SphereGui extends ShapeGuiBase

@@ -1,7 +1,7 @@
 package ccm.pay2spawn.hud;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.P2SConfig;
+import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.util.Constants;
 import ccm.pay2spawn.util.Helper;
 import net.minecraftforge.common.config.Configuration;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 
 public class TotalDonationHudEntry implements IHudEntry
 {
-    private double amount = 0;
-    final int position;
+    final int    position;
     final String format;
+    private double amount = 0;
 
     public TotalDonationHudEntry(String configCat, int defaultPosition, String defaultFormat, double amount)
     {

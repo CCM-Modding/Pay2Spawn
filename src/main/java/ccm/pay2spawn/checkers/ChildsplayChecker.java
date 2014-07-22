@@ -2,8 +2,8 @@ package ccm.pay2spawn.checkers;
 
 import ccm.pay2spawn.hud.DonationsBasedHudEntry;
 import ccm.pay2spawn.hud.Hud;
-import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Base64;
+import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
@@ -28,11 +28,11 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class ChildsplayChecker extends AbstractChecker implements Runnable
 {
-    public static final ChildsplayChecker INSTANCE = new ChildsplayChecker();
-    public final static String NAME = "childsplay";
-    public final static String CAT = BASECAT_TRACKERS + '.' + NAME;
-    public final static String ENDPOINT = "donate.childsplaycharity.org";
-    public final static SimpleDateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss zzz", Locale.US);
+    public static final ChildsplayChecker INSTANCE           = new ChildsplayChecker();
+    public final static String            NAME               = "childsplay";
+    public final static String            CAT                = BASECAT_TRACKERS + '.' + NAME;
+    public final static String            ENDPOINT           = "donate.childsplaycharity.org";
+    public final static SimpleDateFormat  SIMPLE_DATE_FORMAT = new SimpleDateFormat("EEE, dd MMM YYYY HH:mm:ss zzz", Locale.US);
 
     static
     {
@@ -44,10 +44,20 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     String APIKey = "", APIsecret = "";
     boolean enabled  = true;
     int     interval = 3;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private ChildsplayChecker()
     {
         super();
+    }
+
+    public static String encode(String key, String data) throws Exception
+    {
+        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
+        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
+        sha256_HMAC.init(secret_key);
+
+        return Base64.encodeToString(sha256_HMAC.doFinal(data.getBytes()), false);
     }
 
     @Override
@@ -133,7 +143,6 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
         }
     }
 
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Donation getDonation(JsonObject jsonObject)
     {
         long time = new Date().getTime();
@@ -172,14 +181,5 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     private String getSignature(String s) throws Exception
     {
         return "CP " + APIKey + ":" + URLEncoder.encode(encode(APIsecret, s), "UTF-8");
-    }
-
-    public static String encode(String key, String data) throws Exception
-    {
-        Mac sha256_HMAC = Mac.getInstance("HmacSHA256");
-        SecretKeySpec secret_key = new SecretKeySpec(key.getBytes(), "HmacSHA256");
-        sha256_HMAC.init(secret_key);
-
-        return Base64.encodeToString(sha256_HMAC.doFinal(data.getBytes()), false);
     }
 }

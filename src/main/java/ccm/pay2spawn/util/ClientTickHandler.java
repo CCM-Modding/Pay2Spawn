@@ -90,11 +90,11 @@ public class ClientTickHandler
 
     public class QueEntry
     {
-        int        remaining;
-        Donation   donation;
-        Reward     reward;
-        Reward     actualReward;
-        boolean    addToHUD;
+        int      remaining;
+        Donation donation;
+        Reward   reward;
+        Reward   actualReward;
+        boolean  addToHUD;
 
         public QueEntry(Reward reward, Donation donation, boolean addToHUD, Reward actualReward)
         {

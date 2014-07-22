@@ -50,25 +50,66 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class StructureType extends TypeBase
 {
-    private static final String NAME = "structure";
-
     public static final String SHAPES_KEY    = "shapes";
     public static final String BLOCKDATA_KEY = "blockData";
     public static final String TEDATA_KEY    = "tileEntityData";
     public static final String BLOCKID_KEY   = "blockID";
     public static final String META_KEY      = "meta";
     public static final String WEIGHT_KEY    = "weight";
-
     public static final HashMap<String, String> typeMap = new HashMap<>();
-
     static
     {
         typeMap.put(BLOCKID_KEY, NBTTypes[INT]);
         typeMap.put(META_KEY, NBTTypes[INT]);
         typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
     }
-
+    private static final String NAME = "structure";
     public static String[] bannedBlocks = {};
+
+    public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList)
+    {
+        try
+        {
+            ArrayList<BlockData> blockDataList = new ArrayList<>();
+            for (NBTTagCompound compound : blockDataNbtList)
+            {
+                BlockData blockData = new BlockData(compound);
+                for (int i = 0; i <= blockData.weight; i++)
+                    blockDataList.add(blockData);
+            }
+
+            int x = Helper.round(player.posX), y = Helper.round(player.posY), z = Helper.round(player.posZ);
+            Collection<PointI> points = shape.move(x, y, z).getPoints();
+            for (PointI p : points)
+            {
+                if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
+                {
+                    BlockData block = blockDataList.size() == 1 ? blockDataList.get(0) : RandomRegistry.getRandomFromSet(blockDataList);
+
+                    Block block1 = Block.getBlockById(block.id);
+                    if (block1 == Blocks.air) System.out.println(block);
+                    player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), block1, block.meta, 2);
+                    if (block.te != null)
+                    {
+                        TileEntity tileEntity = TileEntity.createAndLoadEntity(block.te);
+                        tileEntity.setWorldObj(player.worldObj);
+                        tileEntity.xCoord = p.getX();
+                        tileEntity.yCoord = p.getY();
+                        tileEntity.zCoord = p.getZ();
+                        player.worldObj.setTileEntity(p.getX(), p.getY(), p.getZ(), tileEntity);
+                    }
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            Pay2Spawn.getLogger().warn("Error spawning in shape.");
+            Pay2Spawn.getLogger().warn("Shape: " + shape.toString());
+            Pay2Spawn.getLogger().warn("Player: " + player);
+            Pay2Spawn.getLogger().warn("BlockData array: " + Arrays.deepToString(blockDataNbtList.toArray()));
+        }
+    }
 
     @Override
     public String getName()
@@ -249,6 +290,42 @@ public class StructureType extends TypeBase
         }
     }
 
+    @Override
+    public void openNewGui(int rewardID, JsonObject data)
+    {
+        new StructureTypeGui(rewardID, NAME, data, typeMap);
+    }
+
+    @Override
+    public Collection<Node> getPermissionNodes()
+    {
+        HashSet<Node> nodes = new HashSet<>();
+
+        nodes.add(new Node(NAME));
+
+        return nodes;
+    }
+
+    @Override
+    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
+    {
+        return new Node(NAME);
+    }
+
+    @Override
+    public String replaceInTemplate(String id, JsonObject jsonObject)
+    {
+        return id;
+    }
+
+    @Override
+    public void doConfig(Configuration configuration)
+    {
+        configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
+        configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used when spawning structures");
+        bannedBlocks = configuration.get(Constants.MODID + "_types." + NAME, "bannedBlocks", bannedBlocks, "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
+    }
+
     public static class BlockData
     {
         final int id, meta, weight;
@@ -286,86 +363,5 @@ public class StructureType extends TypeBase
                     ", te=" + te +
                     '}';
         }
-    }
-
-    public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList)
-    {
-        try
-        {
-            ArrayList<BlockData> blockDataList = new ArrayList<>();
-            for (NBTTagCompound compound : blockDataNbtList)
-            {
-                BlockData blockData = new BlockData(compound);
-                for (int i = 0; i <= blockData.weight; i++)
-                    blockDataList.add(blockData);
-            }
-
-            int x = Helper.round(player.posX), y = Helper.round(player.posY), z = Helper.round(player.posZ);
-            Collection<PointI> points = shape.move(x, y, z).getPoints();
-            for (PointI p : points)
-            {
-                if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
-                {
-                    BlockData block = blockDataList.size() == 1 ? blockDataList.get(0) : RandomRegistry.getRandomFromSet(blockDataList);
-
-                    Block block1 = Block.getBlockById(block.id);
-                    if (block1 == Blocks.air) System.out.println(block);
-                    player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), block1, block.meta, 2);
-                    if (block.te != null)
-                    {
-                        TileEntity tileEntity = TileEntity.createAndLoadEntity(block.te);
-                        tileEntity.setWorldObj(player.worldObj);
-                        tileEntity.xCoord = p.getX();
-                        tileEntity.yCoord = p.getY();
-                        tileEntity.zCoord = p.getZ();
-                        player.worldObj.setTileEntity(p.getX(), p.getY(), p.getZ(), tileEntity);
-                    }
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-            Pay2Spawn.getLogger().warn("Error spawning in shape.");
-            Pay2Spawn.getLogger().warn("Shape: " + shape.toString());
-            Pay2Spawn.getLogger().warn("Player: " + player);
-            Pay2Spawn.getLogger().warn("BlockData array: " + Arrays.deepToString(blockDataNbtList.toArray()));
-        }
-    }
-
-    @Override
-    public void openNewGui(int rewardID, JsonObject data)
-    {
-        new StructureTypeGui(rewardID, NAME, data, typeMap);
-    }
-
-    @Override
-    public Collection<Node> getPermissionNodes()
-    {
-        HashSet<Node> nodes = new HashSet<>();
-
-        nodes.add(new Node(NAME));
-
-        return nodes;
-    }
-
-    @Override
-    public Node getPermissionNode(EntityPlayer player, NBTTagCompound dataFromClient)
-    {
-        return new Node(NAME);
-    }
-
-    @Override
-    public String replaceInTemplate(String id, JsonObject jsonObject)
-    {
-        return id;
-    }
-
-    @Override
-    public void doConfig(Configuration configuration)
-    {
-        configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
-        configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used when spawning structures");
-        bannedBlocks = configuration.get(Constants.MODID + "_types." + NAME, "bannedBlocks", bannedBlocks, "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
     }
 }

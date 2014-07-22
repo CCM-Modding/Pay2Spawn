@@ -13,16 +13,14 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 public class Cylinder extends AbstractShape
 {
-    int radius, height = 0;
-
     public static final String RADIUS_KEY = "radius";
     public static final String HEIGHT_KEY = "height";
-
     static
     {
         typeMap.put(RADIUS_KEY, NBTTypes[INT]);
         typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
     }
+    int radius, height = 0;
 
     public Cylinder(int radius)
     {

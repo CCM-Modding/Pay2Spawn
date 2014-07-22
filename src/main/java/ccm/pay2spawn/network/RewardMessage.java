@@ -22,7 +22,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 
-import static ccm.pay2spawn.util.Constants.*;
+import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
 public class RewardMessage implements IMessage
 {

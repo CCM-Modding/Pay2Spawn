@@ -13,18 +13,16 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 public class Box extends AbstractShape
 {
-    int x, y, z;
-
     public static final String X_KEY = "x";
     public static final String Y_KEY = "y";
     public static final String Z_KEY = "z";
-
     static
     {
         typeMap.put(X_KEY, NBTTypes[INT]);
         typeMap.put(Y_KEY, NBTTypes[INT]);
         typeMap.put(Z_KEY, NBTTypes[INT]);
     }
+    int x, y, z;
 
     public Box(int x, int y, int z)
     {

@@ -41,7 +41,7 @@ import static ccm.pay2spawn.util.Constants.NAME;
  */
 public class MetricsHelper
 {
-    public static  double  totalMoney;
+    public static double  totalMoney;
     public static Metrics metrics;
 
     public static void init()
@@ -52,21 +52,24 @@ public class MetricsHelper
             metrics = new Metrics(NAME + "2", Pay2Spawn.getVersion());
             if (FMLCommonHandler.instance().getEffectiveSide().isClient())
             {
-                metrics.createGraph("RewardCount").addPlotter(new Metrics.Plotter() {
+                metrics.createGraph("RewardCount").addPlotter(new Metrics.Plotter()
+                {
                     @Override
                     public int getValue()
                     {
                         return Pay2Spawn.getRewardsDB().getRewards().size();
                     }
                 });
-                metrics.createGraph("MaxReward").addPlotter(new Metrics.Plotter() {
+                metrics.createGraph("MaxReward").addPlotter(new Metrics.Plotter()
+                {
                     @Override
                     public int getValue()
                     {
                         return (int) (Helper.findMax(Pay2Spawn.getRewardsDB().getAmounts()));
                     }
                 });
-                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(TwitchChecker.INSTANCE.getChannel()) {
+                metrics.createGraph("ChannelName").addPlotter(new Metrics.Plotter(TwitchChecker.INSTANCE.getChannel())
+                {
                     @Override
                     public int getValue()
                     {
@@ -76,7 +79,8 @@ public class MetricsHelper
                 Metrics.Graph graph = metrics.createGraph("Providers");
                 for (final AbstractChecker abstractChecker : CheckerHandler.getAbstractCheckers())
                 {
-                    graph.addPlotter(new Metrics.Plotter(abstractChecker.getName()) {
+                    graph.addPlotter(new Metrics.Plotter(abstractChecker.getName())
+                    {
                         @Override
                         public int getValue()
                         {

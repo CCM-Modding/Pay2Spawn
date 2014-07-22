@@ -20,13 +20,13 @@ public interface IShape
 
     IShape setCenter(PointI pointI);
 
-    IShape setHollow(boolean hollow);
-
     boolean getHollow();
 
-    IShape setReplaceableOnly(boolean replaceableOnly);
+    IShape setHollow(boolean hollow);
 
     boolean getReplaceableOnly();
+
+    IShape setReplaceableOnly(boolean replaceableOnly);
 
     void openGui(int i, JsonObject jsonObject, StructureTypeGui instance);
 }

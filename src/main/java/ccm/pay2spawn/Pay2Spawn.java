@@ -73,13 +73,13 @@ public class Pay2Spawn
     public static boolean forceOn = false;
 
     @Mod.Metadata(MODID)
-    private ModMetadata           metadata;
-    private RewardsDB             rewardsDB;
-    private P2SConfig             config;
-    private File                  configFolder;
-    private Logger                logger;
-    private SimpleNetworkWrapper  snw;
-    private boolean newConfig;
+    private ModMetadata          metadata;
+    private RewardsDB            rewardsDB;
+    private P2SConfig            config;
+    private File                 configFolder;
+    private Logger               logger;
+    private SimpleNetworkWrapper snw;
+    private boolean              newConfig;
 
     public static String getVersion()
     {
@@ -201,24 +201,20 @@ public class Pay2Spawn
 
         if (newConfig)
         {
-            JOptionPane.showMessageDialog(null,
-                    "Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
-                    "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
-                    "If you need help with the configuring of your rewards, contact us!",
-                    "Please configure Pay2Spawn!",
-                    JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Please configure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
+                            "You should provide AT LEAST your channel in the config. Pay2Spawn will crash otherwise.\n\n" +
+                            "If you need help with the configuring of your rewards, contact us!", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
+                                         );
 
             System.exit(1);
         }
 
         if (Pay2Spawn.getConfig().majorConfigVersionChange)
         {
-            JOptionPane.showMessageDialog(null,
-                    "Please reconfigure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
+            JOptionPane.showMessageDialog(null, "Please reconfigure Pay2Spawn properly BEFORE you try launching this instance again.\n" +
                             "There have been major config changes.\n" +
-                            "We made a backup for you, you should start fresh to avoid clutter.",
-                    "Please reconfigure Pay2Spawn!",
-                    JOptionPane.WARNING_MESSAGE);
+                            "We made a backup for you, you should start fresh to avoid clutter.", "Please reconfigure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
+                                         );
 
             System.exit(1);
         }
@@ -227,12 +223,10 @@ public class Pay2Spawn
 
         if (Strings.isNullOrEmpty(TwitchChecker.INSTANCE.getChannel()) && !MetricsHelper.metrics.isOptOut() && event.getSide().isClient() && !deobf)
         {
-            JOptionPane.showMessageDialog(null,
-                    "You must provide your channel in the config for statistics.\n" +
+            JOptionPane.showMessageDialog(null, "You must provide your channel in the config for statistics.\n" +
                             "If you don't agree with this, opt out of the statistics program all together trough the 'PluginMetrics' config file.\n\n" +
-                            "Important note: Don't send the PluginMetrics config to other users, that will screw up analytics.",
-                    "Please configure Pay2Spawn!",
-                    JOptionPane.WARNING_MESSAGE);
+                            "Important note: Don't send the PluginMetrics config to other users, that will screw up analytics.", "Please configure Pay2Spawn!", JOptionPane.WARNING_MESSAGE
+                                         );
 
             System.exit(1);
         }

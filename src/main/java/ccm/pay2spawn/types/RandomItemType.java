@@ -109,8 +109,7 @@ public class RandomItemType extends TypeBase
         do
         {
             is = pickRandomItemStack();
-        }
-        while (is == null || is.getItem() == null);
+        } while (is == null || is.getItem() == null);
 
         NBTTagCompound nbtTagCompound = is.writeToNBT(new NBTTagCompound());
         for (Object o : dataFromClient.func_150296_c())
