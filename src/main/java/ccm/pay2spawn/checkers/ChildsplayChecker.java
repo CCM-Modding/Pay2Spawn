@@ -42,9 +42,9 @@ public class ChildsplayChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry recentDonationsBasedHudEntry;
 
     String APIKey = "", APIsecret = "";
-    boolean enabled  = true;
-    int     interval = 3;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    boolean          enabled  = true;
+    int              interval = 3;
+    SimpleDateFormat sdf      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private ChildsplayChecker()
     {

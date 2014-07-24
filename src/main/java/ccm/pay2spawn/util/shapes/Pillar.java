@@ -3,6 +3,7 @@ package ccm.pay2spawn.util.shapes;
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.PillarGui;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -14,10 +15,12 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 public class Pillar extends AbstractShape
 {
     public static final String HEIGHT_KEY = "height";
+
     static
     {
         typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
     }
+
     int height = 0;
 
 
@@ -72,7 +75,13 @@ public class Pillar extends AbstractShape
     }
 
     @Override
-    public IShape clone()
+    public void render(Tessellator tess)
+    {
+
+    }
+
+    @Override
+    public IShape cloneShape()
     {
         return new Pillar(center, height);
     }

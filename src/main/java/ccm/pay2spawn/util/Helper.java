@@ -23,11 +23,13 @@
 
 package ccm.pay2spawn.util;
 
+import ccm.pay2spawn.util.shapes.PointI;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -37,6 +39,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
+import org.lwjgl.opengl.GL11;
 
 import java.io.*;
 import java.net.URL;
@@ -350,8 +353,60 @@ public class Helper
 
     public static int round(double d)
     {
-        if (d > 0) return MathHelper.ceiling_double_int(d);
-        if (d < 0) return MathHelper.floor_double(d);
-        return 0;
+        return MathHelper.floor_double(d);
+
+    }
+
+    public static void renderPoint(PointI p, Tessellator tess, double r, double g, double b)
+    {
+        GL11.glColor3d(r, g, b);
+        renderPoint(p, tess);
+    }
+
+    public static void renderPoint(PointI p, Tessellator tess)
+    {
+        GL11.glPushMatrix();
+        GL11.glTranslated(p.getX(), p.getY(), p.getZ());
+        GL11.glScalef(1.01f, 1.01f, 1.01f);
+        tess.startDrawing(GL11.GL_LINES);
+
+        // FRONT
+        tess.addVertex(0, 0, 0);
+        tess.addVertex(0, 1, 0);
+
+        tess.addVertex(0, 1, 0);
+        tess.addVertex(1, 1, 0);
+
+        tess.addVertex(1, 1, 0);
+        tess.addVertex(1, 0, 0);
+
+        tess.addVertex(1, 0, 0);
+        tess.addVertex(0, 0, 0);
+
+        // BACK
+        tess.addVertex(0, 0, -1);
+        tess.addVertex(0, 1, -1);
+        tess.addVertex(0, 0, -1);
+        tess.addVertex(1, 0, -1);
+        tess.addVertex(1, 0, -1);
+        tess.addVertex(1, 1, -1);
+        tess.addVertex(0, 1, -1);
+        tess.addVertex(1, 1, -1);
+
+        // betweens.
+        tess.addVertex(0, 0, 0);
+        tess.addVertex(0, 0, -1);
+
+        tess.addVertex(0, 1, 0);
+        tess.addVertex(0, 1, -1);
+
+        tess.addVertex(1, 0, 0);
+        tess.addVertex(1, 0, -1);
+
+        tess.addVertex(1, 1, 0);
+        tess.addVertex(1, 1, -1);
+
+        tess.draw();
+        GL11.glPopMatrix();
     }
 }

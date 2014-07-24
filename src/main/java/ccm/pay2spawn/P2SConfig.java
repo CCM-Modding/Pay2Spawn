@@ -44,10 +44,10 @@ import static ccm.pay2spawn.util.Constants.MODID;
  */
 public class P2SConfig
 {
-    public final static String HUD = MODID + ".Hud";
+    public final static String HUD           = MODID + ".Hud";
     public static final String CONFIGVERSION = "2";
-    public final boolean majorConfigVersionChange;
-    public Configuration configuration;
+    public final boolean       majorConfigVersionChange;
+    public       Configuration configuration;
     public boolean forceServerconfig = true;
     public boolean forceP2S          = false;
     public double  min_donation      = 1;

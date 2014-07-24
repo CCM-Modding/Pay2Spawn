@@ -13,11 +13,13 @@ public abstract class AbstractShape implements IShape
     public static final String                  CENTER_KEY          = "center";
     public static final String                  HOLLOWCENTER_KEY    = "hollow";
     public static final String                  REPLACEABLEONLY_KEY = "replaceableOnly";
+
     static
     {
         typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
         typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
     }
+
     PointI center = new PointI();
     boolean hollow, replaceableOnly;
 

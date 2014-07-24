@@ -29,9 +29,9 @@ public class StreamtipChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
     String ClientID = "", ClientAccessToken = "";
-    boolean enabled  = true;
-    int     interval = 3;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
+    boolean          enabled  = true;
+    int              interval = 3;
+    SimpleDateFormat sdf      = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.S'Z'");
 
     private StreamtipChecker()
     {

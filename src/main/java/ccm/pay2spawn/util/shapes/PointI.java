@@ -2,7 +2,9 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.PointIGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Arrays;
@@ -19,6 +21,7 @@ public class PointI implements IShape
     public static final String                  X_KEY               = "x";
     public static final String                  Y_KEY               = "y";
     public static final String                  Z_KEY               = "z";
+
     static
     {
         typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
@@ -28,6 +31,7 @@ public class PointI implements IShape
         typeMap.put(Y_KEY, NBTTypes[INT]);
         typeMap.put(Z_KEY, NBTTypes[INT]);
     }
+
     int x, y, z;
     boolean hollow, replaceableOnly;
 
@@ -233,7 +237,13 @@ public class PointI implements IShape
     }
 
     @Override
-    public IShape clone()
+    public void render(Tessellator tess)
+    {
+        Helper.renderPoint(this, tess);
+    }
+
+    @Override
+    public IShape cloneShape()
     {
         return new PointI(x, y, z);
     }

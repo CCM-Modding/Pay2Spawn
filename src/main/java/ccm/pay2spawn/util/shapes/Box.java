@@ -3,7 +3,9 @@ package ccm.pay2spawn.util.shapes;
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.BoxGui;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
+import org.lwjgl.opengl.GL11;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -16,12 +18,14 @@ public class Box extends AbstractShape
     public static final String X_KEY = "x";
     public static final String Y_KEY = "y";
     public static final String Z_KEY = "z";
+
     static
     {
         typeMap.put(X_KEY, NBTTypes[INT]);
         typeMap.put(Y_KEY, NBTTypes[INT]);
         typeMap.put(Z_KEY, NBTTypes[INT]);
     }
+
     int x, y, z;
 
     public Box(int x, int y, int z)
@@ -93,7 +97,56 @@ public class Box extends AbstractShape
     }
 
     @Override
-    public IShape clone()
+    public void render(Tessellator tess)
+    {
+        GL11.glPushMatrix();
+
+        GL11.glTranslated(center.getX(), center.getY(), center.getZ());
+        GL11.glScalef(1.01f, 1.01f, 1.01f);
+        tess.startDrawing(GL11.GL_LINES);
+
+        // FRONT
+        tess.addVertex(-x, -y, z);
+        tess.addVertex(-x, y, z);
+
+        tess.addVertex(-x, y, z);
+        tess.addVertex(x, y, z);
+
+        tess.addVertex(x, y, z);
+        tess.addVertex(x, -y, z);
+
+        tess.addVertex(x, -y, z);
+        tess.addVertex(-x, -y, z);
+
+        // BACK
+        tess.addVertex(-x, -y, -z);
+        tess.addVertex(-x, y, -z);
+        tess.addVertex(-x, -y, -z);
+        tess.addVertex(x, -y, -z);
+        tess.addVertex(x, -y, -z);
+        tess.addVertex(x, y, -z);
+        tess.addVertex(-x, y, -z);
+        tess.addVertex(x, y, -z);
+
+        // betweens.
+        tess.addVertex(-x, -y, z);
+        tess.addVertex(-x, -y, -z);
+
+        tess.addVertex(-x, y, z);
+        tess.addVertex(-x, y, -z);
+
+        tess.addVertex(x, -y, z);
+        tess.addVertex(x, -y, -z);
+
+        tess.addVertex(x, y, z);
+        tess.addVertex(x, y, -z);
+
+        tess.draw();
+        GL11.glPopMatrix();
+    }
+
+    @Override
+    public IShape cloneShape()
     {
         return new Box(center, x, y, z);
     }

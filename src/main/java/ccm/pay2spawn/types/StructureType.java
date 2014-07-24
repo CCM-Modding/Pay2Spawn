@@ -34,7 +34,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -50,21 +49,23 @@ import static ccm.pay2spawn.util.Constants.*;
 
 public class StructureType extends TypeBase
 {
-    public static final String SHAPES_KEY    = "shapes";
-    public static final String BLOCKDATA_KEY = "blockData";
-    public static final String TEDATA_KEY    = "tileEntityData";
-    public static final String BLOCKID_KEY   = "blockID";
-    public static final String META_KEY      = "meta";
-    public static final String WEIGHT_KEY    = "weight";
-    public static final HashMap<String, String> typeMap = new HashMap<>();
+    public static final String                  SHAPES_KEY    = "shapes";
+    public static final String                  BLOCKDATA_KEY = "blockData";
+    public static final String                  TEDATA_KEY    = "tileEntityData";
+    public static final String                  BLOCKID_KEY   = "blockID";
+    public static final String                  META_KEY      = "meta";
+    public static final String                  WEIGHT_KEY    = "weight";
+    public static final HashMap<String, String> typeMap       = new HashMap<>();
+
     static
     {
         typeMap.put(BLOCKID_KEY, NBTTypes[INT]);
         typeMap.put(META_KEY, NBTTypes[INT]);
         typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
     }
-    private static final String NAME = "structure";
-    public static String[] bannedBlocks = {};
+
+    private static final String   NAME         = "structure";
+    public static        String[] bannedBlocks = {};
 
     public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList)
     {
@@ -87,7 +88,6 @@ public class StructureType extends TypeBase
                     BlockData block = blockDataList.size() == 1 ? blockDataList.get(0) : RandomRegistry.getRandomFromSet(blockDataList);
 
                     Block block1 = Block.getBlockById(block.id);
-                    if (block1 == Blocks.air) System.out.println(block);
                     player.worldObj.setBlock(p.getX(), p.getY(), p.getZ(), block1, block.meta, 2);
                     if (block.te != null)
                     {
@@ -338,8 +338,6 @@ public class StructureType extends TypeBase
             weight = compound.hasKey(WEIGHT_KEY) ? compound.getInteger(WEIGHT_KEY) : 1;
 
             te = compound.hasKey(TEDATA_KEY) ? compound.getCompoundTag(TEDATA_KEY) : null;
-
-            if (id == 0) System.out.println(compound.toString());
         }
 
         @Override

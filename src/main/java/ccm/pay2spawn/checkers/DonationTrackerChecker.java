@@ -35,9 +35,9 @@ public class DonationTrackerChecker extends AbstractChecker implements Runnable
     DonationsBasedHudEntry topDonationsBasedHudEntry, recentDonationsBasedHudEntry;
 
     String Channel = "", APIKey = "";
-    boolean enabled  = true;
-    int     interval = 3;
-    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
+    boolean          enabled  = true;
+    int              interval = 3;
+    SimpleDateFormat sdf      = new SimpleDateFormat("dd.MM.yyyy - HH:mm:ss");
 
     private DonationTrackerChecker()
     {

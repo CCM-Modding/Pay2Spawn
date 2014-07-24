@@ -2,6 +2,7 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -29,4 +30,8 @@ public interface IShape
     IShape setReplaceableOnly(boolean replaceableOnly);
 
     void openGui(int i, JsonObject jsonObject, StructureTypeGui instance);
+
+    void render(Tessellator tess);
+
+    IShape cloneShape();
 }

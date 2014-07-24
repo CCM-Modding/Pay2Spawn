@@ -28,7 +28,7 @@ public class Shapes
 
     public static IShape loadShape(NBTTagCompound compound)
     {
-        return MAP.get(compound.getString(SHAPE_KEY)).fromNBT(compound);
+        return MAP.get(compound.getString(SHAPE_KEY)).fromNBT(compound).cloneShape();
     }
 
     public static NBTTagCompound storeShape(IShape shape)

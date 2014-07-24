@@ -2,24 +2,36 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestMessage;
+import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.JsonNBTHelper;
+import ccm.pay2spawn.util.shapes.IShape;
 import ccm.pay2spawn.util.shapes.Shapes;
 import com.google.common.base.Strings;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 import static ccm.pay2spawn.types.StructureType.SHAPES_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
 public class StructureTypeGui extends HelperGuiBase
 {
+    public final ArrayList<IShape> ishapes = new ArrayList<>();
     public JPanel        panel1;
     public JTextField    HTMLTextField;
     public JScrollPane   scrollPane;
@@ -31,16 +43,34 @@ public class StructureTypeGui extends HelperGuiBase
     public JButton       addShapeButton;
     public JList<String> shapeList;
     public JButton       removeShapeButton;
-    public StructureTypeGui instance = this;
-
+    public JButton       importButton;
     public JsonArray shapes;
+    public boolean disabled = false;
+    private StructureTypeGui instance = this;
 
     public StructureTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
 
+        MinecraftForge.EVENT_BUS.register(instance);
+
         setupModels();
         makeAndOpen();
+
+        synchronized (ishapes)
+        {
+            ishapes.clear();
+            for (JsonElement element : shapes) ishapes.add(Shapes.loadShape(JsonNBTHelper.parseJSON(element.getAsJsonObject())));
+        }
+
+        dialog.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosed(WindowEvent e)
+            {
+                MinecraftForge.EVENT_BUS.unregister(instance);
+            }
+        });
     }
 
     @Override
@@ -49,6 +79,12 @@ public class StructureTypeGui extends HelperGuiBase
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         data.add(SHAPES_KEY, shapes);
+
+        synchronized (ishapes)
+        {
+            ishapes.clear();
+            for (JsonElement element : shapes) ishapes.add(Shapes.loadShape(JsonNBTHelper.parseJSON(element.getAsJsonObject())));
+        }
 
         shapeList.updateUI();
 
@@ -128,15 +164,26 @@ public class StructureTypeGui extends HelperGuiBase
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                int selectedIndex = shapeList.getSelectedIndex();
-                if (selectedIndex != -1)
+                JsonArray newShapes = new JsonArray();
+                int[] ints = shapeList.getSelectedIndices();
+                HashSet<Integer> selection = new HashSet<>(ints.length);
+                for (int i : ints) selection.add(i);
+
+                for (int i = 0; i < shapes.size(); i++)
                 {
-                    JsonArray newShapes = new JsonArray();
-                    for (int i = 0; i < shapes.size(); i++) if (i != selectedIndex) newShapes.add(shapes.get(i));
-                    shapes = newShapes;
+                    if (!selection.contains(i)) newShapes.add(shapes.get(i));
                 }
+                shapes = newShapes;
                 updateJson();
                 removeShapeButton.setEnabled(!shapeList.isSelectionEmpty());
+            }
+        });
+        importButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                new StructureImporter(instance);
             }
         });
     }
@@ -152,17 +199,23 @@ public class StructureTypeGui extends HelperGuiBase
         jsonPane.setText(GSON.toJson(data));
     }
 
+    public void importCallback(JsonArray points)
+    {
+        shapes.addAll(points);
+        updateJson();
+    }
+
     public void callback(int id, JsonObject data)
     {
         if (id == -1) shapes.add(data);
         else
         {
             JsonArray newShape = new JsonArray();
-            for (int i = 0; i < shapes.size(); i++)
-                if (i != id) newShape.add(shapes.get(i));
+            for (int i = 0; i < shapes.size(); i++) if (i != id) newShape.add(shapes.get(i));
             newShape.add(data);
+            shapes = newShape;
         }
-        readJson();
+        updateJson();
     }
 
     private void setupModels()
@@ -182,6 +235,38 @@ public class StructureTypeGui extends HelperGuiBase
                 return instance.readValue(Shapes.SHAPE_KEY, object) + ": " + object.toString();
             }
         });
+    }
+
+    @SubscribeEvent
+    public void renderEvent(RenderWorldLastEvent event)
+    {
+        if (disabled) return;
+        if (ishapes.size() == 0) return;
+
+        Tessellator tess = Tessellator.instance;
+        Tessellator.renderingWorldRenderer = false;
+
+        GL11.glPushMatrix();
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glLineWidth(1f);
+
+        GL11.glTranslated(-RenderManager.renderPosX, -RenderManager.renderPosY, 1 - RenderManager.renderPosZ);
+        GL11.glTranslated(Helper.round(Minecraft.getMinecraft().thePlayer.posX), Helper.round(Minecraft.getMinecraft().thePlayer.posY), Helper.round(Minecraft.getMinecraft().thePlayer.posZ));
+        GL11.glScalef(1.0F, 1.0F, 1.0F);
+        GL11.glColor3d(1, 1, 1);
+
+        synchronized (ishapes)
+        {
+            for (IShape shape : ishapes) shape.render(tess);
+        }
+
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        // tess.renderingWorldRenderer = true;
+        GL11.glPopMatrix();
     }
 
     @Override
@@ -359,6 +444,14 @@ public class StructureTypeGui extends HelperGuiBase
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel6.add(removeShapeButton, gbc);
+        importButton = new JButton();
+        importButton.setText("Import!");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel6.add(importButton, gbc);
         final JScrollPane scrollPane1 = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

@@ -3,6 +3,7 @@ package ccm.pay2spawn.util.shapes;
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.SphereGui;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -14,10 +15,12 @@ import static ccm.pay2spawn.util.Constants.NBTTypes;
 public class Sphere extends AbstractShape
 {
     public static final String RADIUS_KEY = "radius";
+
     static
     {
         typeMap.put(RADIUS_KEY, NBTTypes[INT]);
     }
+
     int radius;
 
     public Sphere(int radius)
@@ -82,7 +85,13 @@ public class Sphere extends AbstractShape
     }
 
     @Override
-    public IShape clone()
+    public void render(Tessellator tess)
+    {
+
+    }
+
+    @Override
+    public IShape cloneShape()
     {
         return new Sphere(center, radius);
     }

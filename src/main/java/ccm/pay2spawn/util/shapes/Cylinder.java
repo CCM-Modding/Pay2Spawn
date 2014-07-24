@@ -3,6 +3,7 @@ package ccm.pay2spawn.util.shapes;
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.CylinderGui;
 import com.google.gson.JsonObject;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
@@ -15,11 +16,13 @@ public class Cylinder extends AbstractShape
 {
     public static final String RADIUS_KEY = "radius";
     public static final String HEIGHT_KEY = "height";
+
     static
     {
         typeMap.put(RADIUS_KEY, NBTTypes[INT]);
         typeMap.put(HEIGHT_KEY, NBTTypes[INT]);
     }
+
     int radius, height = 0;
 
     public Cylinder(int radius)
@@ -105,7 +108,13 @@ public class Cylinder extends AbstractShape
     }
 
     @Override
-    public IShape clone()
+    public void render(Tessellator tess)
+    {
+        //TODO
+    }
+
+    @Override
+    public IShape cloneShape()
     {
         return new Cylinder(center, radius, height);
     }
