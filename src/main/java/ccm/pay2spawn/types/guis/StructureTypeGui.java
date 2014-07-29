@@ -46,7 +46,7 @@ public class StructureTypeGui extends HelperGuiBase
     public JButton       importButton;
     public JCheckBox renderShapesIngameCheckBox;
     public JCheckBox renderSelectedShapeInCheckBox;
-    public JsonArray shapes;
+    public JsonArray shapes = new JsonArray();
     public  boolean          disabled = false;
     private StructureTypeGui instance = this;
 
@@ -82,6 +82,8 @@ public class StructureTypeGui extends HelperGuiBase
         synchronized (ishapes)
         {
             ishapes.clear();
+            if (shapes == null) shapes = new JsonArray();
+
             for (JsonElement element : shapes) ishapes.add(Shapes.loadShape(JsonNBTHelper.parseJSON(element.getAsJsonObject())));
         }
     }

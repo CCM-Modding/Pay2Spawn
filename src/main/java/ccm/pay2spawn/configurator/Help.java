@@ -44,7 +44,7 @@ public class Help
         {
             instance.frame = new JFrame("Help");
             instance.frame.setContentPane(instance.panel1);
-            instance.frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+            instance.frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             instance.frame.setPreferredSize(new Dimension(500, 750));
             instance.frame.setSize(600, 800);
             instance.frame.pack();

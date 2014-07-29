@@ -43,6 +43,8 @@ public class BlockDataGui extends HelperGuiBase implements IIHasCallback
         dialog.setModal(true);
         dialog.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
         dialog.setTitle(name);
+        dialog.setPreferredSize(new Dimension(400, 500));
+        dialog.setSize(400, 500);
         dialog.pack();
         dialog.setVisible(true);
     }

@@ -84,7 +84,7 @@ public class Configurator implements IIHasCallback
 
         frame = new JFrame("Configurator");
         frame.setContentPane(panel1);
-        frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         frame.setSize(750, 600);
         frame.pack();
         setupModels();
@@ -98,13 +98,14 @@ public class Configurator implements IIHasCallback
 
     public static void show() throws FileNotFoundException
     {
-        if (instance != null) instance.frame.dispose();
+        close();
         instance = new Configurator();
     }
 
     public static void close()
     {
         if (instance != null) instance.frame.dispose();
+        System.gc();
     }
 
     @Override
