@@ -129,7 +129,7 @@ public class CommandP2S extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "redonate", "permissions");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "permissions");
         return null;
     }
 }

@@ -31,7 +31,7 @@ public class RewardMessage implements IMessage
 
     public RewardMessage()
     {
-        
+
     }
 
     public RewardMessage(Reward reward, Donation donation, Reward actualReward)
