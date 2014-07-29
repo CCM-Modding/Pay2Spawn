@@ -32,7 +32,6 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.config.Configuration;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -110,9 +109,9 @@ public class MusicType extends TypeBase
     }
 
     @Override
-    public void doConfig(Configuration configuration)
+    public void printHelpList(File configFolder)
     {
-        musicFolder = new File(Pay2Spawn.getFolder(), "music");
+        musicFolder = new File(configFolder, "music");
         if (musicFolder.mkdirs())
         {
             new Thread(new Runnable()

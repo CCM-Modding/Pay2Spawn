@@ -414,4 +414,46 @@ public class Helper
         tess.draw();
         GL11.glPopMatrix();
     }
+
+    public static final class TableData
+    {
+        public String header;
+        public ArrayList<String> strings;
+        private int   width;
+
+        public TableData(String header, ArrayList<String> data)
+        {
+            this.header = header;
+            this.strings = data;
+            width = header.length();
+
+            updateWidth();
+        }
+
+        private void updateWidth()
+        {
+            for (String string : strings) if (width < string.length()) width = string.length();
+        }
+    }
+
+    public static String makeTable(TableData... datas)
+    {
+        int size = 0;
+        for (TableData data : datas) size += data.width * data.strings.size();
+        StringBuilder stringBuilder = new StringBuilder(size);
+
+        for (TableData data : datas) stringBuilder.append('|').append(' ').append(data.header).append(new String(new char[data.width - data.header.length() + 1]).replace('\0', ' '));
+        stringBuilder.append('|').append('\n');
+        for (TableData data : datas) stringBuilder.append('+').append(new String(new char[data.width + 2]).replace('\0', '-'));
+        stringBuilder.append('+').append('\n');
+        int i = 0;
+        while (i < datas[0].strings.size())
+        {
+            for (TableData data : datas) stringBuilder.append('|').append(' ').append(data.strings.get(i)).append(new String(new char[data.width - data.strings.get(i).length() + 1]).replace('\0', ' '));
+            stringBuilder.append('|').append('\n');
+            i++;
+        }
+
+        return stringBuilder.toString();
+    }
 }

@@ -44,10 +44,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.*;
 
 import static ccm.pay2spawn.util.Constants.*;
 
@@ -253,15 +250,28 @@ public class EntityType extends TypeBase
             file.createNewFile();
             PrintWriter pw = new PrintWriter(file);
 
-            pw.println("## This is a list of all the entities you can use in the json file.");
-            pw.println("## Not all of them will work, some are system things that shouldn't be messed with.");
-            pw.println("## This file gets deleted and remade every startup, can be disabled in the config.");
+            pw.println("This is a list of all the entities you can use in the json file.");
 
-            for (Object key : EntityList.stringToClassMapping.keySet())
+            ArrayList<String> ids = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
+
+            ArrayList<Integer> list = new ArrayList<Integer>(EntityList.IDtoClassMapping.size());
+            for (Object key : EntityList.IDtoClassMapping.keySet())
             {
-                NAMES.add(key.toString());
-                pw.println(key.toString());
+                list.add((Integer) key);
             }
+            Collections.sort(list);
+            for (Object key : list)
+            {
+                Integer id = (Integer) key;
+                String name = EntityList.getStringFromID(id);
+
+                NAMES.add(name);
+                ids.add(id + "");
+                names.add(name);
+            }
+            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names)));
+
             pw.close();
         }
         catch (IOException e)

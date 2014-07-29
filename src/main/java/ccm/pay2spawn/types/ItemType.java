@@ -26,15 +26,21 @@ package ccm.pay2spawn.types;
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.ItemTypeGui;
+import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -116,5 +122,41 @@ public class ItemType extends TypeBase
                 return is.getItem().getItemStackDisplayName(is);
         }
         return id;
+    }
+
+    @Override
+    public void printHelpList(File configFolder)
+    {
+        File file = new File(configFolder, "Enchantment.txt");
+        try
+        {
+            if (file.exists()) file.delete();
+            file.createNewFile();
+            PrintWriter pw = new PrintWriter(file);
+
+            pw.println("Enchantment list file");
+
+            ArrayList<String> ids = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> minlvl = new ArrayList<>();
+            ArrayList<String> maxlvl = new ArrayList<>();
+            for (Enchantment enchantment : Enchantment.enchantmentsList)
+            {
+                if (enchantment != null)
+                {
+                    ids.add(enchantment.effectId + "");
+                    names.add(enchantment.getTranslatedName(enchantment.getMinLevel()));
+                    minlvl.add(enchantment.getMinLevel() + "");
+                    maxlvl.add(enchantment.getMaxLevel() + "");
+                }
+            }
+            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names), new Helper.TableData("minLvl", minlvl), new Helper.TableData("maxLvl", maxlvl)));
+
+            pw.close();
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

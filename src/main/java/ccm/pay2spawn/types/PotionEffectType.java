@@ -23,9 +23,9 @@
 
 package ccm.pay2spawn.types;
 
-import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.types.guis.PotionEffectTypeGui;
+import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonObject;
@@ -33,10 +33,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.StatCollector;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,25 +84,28 @@ public class PotionEffectType extends TypeBase
     @Override
     public void printHelpList(File configFolder)
     {
-        File file = new File(Pay2Spawn.getFolder(), "Potion.txt");
+        File file = new File(configFolder, "Potion.txt");
         try
         {
             if (file.exists()) file.delete();
             file.createNewFile();
             PrintWriter pw = new PrintWriter(file);
 
-            pw.println("# Potion list file");
-            pw.println("# Format:");
-            pw.println("# ID: name");
+            pw.println("Potion list file");
+
+            ArrayList<String> ids = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
 
             for (Potion potion : Potion.potionTypes)
             {
                 if (potion != null)
                 {
                     POTIONS.put(potion.getId() + ": " + potion.getName(), potion.getId());
-                    pw.println(potion.getId() + ": " + potion.getName());
+                    ids.add(potion.getId() + "");
+                    names.add(StatCollector.translateToLocal(potion.getName()));
                 }
             }
+            pw.print(Helper.makeTable(new Helper.TableData("ID", ids), new Helper.TableData("name", names)));
 
             pw.close();
         }
