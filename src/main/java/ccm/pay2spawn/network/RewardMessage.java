@@ -10,7 +10,6 @@ import ccm.pay2spawn.util.Donation;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.Reward;
-import com.google.common.base.Charsets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -32,7 +31,7 @@ public class RewardMessage implements IMessage
 
     public RewardMessage()
     {
-
+        
     }
 
     public RewardMessage(Reward reward, Donation donation, Reward actualReward)
@@ -46,23 +45,14 @@ public class RewardMessage implements IMessage
     @Override
     public void fromBytes(ByteBuf buf)
     {
-        // Cause the ByteBufUtils method doesn't like big strings
-        byte[] string = new byte[buf.readInt()];
-        buf.readBytes(string);
-        rewards = JSON_PARSER.parse(new String(string, Charsets.UTF_8)).getAsJsonArray();
-
-        //rewards = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonArray();
+        rewards = JSON_PARSER.parse(ByteBufUtils.readUTF8String(buf)).getAsJsonArray();
         rewardData = ByteBufUtils.readTag(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf)
     {
-        // Cause the ByteBufUtils method doesn't like big strings
-        buf.writeInt(formattedData.length());
-        buf.writeBytes(formattedData.getBytes(Charsets.UTF_8));
-
-        //ByteBufUtils.writeUTF8String(buf, formattedData);
+        ByteBufUtils.writeUTF8String(buf, formattedData);
         ByteBufUtils.writeTag(buf, rewardData);
     }
 
