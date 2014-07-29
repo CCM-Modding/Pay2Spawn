@@ -36,6 +36,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 
+import static ccm.pay2spawn.types.ItemType.SLOT_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
 public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
@@ -49,6 +50,7 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     public JButton     importItemYouAreButton;
     public JPanel      pane1;
     public JTextField  HTMLTextField;
+    private JTextField slotTextField;
     private ItemTypeGui instance = this;
 
     public ItemTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
@@ -63,6 +65,8 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     {
         jsonPane.setText(GSON.toJson(data));
 
+        if (data.has(SLOT_KEY)) slotTextField.setText(readValue(SLOT_KEY, data));
+
         HTMLTextField.setText(readValue(CUSTOMHTML, data));
     }
 
@@ -70,6 +74,8 @@ public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
     public void updateJson()
     {
         jsonPane.setText(GSON.toJson(data));
+
+        storeValue(SLOT_KEY, data, slotTextField.getText());
 
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
     }

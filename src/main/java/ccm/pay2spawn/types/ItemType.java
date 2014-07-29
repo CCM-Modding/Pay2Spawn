@@ -42,7 +42,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
+
+import static ccm.pay2spawn.util.Constants.INT;
+import static ccm.pay2spawn.util.Constants.NBTTypes;
 
 /**
  * Spawn an itemstack
@@ -53,6 +57,14 @@ import java.util.HashSet;
 public class ItemType extends TypeBase
 {
     public static final String NAME = "item";
+
+    public static final String                  SLOT_KEY = "SLOT";
+    public static final HashMap<String, String> typeMap  = new HashMap<>();
+
+    static
+    {
+        typeMap.put(SLOT_KEY, NBTTypes[INT]);
+    }
 
     @Override
     public String getName()
@@ -73,9 +85,17 @@ public class ItemType extends TypeBase
     {
         try
         {
-            EntityItem entityitem = player.dropPlayerItemWithRandomChoice(ItemStack.loadItemStackFromNBT(dataFromClient), false);
-            entityitem.delayBeforeCanPickup = 0;
-            entityitem.func_145797_a(player.getCommandSenderName());
+            int id = dataFromClient.hasKey(SLOT_KEY) ? dataFromClient.getInteger(SLOT_KEY) : -1;
+            if (id != -1 && player.inventory.getStackInSlot(id) == null)
+            {
+                player.inventory.setInventorySlotContents(id, ItemStack.loadItemStackFromNBT(dataFromClient));
+            }
+            else
+            {
+                EntityItem entityitem = player.dropPlayerItemWithRandomChoice(ItemStack.loadItemStackFromNBT(dataFromClient), false);
+                entityitem.delayBeforeCanPickup = 0;
+                entityitem.func_145797_a(player.getCommandSenderName());
+            }
         }
         catch (Exception e)
         {
@@ -86,7 +106,7 @@ public class ItemType extends TypeBase
     @Override
     public void openNewGui(int rewardID, JsonObject data)
     {
-        new ItemTypeGui(rewardID, getName(), data, null);
+        new ItemTypeGui(rewardID, getName(), data, typeMap);
     }
 
     @Override
