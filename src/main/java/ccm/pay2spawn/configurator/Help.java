@@ -26,8 +26,11 @@ package ccm.pay2spawn.configurator;
 import ccm.pay2spawn.util.Helper;
 
 import javax.swing.*;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import java.awt.*;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 public class Help
 {
@@ -59,6 +62,24 @@ public class Help
             }
             instance.textPane.setSelectionStart(1);
             instance.textPane.setSelectionEnd(1);
+            instance.textPane.addHyperlinkListener(new HyperlinkListener()
+            {
+                @Override
+                public void hyperlinkUpdate(HyperlinkEvent e)
+                {
+                    if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED && Desktop.isDesktopSupported())
+                    {
+                        try
+                        {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        }
+                        catch (IOException | URISyntaxException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            });
         }
 
         if (!instance.frame.isVisible()) instance.frame.setVisible(true);
