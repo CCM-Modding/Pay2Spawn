@@ -2,6 +2,7 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.PillarGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
@@ -74,10 +75,15 @@ public class Pillar extends AbstractShape
         new PillarGui(i, jsonObject, instance, typeMap);
     }
 
+    private Collection<PointI> temppoints;
     @Override
     public void render(Tessellator tess)
     {
-
+        if (temppoints == null) temppoints = getPoints();
+        for (PointI pointI : temppoints)
+        {
+            Helper.renderPoint(pointI, tess);
+        }
     }
 
     @Override

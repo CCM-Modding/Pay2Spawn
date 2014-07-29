@@ -63,8 +63,14 @@ public abstract class HelperGuiBase
         dialog.setTitle("Editing: " + name);
         dialog.setPreferredSize(new Dimension(600, 750));
         dialog.setSize(400, 750);
+        setupDialog();
         dialog.pack();
         dialog.setVisible(true);
+    }
+
+    public void setupDialog()
+    {
+
     }
 
     public abstract void readJson();

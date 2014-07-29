@@ -59,7 +59,7 @@ public class PillarGui extends ShapeGuiBase
         centerYTextField.setText(readValue(PointI.Y_KEY, data.getAsJsonObject(CENTER_KEY)));
         centerZTextField.setText(readValue(PointI.Z_KEY, data.getAsJsonObject(CENTER_KEY)));
 
-        String hollow = readValue(HOLLOWCENTER_KEY, data);
+        String hollow = readValue(HOLLOW_KEY, data);
         noHollowRadioButton.setSelected(hollow.equals(FALSE_BYTE) || hollow.equals(""));
         hollowRadioButton.setSelected(hollow.equals(TRUE_BYTE));
         randomHollowRadioButton.setSelected(hollow.startsWith(RANDOM_BOOLEAN));
@@ -86,9 +86,9 @@ public class PillarGui extends ShapeGuiBase
 
         storeValue(HEIGHT_KEY, data, heightTextField.getText());
 
-        if (hollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, TRUE_BYTE);
-        if (noHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, FALSE_BYTE);
-        if (randomHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, RANDOM_BOOLEAN);
+        if (hollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, TRUE_BYTE);
+        if (noHollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, FALSE_BYTE);
+        if (randomHollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, RANDOM_BOOLEAN);
 
         if (replaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, TRUE_BYTE);
         if (noReplaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, FALSE_BYTE);
@@ -447,6 +447,15 @@ public class PillarGui extends ShapeGuiBase
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(saveButton, gbc);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(hollowRadioButton);
+        buttonGroup.add(noHollowRadioButton);
+        buttonGroup.add(randomHollowRadioButton);
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(replaceableRadioButton);
+        buttonGroup.add(noReplaceableRadioButton);
+        buttonGroup.add(randomReplaceableRadioButton);
     }
 
     /** @noinspection ALL */

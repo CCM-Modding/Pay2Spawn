@@ -2,6 +2,7 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.CylinderGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
@@ -79,24 +80,54 @@ public class Cylinder extends AbstractShape
     {
         HashSet<PointI> points = new HashSet<>();
 
-        for (int x = -radius; x <= radius; x++)
+        int d = (5 - radius * 4)/4;
+        int x = 0;
+        int z = radius;
+
+        do
         {
-            for (int z = -radius; z <= radius; z++)
+            for (int y = -height; y <= height; y++)
             {
-                for (int y = -height; y <= height; y++)
+                if (hollow)
                 {
-                    PointI p = new PointI(center.x + x, center.y, center.z + z);
-                    if (center.distanceTo(p) <= radius) points.add(p.addY(y));
+                    points.add(new PointI(center.x + x, center.y + y, center.z + z));
+                    points.add(new PointI(center.x + x, center.y + y, center.z - z));
+                    points.add(new PointI(center.x - x, center.y + y, center.z + z));
+                    points.add(new PointI(center.x - x, center.y + y, center.z - z));
+
+                    points.add(new PointI(center.x + z, center.y + y, center.z + x));
+                    points.add(new PointI(center.x + z, center.y + y, center.z - x));
+                    points.add(new PointI(center.x - z, center.y + y, center.z + x));
+                    points.add(new PointI(center.x - z, center.y + y, center.z - x));
                 }
-                if (height == 0)
+                else
                 {
-                    PointI p = new PointI(center.x + x, center.y, center.z + z);
-                    if (center.distanceTo(p) <= radius) points.add(p);
+                    for (int z2 = -z; z2 <= z; z2++)
+                    {
+                        points.add(new PointI(center.x + x, center.y + y, center.z + z2));
+                        points.add(new PointI(center.x - x, center.y + y, center.z + z2));
+                    }
+
+                    for (int x2 = -x; x2 <= x; x2++)
+                    {
+                        points.add(new PointI(center.x + z, center.y + y, center.z + x2));
+                        points.add(new PointI(center.x - z, center.y + y, center.z + x2));
+                    }
                 }
             }
-        }
 
-        if (hollow) points.removeAll(new Cylinder(center, radius - 1, height - 1).getPoints());
+            if (d < 0)
+            {
+                d += 2 * x + 1;
+            }
+            else
+            {
+                d += 2 * (x - z) + 1;
+                z--;
+            }
+            x++;
+        }
+        while (x <= z);
 
         return points;
     }
@@ -107,10 +138,15 @@ public class Cylinder extends AbstractShape
         new CylinderGui(i, jsonObject, instance, typeMap);
     }
 
+    private Collection<PointI> temppoints;
     @Override
     public void render(Tessellator tess)
     {
-        //TODO
+        if (temppoints == null) temppoints = getPoints();
+        for (PointI pointI : temppoints)
+        {
+            Helper.renderPoint(pointI, tess);
+        }
     }
 
     @Override

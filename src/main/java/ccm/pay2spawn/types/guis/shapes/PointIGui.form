@@ -21,7 +21,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Size X: "/>
+              <text value="X: "/>
             </properties>
           </component>
           <component id="ddadd" class="javax.swing.JTextField" binding="sizeXTextField">
@@ -48,7 +48,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Size Y: "/>
+              <text value="Y: "/>
             </properties>
           </component>
           <component id="402ed" class="javax.swing.JTextField" binding="sizeYTextField">
@@ -75,7 +75,7 @@
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
-              <text value="Size Z: "/>
+              <text value="Z: "/>
             </properties>
           </component>
           <component id="888f3" class="javax.swing.JTextField" binding="sizeZTextField">
@@ -96,36 +96,9 @@
               <text value="INT"/>
             </properties>
           </component>
-          <component id="59ac3" class="javax.swing.JRadioButton" binding="noHollowRadioButton">
-            <constraints>
-              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Not hollow"/>
-            </properties>
-          </component>
-          <component id="f5fa8" class="javax.swing.JRadioButton" binding="hollowRadioButton">
-            <constraints>
-              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Hollow"/>
-            </properties>
-          </component>
-          <component id="c121" class="javax.swing.JRadioButton" binding="randomHollowRadioButton">
-            <constraints>
-              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-              <gridbag weightx="0.0" weighty="0.0"/>
-            </constraints>
-            <properties>
-              <text value="Random hollow"/>
-            </properties>
-          </component>
           <component id="b3769" class="javax.swing.JRadioButton" binding="noReplaceableRadioButton">
             <constraints>
-              <grid row="4" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -134,7 +107,7 @@
           </component>
           <component id="4da9e" class="javax.swing.JRadioButton" binding="replaceableRadioButton">
             <constraints>
-              <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -143,7 +116,7 @@
           </component>
           <component id="6472b" class="javax.swing.JRadioButton" binding="randomReplaceableRadioButton">
             <constraints>
-              <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties>
@@ -152,7 +125,7 @@
           </component>
           <grid id="5a3f" layout-manager="GridBagLayout">
             <constraints>
-              <grid row="7" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="6" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="0.5"/>
             </constraints>
             <properties/>
@@ -190,7 +163,7 @@
           </grid>
           <scrollpane id="b5809">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="5" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="1.0" weighty="1.0"/>
             </constraints>
             <properties/>
@@ -204,7 +177,7 @@
           </scrollpane>
           <grid id="cd46d" layout-manager="GridBagLayout">
             <constraints>
-              <grid row="6" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="5" column="0" row-span="1" col-span="5" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
               <gridbag weightx="0.0" weighty="0.0"/>
             </constraints>
             <properties/>
@@ -273,4 +246,11 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="buttonGroup1">
+      <member id="4da9e"/>
+      <member id="b3769"/>
+      <member id="6472b"/>
+    </group>
+  </buttonGroups>
 </form>

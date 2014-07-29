@@ -62,7 +62,7 @@ public class BoxGui extends ShapeGuiBase
         sizeYTextField.setText(readValue(Y_KEY, data));
         sizeZTextField.setText(readValue(Z_KEY, data));
 
-        String hollow = readValue(HOLLOWCENTER_KEY, data);
+        String hollow = readValue(HOLLOW_KEY, data);
         noHollowRadioButton.setSelected(hollow.equals(FALSE_BYTE) || hollow.equals(""));
         hollowRadioButton.setSelected(hollow.equals(TRUE_BYTE));
         randomHollowRadioButton.setSelected(hollow.startsWith(RANDOM_BOOLEAN));
@@ -91,9 +91,9 @@ public class BoxGui extends ShapeGuiBase
         storeValue(Y_KEY, data, sizeYTextField.getText());
         storeValue(Z_KEY, data, sizeZTextField.getText());
 
-        if (hollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, TRUE_BYTE);
-        if (noHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, FALSE_BYTE);
-        if (randomHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, RANDOM_BOOLEAN);
+        if (hollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, TRUE_BYTE);
+        if (noHollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, FALSE_BYTE);
+        if (randomHollowRadioButton.isSelected()) storeValue(HOLLOW_KEY, data, RANDOM_BOOLEAN);
 
         if (replaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, TRUE_BYTE);
         if (noReplaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, FALSE_BYTE);

@@ -365,8 +365,13 @@ public class Helper
 
     public static void renderPoint(PointI p, Tessellator tess)
     {
+        renderPoint(tess, p.getX(), p.getY(), p.getZ());
+    }
+
+    public static void renderPoint(Tessellator tess, int x, int y, int z)
+    {
         GL11.glPushMatrix();
-        GL11.glTranslated(p.getX(), p.getY(), p.getZ());
+        GL11.glTranslated(x, y, z);
         GL11.glScalef(1.01f, 1.01f, 1.01f);
         tess.startDrawing(GL11.GL_LINES);
 

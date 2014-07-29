@@ -2,10 +2,10 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.BoxGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
-import org.lwjgl.opengl.GL11;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -96,53 +96,15 @@ public class Box extends AbstractShape
         new BoxGui(index, jsonObject, instance, typeMap);
     }
 
+    private Collection<PointI> temppoints;
     @Override
     public void render(Tessellator tess)
     {
-        GL11.glPushMatrix();
-
-        GL11.glTranslated(center.getX(), center.getY(), center.getZ());
-        GL11.glScalef(1.01f, 1.01f, 1.01f);
-        tess.startDrawing(GL11.GL_LINES);
-
-        // FRONT
-        tess.addVertex(-x, -y, z);
-        tess.addVertex(-x, y, z);
-
-        tess.addVertex(-x, y, z);
-        tess.addVertex(x, y, z);
-
-        tess.addVertex(x, y, z);
-        tess.addVertex(x, -y, z);
-
-        tess.addVertex(x, -y, z);
-        tess.addVertex(-x, -y, z);
-
-        // BACK
-        tess.addVertex(-x, -y, -z);
-        tess.addVertex(-x, y, -z);
-        tess.addVertex(-x, -y, -z);
-        tess.addVertex(x, -y, -z);
-        tess.addVertex(x, -y, -z);
-        tess.addVertex(x, y, -z);
-        tess.addVertex(-x, y, -z);
-        tess.addVertex(x, y, -z);
-
-        // betweens.
-        tess.addVertex(-x, -y, z);
-        tess.addVertex(-x, -y, -z);
-
-        tess.addVertex(-x, y, z);
-        tess.addVertex(-x, y, -z);
-
-        tess.addVertex(x, -y, z);
-        tess.addVertex(x, -y, -z);
-
-        tess.addVertex(x, y, z);
-        tess.addVertex(x, y, -z);
-
-        tess.draw();
-        GL11.glPopMatrix();
+        if (temppoints == null) temppoints = getPoints();
+        for (PointI pointI : temppoints)
+        {
+            Helper.renderPoint(pointI, tess);
+        }
     }
 
     @Override

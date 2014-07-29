@@ -327,4 +327,16 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="buttonGroup1">
+      <member id="24313"/>
+      <member id="7e44e"/>
+      <member id="75845"/>
+    </group>
+    <group name="buttonGroup2">
+      <member id="f05e5"/>
+      <member id="80934"/>
+      <member id="5abe5"/>
+    </group>
+  </buttonGroups>
 </form>

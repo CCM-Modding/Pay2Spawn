@@ -11,12 +11,12 @@ public abstract class AbstractShape implements IShape
 {
     public static final HashMap<String, String> typeMap             = new HashMap<>();
     public static final String                  CENTER_KEY          = "center";
-    public static final String                  HOLLOWCENTER_KEY    = "hollow";
-    public static final String                  REPLACEABLEONLY_KEY = "replaceableOnly";
+    public static final String HOLLOW_KEY          = "hollow";
+    public static final String REPLACEABLEONLY_KEY = "replaceableOnly";
 
     static
     {
-        typeMap.put(HOLLOWCENTER_KEY, NBTTypes[BYTE]);
+        typeMap.put(HOLLOW_KEY, NBTTypes[BYTE]);
         typeMap.put(REPLACEABLEONLY_KEY, NBTTypes[BYTE]);
     }
 
@@ -37,7 +37,7 @@ public abstract class AbstractShape implements IShape
     public IShape fromNBT(NBTTagCompound compound)
     {
         center.fromNBT(compound.getCompoundTag(CENTER_KEY));
-        hollow = compound.getBoolean(HOLLOWCENTER_KEY);
+        hollow = compound.getBoolean(HOLLOW_KEY);
         replaceableOnly = compound.getBoolean(REPLACEABLEONLY_KEY);
         return this;
     }
@@ -47,7 +47,7 @@ public abstract class AbstractShape implements IShape
     {
         NBTTagCompound compound = new NBTTagCompound();
         compound.setTag(CENTER_KEY, center.toNBT());
-        compound.setBoolean(HOLLOWCENTER_KEY, hollow);
+        compound.setBoolean(HOLLOW_KEY, hollow);
         compound.setBoolean(REPLACEABLEONLY_KEY, replaceableOnly);
         return compound;
     }

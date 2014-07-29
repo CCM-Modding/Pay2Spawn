@@ -44,8 +44,10 @@ public class StructureTypeGui extends HelperGuiBase
     public JList<String> shapeList;
     public JButton       removeShapeButton;
     public JButton       importButton;
+    public JCheckBox renderShapesIngameCheckBox;
+    public JCheckBox renderSelectedShapeInCheckBox;
     public JsonArray shapes;
-    public boolean disabled = false;
+    public  boolean          disabled = false;
     private StructureTypeGui instance = this;
 
     public StructureTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
@@ -56,21 +58,32 @@ public class StructureTypeGui extends HelperGuiBase
 
         setupModels();
         makeAndOpen();
+    }
 
-        synchronized (ishapes)
-        {
-            ishapes.clear();
-            for (JsonElement element : shapes) ishapes.add(Shapes.loadShape(JsonNBTHelper.parseJSON(element.getAsJsonObject())));
-        }
-
+    @Override
+    public void setupDialog()
+    {
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         dialog.addWindowListener(new WindowAdapter()
         {
             @Override
             public void windowClosed(WindowEvent e)
             {
-                MinecraftForge.EVENT_BUS.unregister(instance);
+                try
+                {
+                    MinecraftForge.EVENT_BUS.unregister(instance);
+                }
+                catch (Exception ex)
+                {
+                    // We don't cara cause its weird
+                }
             }
         });
+        synchronized (ishapes)
+        {
+            ishapes.clear();
+            for (JsonElement element : shapes) ishapes.add(Shapes.loadShape(JsonNBTHelper.parseJSON(element.getAsJsonObject())));
+        }
     }
 
     @Override
@@ -123,6 +136,7 @@ public class StructureTypeGui extends HelperGuiBase
                     data = JSON_PARSER.parse(jsonPane.getText()).getAsJsonObject();
                     readJson();
                     jsonPane.setForeground(Color.black);
+                    shapeList.clearSelection();
                 }
                 catch (Exception e1)
                 {
@@ -145,6 +159,7 @@ public class StructureTypeGui extends HelperGuiBase
             public void actionPerformed(ActionEvent e)
             {
                 Shapes.MAP.get(JOptionPane.showInputDialog(instance.panel1, "Please pick a new shape to add.", "Pick a shape", JOptionPane.QUESTION_MESSAGE, null, Shapes.LIST.toArray(), Shapes.LIST.get(0))).openGui(-1, new JsonObject(), instance);
+                shapeList.clearSelection();
             }
         });
         shapeList.addMouseListener(new MouseAdapter()
@@ -156,6 +171,7 @@ public class StructureTypeGui extends HelperGuiBase
                 {
                     JsonObject object = shapes.get(shapeList.getSelectedIndex()).getAsJsonObject();
                     Shapes.MAP.get(readValue(Shapes.SHAPE_KEY, object)).openGui(shapeList.getSelectedIndex(), object, instance);
+                    shapeList.clearSelection();
                 }
             }
         });
@@ -176,6 +192,7 @@ public class StructureTypeGui extends HelperGuiBase
                 shapes = newShapes;
                 updateJson();
                 removeShapeButton.setEnabled(!shapeList.isSelectionEmpty());
+                shapeList.clearSelection();
             }
         });
         importButton.addMouseListener(new MouseAdapter()
@@ -183,6 +200,7 @@ public class StructureTypeGui extends HelperGuiBase
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                shapeList.clearSelection();
                 new StructureImporter(instance);
             }
         });
@@ -203,6 +221,7 @@ public class StructureTypeGui extends HelperGuiBase
     {
         shapes.addAll(points);
         updateJson();
+        shapeList.clearSelection();
     }
 
     public void callback(int id, JsonObject data)
@@ -216,6 +235,7 @@ public class StructureTypeGui extends HelperGuiBase
             shapes = newShape;
         }
         updateJson();
+        shapeList.clearSelection();
     }
 
     private void setupModels()
@@ -240,7 +260,7 @@ public class StructureTypeGui extends HelperGuiBase
     @SubscribeEvent
     public void renderEvent(RenderWorldLastEvent event)
     {
-        if (disabled) return;
+        if (disabled || !renderShapesIngameCheckBox.isSelected()) return;
         if (ishapes.size() == 0) return;
 
         Tessellator tess = Tessellator.instance;
@@ -250,16 +270,30 @@ public class StructureTypeGui extends HelperGuiBase
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glLineWidth(1f);
 
         GL11.glTranslated(-RenderManager.renderPosX, -RenderManager.renderPosY, 1 - RenderManager.renderPosZ);
         GL11.glTranslated(Helper.round(Minecraft.getMinecraft().thePlayer.posX), Helper.round(Minecraft.getMinecraft().thePlayer.posY), Helper.round(Minecraft.getMinecraft().thePlayer.posZ));
         GL11.glScalef(1.0F, 1.0F, 1.0F);
-        GL11.glColor3d(1, 1, 1);
 
         synchronized (ishapes)
         {
-            for (IShape shape : ishapes) shape.render(tess);
+            GL11.glLineWidth(1f);
+            GL11.glColor3d(1, 1, 1);
+            for (IShape ishape : ishapes)
+            {
+                ishape.render(tess);
+            }
+        }
+
+        if (renderSelectedShapeInCheckBox.isSelected())
+        {
+            GL11.glLineWidth(2f);
+            GL11.glColor3d(0, 0, 1);
+            for (int i : shapeList.getSelectedIndices())
+            {
+                if (i < ishapes.size()) // Fuck event based bullshit that causes IndexOutOfBoundsException out of nowhere.
+                    ishapes.get(i).render(tess);
+            }
         }
 
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -432,7 +466,7 @@ public class StructureTypeGui extends HelperGuiBase
         addShapeButton.setToolTipText("Push the button!");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel6.add(addShapeButton, gbc);
@@ -440,7 +474,7 @@ public class StructureTypeGui extends HelperGuiBase
         removeShapeButton.setText("Remove shape");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel6.add(removeShapeButton, gbc);
@@ -448,10 +482,28 @@ public class StructureTypeGui extends HelperGuiBase
         importButton.setText("Import!");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
+        gbc.gridwidth = 2;
         gbc.weightx = 0.5;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel6.add(importButton, gbc);
+        renderShapesIngameCheckBox = new JCheckBox();
+        renderShapesIngameCheckBox.setSelected(true);
+        renderShapesIngameCheckBox.setText("Render shapes ingame");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 3;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(renderShapesIngameCheckBox, gbc);
+        renderSelectedShapeInCheckBox = new JCheckBox();
+        renderSelectedShapeInCheckBox.setSelected(true);
+        renderSelectedShapeInCheckBox.setText("Render selected shape in color");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 3;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        panel6.add(renderSelectedShapeInCheckBox, gbc);
         final JScrollPane scrollPane1 = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

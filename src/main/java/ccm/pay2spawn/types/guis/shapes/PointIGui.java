@@ -17,7 +17,6 @@ import static ccm.pay2spawn.types.StructureType.BLOCKDATA_KEY;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 import static ccm.pay2spawn.util.shapes.AbstractShape.CENTER_KEY;
-import static ccm.pay2spawn.util.shapes.AbstractShape.HOLLOWCENTER_KEY;
 import static ccm.pay2spawn.util.shapes.AbstractShape.REPLACEABLEONLY_KEY;
 import static ccm.pay2spawn.util.shapes.Box.*;
 
@@ -26,9 +25,6 @@ public class PointIGui extends ShapeGuiBase
     public JTextField    sizeXTextField;
     public JTextField    sizeYTextField;
     public JTextField    sizeZTextField;
-    public JRadioButton  noHollowRadioButton;
-    public JRadioButton  hollowRadioButton;
-    public JRadioButton  randomHollowRadioButton;
     public JRadioButton  noReplaceableRadioButton;
     public JRadioButton  replaceableRadioButton;
     public JRadioButton  randomReplaceableRadioButton;
@@ -57,11 +53,6 @@ public class PointIGui extends ShapeGuiBase
         sizeYTextField.setText(readValue(Y_KEY, data));
         sizeZTextField.setText(readValue(Z_KEY, data));
 
-        String hollow = readValue(HOLLOWCENTER_KEY, data);
-        noHollowRadioButton.setSelected(hollow.equals(FALSE_BYTE) || hollow.equals(""));
-        hollowRadioButton.setSelected(hollow.equals(TRUE_BYTE));
-        randomHollowRadioButton.setSelected(hollow.startsWith(RANDOM_BOOLEAN));
-
         String replaceable = readValue(REPLACEABLEONLY_KEY, data);
         noReplaceableRadioButton.setSelected(replaceable.equals(FALSE_BYTE) || replaceable.equals(""));
         replaceableRadioButton.setSelected(replaceable.equals(TRUE_BYTE));
@@ -81,10 +72,6 @@ public class PointIGui extends ShapeGuiBase
         storeValue(X_KEY, data, sizeXTextField.getText());
         storeValue(Y_KEY, data, sizeYTextField.getText());
         storeValue(Z_KEY, data, sizeZTextField.getText());
-
-        if (hollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, TRUE_BYTE);
-        if (noHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, FALSE_BYTE);
-        if (randomHollowRadioButton.isSelected()) storeValue(HOLLOWCENTER_KEY, data, RANDOM_BOOLEAN);
 
         if (replaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, TRUE_BYTE);
         if (noReplaceableRadioButton.isSelected()) storeValue(REPLACEABLEONLY_KEY, data, FALSE_BYTE);
@@ -211,7 +198,7 @@ public class PointIGui extends ShapeGuiBase
         gbc.fill = GridBagConstraints.BOTH;
         panel1.add(panel2, gbc);
         final JLabel label1 = new JLabel();
-        label1.setText("Size X: ");
+        label1.setText("X: ");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -234,7 +221,7 @@ public class PointIGui extends ShapeGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label2, gbc);
         final JLabel label3 = new JLabel();
-        label3.setText("Size Y: ");
+        label3.setText("Y: ");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -257,7 +244,7 @@ public class PointIGui extends ShapeGuiBase
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label4, gbc);
         final JLabel label5 = new JLabel();
-        label5.setText("Size Z: ");
+        label5.setText("Z: ");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 2;
@@ -279,53 +266,32 @@ public class PointIGui extends ShapeGuiBase
         gbc.gridy = 2;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(label6, gbc);
-        noHollowRadioButton = new JRadioButton();
-        noHollowRadioButton.setText("Not hollow");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 2;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(noHollowRadioButton, gbc);
-        hollowRadioButton = new JRadioButton();
-        hollowRadioButton.setText("Hollow");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(hollowRadioButton, gbc);
-        randomHollowRadioButton = new JRadioButton();
-        randomHollowRadioButton.setText("Random hollow");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 3;
-        gbc.gridy = 3;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel2.add(randomHollowRadioButton, gbc);
         noReplaceableRadioButton = new JRadioButton();
         noReplaceableRadioButton.setText("All blocks");
         gbc = new GridBagConstraints();
         gbc.gridx = 2;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(noReplaceableRadioButton, gbc);
         replaceableRadioButton = new JRadioButton();
         replaceableRadioButton.setText("Replaceable only");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(replaceableRadioButton, gbc);
         randomReplaceableRadioButton = new JRadioButton();
         randomReplaceableRadioButton.setText("Random");
         gbc = new GridBagConstraints();
         gbc.gridx = 3;
-        gbc.gridy = 4;
+        gbc.gridy = 3;
         gbc.anchor = GridBagConstraints.WEST;
         panel2.add(randomReplaceableRadioButton, gbc);
         final JPanel panel3 = new JPanel();
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 6;
         gbc.gridwidth = 5;
         gbc.weightx = 1.0;
         gbc.weighty = 0.5;
@@ -354,7 +320,7 @@ public class PointIGui extends ShapeGuiBase
         final JScrollPane scrollPane1 = new JScrollPane();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 4;
         gbc.gridwidth = 5;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
@@ -366,7 +332,7 @@ public class PointIGui extends ShapeGuiBase
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 5;
         gbc.gridwidth = 5;
         gbc.fill = GridBagConstraints.BOTH;
         panel2.add(panel4, gbc);
@@ -422,6 +388,11 @@ public class PointIGui extends ShapeGuiBase
         gbc.weightx = 1.0;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         panel5.add(saveButton, gbc);
+        ButtonGroup buttonGroup;
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(replaceableRadioButton);
+        buttonGroup.add(noReplaceableRadioButton);
+        buttonGroup.add(randomReplaceableRadioButton);
     }
 
     /** @noinspection ALL */

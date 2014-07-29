@@ -300,4 +300,16 @@
       </grid>
     </children>
   </grid>
+  <buttonGroups>
+    <group name="buttonGroup1">
+      <member id="468e0"/>
+      <member id="4bef5"/>
+      <member id="45f5d"/>
+    </group>
+    <group name="buttonGroup2">
+      <member id="1c06d"/>
+      <member id="639f0"/>
+      <member id="e0efb"/>
+    </group>
+  </buttonGroups>
 </form>

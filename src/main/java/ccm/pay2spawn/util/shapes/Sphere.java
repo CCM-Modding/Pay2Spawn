@@ -2,6 +2,7 @@ package ccm.pay2spawn.util.shapes;
 
 import ccm.pay2spawn.types.guis.StructureTypeGui;
 import ccm.pay2spawn.types.guis.shapes.SphereGui;
+import ccm.pay2spawn.util.Helper;
 import com.google.gson.JsonObject;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.nbt.NBTTagCompound;
@@ -68,7 +69,7 @@ public class Sphere extends AbstractShape
                 for (int y = -radius; y <= radius; y++)
                 {
                     PointI p = new PointI(center.x + x, center.y + y, center.z + z);
-                    if (center.distanceTo(p) <= radius) points.add(p);
+                    if (center.distanceTo(p) < radius) points.add(p);
                 }
             }
         }
@@ -84,10 +85,15 @@ public class Sphere extends AbstractShape
         new SphereGui(i, jsonObject, instance, typeMap);
     }
 
+    private Collection<PointI> temppoints;
     @Override
     public void render(Tessellator tess)
     {
-
+        if (temppoints == null) temppoints = getPoints();
+        for (PointI pointI : temppoints)
+        {
+            Helper.renderPoint(pointI, tess);
+        }
     }
 
     @Override
