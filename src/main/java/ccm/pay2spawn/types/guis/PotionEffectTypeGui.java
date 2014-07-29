@@ -25,6 +25,7 @@ package ccm.pay2spawn.types.guis;
 
 import ccm.pay2spawn.configurator.Configurator;
 import ccm.pay2spawn.network.TestMessage;
+import com.google.common.base.Strings;
 import com.google.gson.JsonObject;
 
 import javax.swing.*;
@@ -36,6 +37,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 import static ccm.pay2spawn.types.PotionEffectType.*;
+import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
@@ -51,6 +53,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
     public JPanel            panel1;
     public JTextField        durationTextField;
     public JComboBox<String> potionEffectComboBox;
+    private JTextField HTMLTextField;
 
     public PotionEffectTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
@@ -80,6 +83,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         potionEffectComboBox.setSelectedItem(id);
         amplifierTextField.setText(readValue(AMPLIFIER_KEY, data));
         durationTextField.setText(readValue(DURATION_KEY, data));
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -93,6 +97,7 @@ public class PotionEffectTypeGui extends HelperGuiBase
         storeValue(ID_KEY, data, id);
         storeValue(AMPLIFIER_KEY, data, amplifierTextField.getText());
         storeValue(DURATION_KEY, data, durationTextField.getText());
+        if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         jsonPane.setText(GSON.toJson(data));
     }
