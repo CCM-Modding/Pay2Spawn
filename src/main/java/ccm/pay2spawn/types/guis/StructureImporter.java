@@ -1,5 +1,7 @@
 package ccm.pay2spawn.types.guis;
 
+import ccm.pay2spawn.Pay2Spawn;
+import ccm.pay2spawn.network.StructureImportMessage;
 import ccm.pay2spawn.util.Helper;
 import ccm.pay2spawn.util.JsonNBTHelper;
 import ccm.pay2spawn.util.shapes.PointI;
@@ -131,7 +133,7 @@ public class StructureImporter
                 {
                     for (PointI point : points) jsonArray.add(JsonNBTHelper.parseNBT(Shapes.storeShape(point.move(-x, -y, -z))));
                 }
-                callback.importCallback(jsonArray);
+                Pay2Spawn.getSnw().sendToServer(new StructureImportMessage(x, y, z, jsonArray));
 
                 dialog.dispose();
             }

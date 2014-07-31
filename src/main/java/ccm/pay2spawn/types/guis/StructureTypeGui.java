@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static ccm.pay2spawn.types.StructureType.ROTATE_KEY;
-import static ccm.pay2spawn.types.StructureType.SHAPES_KEY;
+import static ccm.pay2spawn.types.StructureType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
 public class StructureTypeGui extends HelperGuiBase
@@ -51,11 +50,12 @@ public class StructureTypeGui extends HelperGuiBase
     private JComboBox baseRotation;
     public  JsonArray        shapes   = new JsonArray();
     public  boolean          disabled = false;
-    private StructureTypeGui instance = this;
+    private static StructureTypeGui instance;
 
     public StructureTypeGui(int rewardID, String name, JsonObject inputData, HashMap<String, String> typeMap)
     {
         super(rewardID, name, inputData, typeMap);
+        instance = this;
 
         MinecraftForge.EVENT_BUS.register(instance);
 
@@ -91,6 +91,7 @@ public class StructureTypeGui extends HelperGuiBase
 
         data.add(SHAPES_KEY, shapes);
         storeValue(ROTATE_KEY, data, rotateBasedOnPlayerCheckBox.isSelected() ? TRUE_BYTE : FALSE_BYTE);
+        storeValue(BASEROTATION_KEY, data, baseRotation.getSelectedIndex());
 
         synchronized (ishapes)
         {
@@ -113,6 +114,7 @@ public class StructureTypeGui extends HelperGuiBase
         shapeList.updateUI();
 
         rotateBasedOnPlayerCheckBox.setSelected(readValue(ROTATE_KEY, data).equals(TRUE_BYTE));
+        baseRotation.setSelectedIndex(data.has(BASEROTATION_KEY) ? Integer.parseInt(readValue(BASEROTATION_KEY, data)) : 0);
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -227,11 +229,11 @@ public class StructureTypeGui extends HelperGuiBase
         });
     }
 
-    public void importCallback(JsonArray points)
+    public static void importCallback(JsonArray points)
     {
-        shapes.addAll(points);
-        updateJson();
-        shapeList.clearSelection();
+        instance.shapes.addAll(points);
+        instance.updateJson();
+        instance.shapeList.clearSelection();
     }
 
     public void callback(int id, JsonObject data)

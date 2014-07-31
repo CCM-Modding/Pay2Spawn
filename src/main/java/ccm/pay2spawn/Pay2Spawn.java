@@ -157,6 +157,8 @@ public class Pay2Spawn
         snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.SERVER);
         snw.registerMessage(StatusMessage.Handler.class, StatusMessage.class, id++, Side.CLIENT);
         snw.registerMessage(TestMessage.Handler.class, TestMessage.class, id++, Side.SERVER);
+        snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.SERVER);
+        snw.registerMessage(StructureImportMessage.Handler.class, StructureImportMessage.class, id++, Side.CLIENT);
 
         TypeRegistry.preInit();
         Statistics.preInit();
