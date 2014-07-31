@@ -247,4 +247,27 @@ public class PointI implements IShape
     {
         return new PointI(x, y, z);
     }
+
+    @Override
+    public IShape rotate(int baseRotation)
+    {
+        switch (baseRotation)
+        {
+            case 1:
+                int tempx = x;
+                x = -z;
+                z = -tempx;
+                break;
+            case 2:
+                x *= -1;
+                z *= -1;
+                break;
+            case 3:
+                int tempz = z;
+                z = x;
+                x = tempz;
+                break;
+        }
+        return this;
+    }
 }

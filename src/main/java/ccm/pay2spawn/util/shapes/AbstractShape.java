@@ -97,4 +97,11 @@ public abstract class AbstractShape implements IShape
         this.replaceableOnly = replaceableOnly;
         return this;
     }
+
+    @Override
+    public IShape rotate(int baseRotation)
+    {
+        center.rotate(baseRotation);
+        return this;
+    }
 }

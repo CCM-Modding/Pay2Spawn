@@ -417,9 +417,9 @@ public class Helper
 
     public static final class TableData
     {
-        public String header;
-        public ArrayList<String> strings;
-        private int   width;
+        public  String            header;
+        public  ArrayList<String> strings;
+        private int               width;
 
         public TableData(String header, ArrayList<String> data)
         {
@@ -455,5 +455,15 @@ public class Helper
         }
 
         return stringBuilder.toString();
+    }
+
+    public static int getHeading(EntityPlayer player)
+    {
+        return MathHelper.floor_double((double)(player.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+    }
+
+    public static int getHeading()
+    {
+        return getHeading(Minecraft.getMinecraft().thePlayer);
     }
 }

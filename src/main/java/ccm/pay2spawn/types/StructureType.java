@@ -55,6 +55,8 @@ public class StructureType extends TypeBase
     public static final String                  BLOCKID_KEY   = "blockID";
     public static final String                  META_KEY      = "meta";
     public static final String                  WEIGHT_KEY    = "weight";
+    public static final String                  ROTATE_KEY    = "rotate";
+    public static final String                  BASEROTATION_KEY    = "baseRotation";
     public static final HashMap<String, String> typeMap       = new HashMap<>();
 
     static
@@ -62,12 +64,14 @@ public class StructureType extends TypeBase
         typeMap.put(BLOCKID_KEY, NBTTypes[INT]);
         typeMap.put(META_KEY, NBTTypes[INT]);
         typeMap.put(WEIGHT_KEY, NBTTypes[INT]);
+        typeMap.put(ROTATE_KEY, NBTTypes[BYTE]);
+        typeMap.put(BASEROTATION_KEY, NBTTypes[BYTE]);
     }
 
     private static final String   NAME         = "structure";
     public static        String[] bannedBlocks = {};
 
-    public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList)
+    public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList, byte baseRotation)
     {
         try
         {
@@ -79,8 +83,8 @@ public class StructureType extends TypeBase
                     blockDataList.add(blockData);
             }
 
-            int x = Helper.round(player.posX), y = Helper.round(player.posY), z = Helper.round(player.posZ);
-            Collection<PointI> points = shape.move(x, y, z).getPoints();
+            int x = Helper.round(player.posX), y = Helper.round(player.posY + 1), z = Helper.round(player.posZ);
+            Collection<PointI> points = shape.rotate(baseRotation).rotate(baseRotation == -1 ? -1 : Helper.getHeading(player)).move(x, y, z).getPoints();
             for (PointI p : points)
             {
                 if (!shape.getReplaceableOnly() || player.worldObj.getBlock(p.getX(), p.getY(), p.getZ()).isReplaceable(player.worldObj, p.getX(), p.getY(), p.getZ()))
@@ -276,6 +280,7 @@ public class StructureType extends TypeBase
     @Override
     public void spawnServerSide(EntityPlayer player, NBTTagCompound dataFromClient, NBTTagCompound rewardData)
     {
+        byte baseRotation = dataFromClient.getBoolean(ROTATE_KEY) ? dataFromClient.getByte(BASEROTATION_KEY) : -1;
         NBTTagList list = dataFromClient.getTagList(SHAPES_KEY, COMPOUND);
         for (int i = 0; i < list.tagCount(); i++)
         {
@@ -286,7 +291,7 @@ public class StructureType extends TypeBase
             for (int j = 0; j < blockDataNbt.tagCount(); j++)
                 blockDataList.add(blockDataNbt.getCompoundTagAt(j));
 
-            applyShape(Shapes.loadShape(shapeNbt), player, blockDataList);
+            applyShape(Shapes.loadShape(shapeNbt), player, blockDataList, baseRotation);
         }
     }
 

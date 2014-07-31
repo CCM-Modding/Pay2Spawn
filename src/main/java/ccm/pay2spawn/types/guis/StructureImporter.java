@@ -44,10 +44,9 @@ public class StructureImporter
     PointI[] tempPointsArray = points.toArray(new PointI[points.size()]);
     Mode     mode            = Mode.SINGLE;
 
-    public StructureImporter(final StructureTypeGui instance)
+    public StructureImporter(final StructureTypeGui callback)
     {
-        this.callback = instance;
-        MinecraftForge.EVENT_BUS.register(this);
+        this.callback = callback;
 
         modeComboBox.setModel(new DefaultComboBoxModel<>(Mode.values()));
         pointList.setModel(new AbstractListModel<String>()
@@ -145,6 +144,8 @@ public class StructureImporter
                 callback.disabled = disableAlreadyImportedShapesCheckBox.isSelected();
             }
         });
+
+        MinecraftForge.EVENT_BUS.register(this.instance);
 
         dialog = new JDialog();
         dialog.setContentPane(panel1);

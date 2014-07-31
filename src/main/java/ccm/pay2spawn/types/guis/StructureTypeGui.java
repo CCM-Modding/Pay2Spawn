@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
+import static ccm.pay2spawn.types.StructureType.ROTATE_KEY;
 import static ccm.pay2spawn.types.StructureType.SHAPES_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
@@ -46,7 +47,9 @@ public class StructureTypeGui extends HelperGuiBase
     public JButton       importButton;
     public JCheckBox renderShapesIngameCheckBox;
     public JCheckBox renderSelectedShapeInCheckBox;
-    public JsonArray shapes = new JsonArray();
+    private JCheckBox rotateBasedOnPlayerCheckBox;
+    private JComboBox baseRotation;
+    public  JsonArray        shapes   = new JsonArray();
     public  boolean          disabled = false;
     private StructureTypeGui instance = this;
 
@@ -69,14 +72,7 @@ public class StructureTypeGui extends HelperGuiBase
             @Override
             public void windowClosed(WindowEvent e)
             {
-                try
-                {
-                    MinecraftForge.EVENT_BUS.unregister(instance);
-                }
-                catch (Exception ex)
-                {
-                    // We don't cara cause its weird
-                }
+                MinecraftForge.EVENT_BUS.unregister(instance);
             }
         });
         synchronized (ishapes)
@@ -94,6 +90,7 @@ public class StructureTypeGui extends HelperGuiBase
         if (!Strings.isNullOrEmpty(HTMLTextField.getText())) storeValue(CUSTOMHTML, data, HTMLTextField.getText());
 
         data.add(SHAPES_KEY, shapes);
+        storeValue(ROTATE_KEY, data, rotateBasedOnPlayerCheckBox.isSelected() ? TRUE_BYTE : FALSE_BYTE);
 
         synchronized (ishapes)
         {
@@ -102,6 +99,20 @@ public class StructureTypeGui extends HelperGuiBase
         }
 
         shapeList.updateUI();
+
+        jsonPane.setText(GSON.toJson(data));
+    }
+
+
+    @Override
+    public void readJson()
+    {
+        HTMLTextField.setText(readValue(CUSTOMHTML, data));
+
+        shapes = data.getAsJsonArray(SHAPES_KEY);
+        shapeList.updateUI();
+
+        rotateBasedOnPlayerCheckBox.setSelected(readValue(ROTATE_KEY, data).equals(TRUE_BYTE));
 
         jsonPane.setText(GSON.toJson(data));
     }
@@ -206,17 +217,14 @@ public class StructureTypeGui extends HelperGuiBase
                 new StructureImporter(instance);
             }
         });
-    }
-
-    @Override
-    public void readJson()
-    {
-        HTMLTextField.setText(readValue(CUSTOMHTML, data));
-
-        shapes = data.getAsJsonArray(SHAPES_KEY);
-        shapeList.updateUI();
-
-        jsonPane.setText(GSON.toJson(data));
+        rotateBasedOnPlayerCheckBox.addActionListener(new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                baseRotation.setEnabled(rotateBasedOnPlayerCheckBox.isSelected());
+            }
+        });
     }
 
     public void importCallback(JsonArray points)
@@ -276,6 +284,39 @@ public class StructureTypeGui extends HelperGuiBase
         GL11.glTranslated(-RenderManager.renderPosX, -RenderManager.renderPosY, 1 - RenderManager.renderPosZ);
         GL11.glTranslated(Helper.round(Minecraft.getMinecraft().thePlayer.posX), Helper.round(Minecraft.getMinecraft().thePlayer.posY), Helper.round(Minecraft.getMinecraft().thePlayer.posZ));
         GL11.glScalef(1.0F, 1.0F, 1.0F);
+
+        if (rotateBasedOnPlayerCheckBox.isSelected())
+        {
+            GL11.glRotated(90 * Helper.getHeading(), 0, -1, 0);
+
+            switch (Helper.getHeading())
+            {
+                case 1:
+                    GL11.glTranslated(-1, 0, 0);
+                    break;
+                case 2:
+                    GL11.glTranslated(-1, 0, 1);
+                    break;
+                case 3:
+                    GL11.glTranslated(0, 0, 1);
+                    break;
+            }
+
+            GL11.glRotated(90 * baseRotation.getSelectedIndex(), 0, -1, 0);
+
+            switch (baseRotation.getSelectedIndex())
+            {
+                case 1:
+                    GL11.glTranslated(-1, 0, 0);
+                    break;
+                case 2:
+                    GL11.glTranslated(-1, 0, 1);
+                    break;
+                case 3:
+                    GL11.glTranslated(0, 0, 1);
+                    break;
+            }
+        }
 
         synchronized (ishapes)
         {

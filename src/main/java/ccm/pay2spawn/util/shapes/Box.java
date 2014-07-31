@@ -112,4 +112,30 @@ public class Box extends AbstractShape
     {
         return new Box(center, x, y, z);
     }
+
+    @Override
+    public IShape rotate(int baseRotation)
+    {
+        super.rotate(baseRotation);
+
+        switch (baseRotation)
+        {
+            case 1:
+                int tempx = x;
+                x = -z;
+                z = -tempx;
+                break;
+            case 2:
+                x *= -1;
+                z *= -1;
+                break;
+            case 3:
+                int tempz = z;
+                z = x;
+                x = tempz;
+                break;
+        }
+
+        return this;
+    }
 }

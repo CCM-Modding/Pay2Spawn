@@ -34,4 +34,6 @@ public interface IShape
     void render(Tessellator tess);
 
     IShape cloneShape();
+
+    IShape rotate(int baseRotation);
 }
