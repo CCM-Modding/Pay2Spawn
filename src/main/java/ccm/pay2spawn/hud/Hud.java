@@ -26,6 +26,11 @@ package ccm.pay2spawn.hud;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+/**
+ * Handler for the event, keeps track of all active IHudEntry s
+ *
+ * @author Dries007
+ */
 public class Hud
 {
     public static final Hud                INSTANCE = new Hud();

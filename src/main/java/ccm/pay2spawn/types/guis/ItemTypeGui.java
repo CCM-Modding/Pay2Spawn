@@ -39,6 +39,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.ItemType.SLOT_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class ItemTypeGui extends HelperGuiBase implements IIHasCallback
 {
     public JScrollPane scrollPane;

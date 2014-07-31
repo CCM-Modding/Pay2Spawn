@@ -42,6 +42,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.EntityType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class EntityTypeGui extends HelperGuiBase
 {
     public JComboBox<String> entityNameComboBox;

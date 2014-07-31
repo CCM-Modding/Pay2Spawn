@@ -30,6 +30,11 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 
+/**
+ * Countdown on screen
+ *
+ * @author Dries007
+ */
 public class CountDownHudEntry implements IHudEntry
 {
     public final ArrayList<String> lines = new ArrayList<>();

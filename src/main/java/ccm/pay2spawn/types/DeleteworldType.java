@@ -15,6 +15,11 @@ import java.util.HashMap;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 import static ccm.pay2spawn.util.Constants.STRING;
 
+/**
+ * This should be !FUN!
+ *
+ * @author Dries007
+ */
 public class DeleteworldType extends TypeBase
 {
     public static final  String                  MESSAGE_KEY = "message";

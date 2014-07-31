@@ -39,6 +39,11 @@ import java.util.TimerTask;
 
 import static ccm.pay2spawn.util.Constants.NAME;
 
+/**
+ * Oh god its event based now -_-
+ *
+ * @author Dries007
+ */
 public class ConnectionHandler
 {
     public static final ConnectionHandler INSTANCE = new ConnectionHandler();
@@ -46,6 +51,11 @@ public class ConnectionHandler
     private ConnectionHandler()
     {
         FMLCommonHandler.instance().bus().register(this);
+    }
+
+    public void init()
+    {
+
     }
 
     @SubscribeEvent

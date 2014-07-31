@@ -39,6 +39,11 @@ import net.minecraftforge.common.DimensionManager;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The server side only command
+ *
+ * @author Dries007
+ */
 public class CommandP2SServer extends CommandBase
 {
     static final String HELP = "OP only command, Server side.";

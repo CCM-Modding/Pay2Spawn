@@ -8,6 +8,11 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.*;
 
+/**
+ * Registers and polls all donation checkers
+ *
+ * @author Dries007
+ */
 public class CheckerHandler
 {
     public static final Comparator<Donation> RECENT_DONATION_COMPARATOR = new Comparator<Donation>()

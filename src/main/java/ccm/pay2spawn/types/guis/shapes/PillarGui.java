@@ -20,6 +20,9 @@ import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 import static ccm.pay2spawn.util.shapes.AbstractShape.*;
 import static ccm.pay2spawn.util.shapes.Pillar.HEIGHT_KEY;
 
+/**
+ * @author Dries007
+ */
 public class PillarGui extends ShapeGuiBase
 {
     public JTextField   centerXTextField;

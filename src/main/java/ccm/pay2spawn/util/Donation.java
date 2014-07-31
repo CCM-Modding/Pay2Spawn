@@ -6,6 +6,11 @@ import java.util.regex.Pattern;
 
 import static ccm.pay2spawn.util.Constants.ANONYMOUS;
 
+/**
+ * A donation in java object style
+ *
+ * @author Dries007
+ */
 public class Donation
 {
     public String id;

@@ -8,6 +8,11 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 
+/**
+ * Special case for total donation thing
+ *
+ * @author Dries007
+ */
 public class TotalDonationHudEntry implements IHudEntry
 {
     final int    position;

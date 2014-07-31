@@ -15,6 +15,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.DeleteworldType.MESSAGE_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class DeleteworldTypeGui extends HelperGuiBase
 {
     private JTextField  MessageField;

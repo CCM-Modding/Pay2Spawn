@@ -25,6 +25,11 @@ package ccm.pay2spawn.util;
 
 import net.minecraft.entity.Entity;
 
+/**
+ * Used to throw an entity to the player
+ *
+ * @author Dries007
+ */
 public class Vector3
 {
     public double x, y, z;

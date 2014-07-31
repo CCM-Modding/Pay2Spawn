@@ -34,6 +34,11 @@ import java.util.HashMap;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class PermissionsDB
 {
     private HashMap<String, Player> playerDB = new HashMap<>();

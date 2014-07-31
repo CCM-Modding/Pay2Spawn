@@ -35,6 +35,12 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import java.util.HashSet;
 import java.util.Iterator;
 
+/**
+ * Client side tick things
+ * - countdown exists here
+ *
+ * @author Dries007
+ */
 public class ClientTickHandler
 {
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();

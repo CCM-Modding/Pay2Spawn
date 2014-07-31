@@ -39,6 +39,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.EntityType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class CustomEntityTypeGui extends HelperGuiBase implements IIHasCallback
 {
     public JButton      importItemYouAreButton;

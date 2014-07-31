@@ -43,6 +43,9 @@ import static ccm.pay2spawn.types.EntityType.RIDETHISMOB_KEY;
 import static ccm.pay2spawn.types.FireworksType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class FireworksTypeGui extends HelperGuiBase implements IIHasCallback
 {
     public JTextField    flightMultiplierTextField;

@@ -29,6 +29,9 @@ import java.util.HashSet;
 import static ccm.pay2spawn.types.StructureType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class StructureTypeGui extends HelperGuiBase
 {
     public final ArrayList<IShape> ishapes = new ArrayList<>();

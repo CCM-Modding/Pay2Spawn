@@ -31,6 +31,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.HashMap;
 
+/**
+ * Base class for type GUIs
+ *
+ * @author Dries007
+ */
 public abstract class HelperGuiBase
 {
     public static final String RANDOM_BOOLEAN = "$random()";

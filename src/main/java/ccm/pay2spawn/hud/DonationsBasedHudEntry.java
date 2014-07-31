@@ -33,6 +33,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Base class for all on screen things that have to do with donation data directly
+ *
+ * @author Dries007
+ */
 public class DonationsBasedHudEntry implements IHudEntry
 {
     final ArrayList<String> strings = new ArrayList<>();

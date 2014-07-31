@@ -41,6 +41,9 @@ import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class FireworksType extends TypeBase
 {
     public static final String NODENAME = "fireworks";

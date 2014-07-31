@@ -36,6 +36,11 @@ import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * A reward in java object style
+ *
+ * @author Dries007
+ */
 public class Reward
 {
     private String    message;

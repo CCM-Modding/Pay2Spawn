@@ -20,6 +20,11 @@ import net.minecraft.world.World;
 import static ccm.pay2spawn.types.StructureType.*;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * Reads all blockID, metadata and NBT from a list of points
+ *
+ * @author Dries007
+ */
 public class StructureImportMessage implements IMessage
 {
     int x, y, z;

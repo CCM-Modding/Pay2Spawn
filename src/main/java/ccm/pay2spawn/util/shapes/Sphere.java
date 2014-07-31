@@ -13,6 +13,11 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.INT;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * Spawns a shape
+ *
+ * @author Dries007
+ */
 public class Sphere extends AbstractShape
 {
     public static final String RADIUS_KEY = "radius";

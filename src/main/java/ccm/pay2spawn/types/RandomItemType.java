@@ -43,6 +43,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 import static ccm.pay2spawn.util.Constants.STRING;
 
+/**
+ * @author Dries007
+ */
 public class RandomItemType extends TypeBase
 {
     public static final String                  NAME_KEY    = "Name";

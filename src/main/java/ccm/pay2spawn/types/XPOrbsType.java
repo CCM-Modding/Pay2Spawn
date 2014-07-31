@@ -36,6 +36,9 @@ import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class XPOrbsType extends TypeBase
 {
     public static final String NODENAME         = "xporbs";

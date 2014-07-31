@@ -46,6 +46,11 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.JOINER_COMMA_SPACE;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * The pain in the ass that makes this mod even possible to configure
+ *
+ * @author Dries007
+ */
 public class Configurator implements IIHasCallback
 {
     public static final String[] COLUMN_KEYS  = new String[] {"name", "amount", "message", "countdown", "rewards"};

@@ -44,6 +44,11 @@ import java.util.regex.Pattern;
 
 import static ccm.pay2spawn.util.Constants.CURRENCY_FORMATTER;
 
+/**
+ * Makes nice looking HTML page!
+ *
+ * @author Dries007
+ */
 public class HTMLGenerator
 {
     static final String  LOOP_START = "<!-- BEGIN REWARDS -->";

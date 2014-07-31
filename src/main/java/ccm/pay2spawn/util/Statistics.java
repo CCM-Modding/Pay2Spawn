@@ -40,6 +40,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * ALL OF THE STATISTICS
+ *
+ * @author Dries007
+ */
 public class Statistics
 {
     private static File statisticsFile;

@@ -41,6 +41,9 @@ import static ccm.pay2spawn.util.Constants.CUSTOMHTML;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * @author Dries007
+ */
 public class PotionEffectTypeGui extends HelperGuiBase
 {
     public JTextField        amplifierTextField;

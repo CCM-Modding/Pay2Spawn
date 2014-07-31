@@ -21,6 +21,9 @@ import static ccm.pay2spawn.util.shapes.AbstractShape.*;
 import static ccm.pay2spawn.util.shapes.Cylinder.HEIGHT_KEY;
 import static ccm.pay2spawn.util.shapes.Cylinder.RADIUS_KEY;
 
+/**
+ * @author Dries007
+ */
 public class CylinderGui extends ShapeGuiBase
 {
     public JTextField   centerXTextField;

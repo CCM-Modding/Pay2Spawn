@@ -9,6 +9,11 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.HashSet;
 
+/**
+ * Base class for all donation checkers
+ *
+ * @author Dries007
+ */
 public abstract class AbstractChecker
 {
     protected HashSet<String>   doneIDs = new HashSet<>();

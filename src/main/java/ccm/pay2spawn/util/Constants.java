@@ -33,7 +33,7 @@ import java.text.NumberFormat;
 import java.util.Random;
 
 /**
- * ModID and P2S
+ * ModID and P2S and so much more...
  *
  * @author Dries007
  */

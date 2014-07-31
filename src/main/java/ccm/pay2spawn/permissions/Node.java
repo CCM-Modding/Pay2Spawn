@@ -27,6 +27,11 @@ import java.util.Arrays;
 
 import static ccm.pay2spawn.util.Constants.JOINER_DOT;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class Node
 {
     final String[] parts;

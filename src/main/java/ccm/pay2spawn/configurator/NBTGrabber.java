@@ -34,6 +34,11 @@ import java.awt.event.ActionListener;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * Grabs NBT from various things ingame
+ *
+ * @author Dries007
+ */
 public class NBTGrabber implements IIHasCallback
 {
     public JButton   grabEntityButton;

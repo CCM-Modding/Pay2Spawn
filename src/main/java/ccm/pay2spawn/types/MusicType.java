@@ -47,6 +47,9 @@ import java.util.zip.ZipFile;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 import static ccm.pay2spawn.util.Constants.STRING;
 
+/**
+ * @author Dries007
+ */
 public class MusicType extends TypeBase
 {
     public static final  String                  SOUND_KEY = "song";

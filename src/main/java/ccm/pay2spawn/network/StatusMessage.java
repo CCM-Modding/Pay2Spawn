@@ -16,6 +16,15 @@ import net.minecraft.util.EnumChatFormatting;
 
 import java.util.HashSet;
 
+/**
+ * Used for status things
+ * - Handshake
+ * - Forced config
+ * - Enable or disable
+ * - Status check
+ *
+ * @author Dries007
+ */
 public class StatusMessage implements IMessage
 {
     private static final HashSet<String> playersWithValidConfig = new HashSet<>();

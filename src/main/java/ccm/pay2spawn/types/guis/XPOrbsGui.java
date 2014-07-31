@@ -39,6 +39,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.XPOrbsType.AMOUNTOFORBS_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class XPOrbsGui extends HelperGuiBase
 {
     public  JScrollPane scrollPane;

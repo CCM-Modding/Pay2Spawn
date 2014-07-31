@@ -15,6 +15,9 @@ import static ccm.pay2spawn.types.StructureType.*;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * @author Dries007
+ */
 public class BlockDataGui extends HelperGuiBase implements IIHasCallback
 {
     private final ShapeGuiBase callback;

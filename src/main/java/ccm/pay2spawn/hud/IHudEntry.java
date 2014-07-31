@@ -25,6 +25,11 @@ package ccm.pay2spawn.hud;
 
 import java.util.ArrayList;
 
+/**
+ * Used to display stuff on screen more easily
+ *
+ * @author Dries007
+ */
 public interface IHudEntry
 {
     public int getPosition();

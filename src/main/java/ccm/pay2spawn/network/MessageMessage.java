@@ -16,6 +16,11 @@ import net.minecraft.util.ChatComponentText;
 import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.GSON_NOPP;
 
+/**
+ * A message for messages?
+ *
+ * @author Dries007
+ */
 public class MessageMessage implements IMessage
 {
     private Reward   reward;

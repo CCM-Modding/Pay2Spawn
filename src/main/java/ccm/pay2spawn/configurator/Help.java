@@ -32,6 +32,11 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
+/**
+ * The outdated and not all the useful help text.
+ *
+ * @author Dries007
+ */
 public class Help
 {
     private static Help        instance;

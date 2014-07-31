@@ -28,6 +28,11 @@ import ccm.pay2spawn.util.Helper;
 import cpw.mods.fml.common.FMLCommonHandler;
 import net.minecraft.util.EnumChatFormatting;
 
+/**
+ * Manages instances of the NBTgrabber and the configurator
+ *
+ * @author Dries007
+ */
 public class ConfiguratorManager
 {
     public static void openNbt()

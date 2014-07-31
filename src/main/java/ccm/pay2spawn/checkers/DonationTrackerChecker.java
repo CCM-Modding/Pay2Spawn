@@ -21,6 +21,11 @@ import java.util.regex.Pattern;
 import static ccm.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * For donation-tracker.com
+ *
+ * @author Dries007
+ */
 public class DonationTrackerChecker extends AbstractChecker implements Runnable
 {
     public static final DonationTrackerChecker INSTANCE     = new DonationTrackerChecker();

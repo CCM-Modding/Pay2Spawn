@@ -7,6 +7,10 @@ import io.netty.buffer.ByteBuf;
 
 /**
  * This is a copy paste class :p
+ *
+ * Converted from old system on CPW's recommendation. The old thing had memory leaks -_-
+ *
+ * @author Dries007
  */
 public class Message implements IMessage
 {

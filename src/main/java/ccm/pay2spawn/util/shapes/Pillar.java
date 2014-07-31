@@ -13,6 +13,11 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.INT;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * Spawns a pillar
+ *
+ * @author Dries007
+ */
 public class Pillar extends AbstractShape
 {
     public static final String HEIGHT_KEY = "height";

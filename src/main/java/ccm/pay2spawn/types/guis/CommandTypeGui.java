@@ -37,6 +37,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.CommandType.COMMAND_KEY;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class CommandTypeGui extends HelperGuiBase
 {
     public JPanel      panel1;

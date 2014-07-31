@@ -36,6 +36,11 @@ import net.minecraft.util.EnumChatFormatting;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * The main permission system command
+ *
+ * @author Dries007
+ */
 public class CommandP2SPermissions extends CommandBase
 {
     static final String HELP = "Use client side command 'p2s' for non permissions stuff.";

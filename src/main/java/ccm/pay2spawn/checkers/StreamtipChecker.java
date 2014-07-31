@@ -19,6 +19,11 @@ import java.util.Date;
 import static ccm.pay2spawn.util.Constants.BASECAT_TRACKERS;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * For streamtip.com
+ *
+ * @author Dries007
+ */
 public class StreamtipChecker extends AbstractChecker implements Runnable
 {
     public static final StreamtipChecker INSTANCE = new StreamtipChecker();

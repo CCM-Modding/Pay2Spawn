@@ -47,6 +47,9 @@ import java.util.*;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class StructureType extends TypeBase
 {
     public static final String                  SHAPES_KEY    = "shapes";

@@ -20,6 +20,11 @@ import net.minecraft.util.EnumChatFormatting;
 
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * Allows testing of rewards
+ *
+ * @author Dries007
+ */
 public class TestMessage implements IMessage
 {
     private String     name;

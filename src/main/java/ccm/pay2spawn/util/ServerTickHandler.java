@@ -31,6 +31,11 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import static ccm.pay2spawn.types.PlayerModificationType.Type;
 
+/**
+ * Server side tick things, does timeable player effects
+ *
+ * @author Dries007
+ */
 public class ServerTickHandler
 {
     public static final ServerTickHandler INSTANCE = new ServerTickHandler();

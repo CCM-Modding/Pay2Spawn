@@ -13,6 +13,11 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.types.StructureType.*;
 
+/**
+ * Base class for shape GUIs
+ *
+ * @author Dries007
+ */
 public abstract class ShapeGuiBase extends HelperGuiBase
 {
     public ShapeGuiBase instance = this;

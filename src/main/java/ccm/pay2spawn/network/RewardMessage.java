@@ -23,6 +23,11 @@ import net.minecraft.util.EnumChatFormatting;
 
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 
+/**
+ * Triggers the reward on the server.
+ *
+ * @author Dries007
+ */
 public class RewardMessage implements IMessage
 {
     private JsonArray rewards;

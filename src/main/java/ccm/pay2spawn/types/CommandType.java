@@ -41,6 +41,9 @@ import java.util.HashSet;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class CommandType extends TypeBase
 {
     public static final  String                  COMMAND_KEY = "command";

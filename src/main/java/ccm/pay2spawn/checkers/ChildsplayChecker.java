@@ -26,6 +26,11 @@ import java.util.TimeZone;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * For childsplaycharity.org
+ *
+ * @author Dries007
+ */
 public class ChildsplayChecker extends AbstractChecker implements Runnable
 {
     public static final ChildsplayChecker INSTANCE           = new ChildsplayChecker();

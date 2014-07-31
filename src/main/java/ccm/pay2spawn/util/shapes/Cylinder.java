@@ -13,6 +13,11 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.INT;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * Spawns a cylinder
+ *
+ * @author Dries007
+ */
 public class Cylinder extends AbstractShape
 {
     public static final String RADIUS_KEY = "radius";

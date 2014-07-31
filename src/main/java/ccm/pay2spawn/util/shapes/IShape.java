@@ -7,6 +7,12 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Collection;
 
+
+/**
+ * For structure spawning things
+ *
+ * @author Dries007
+ */
 public interface IShape
 {
     NBTTagCompound toNBT();

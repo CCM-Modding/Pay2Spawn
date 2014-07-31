@@ -34,6 +34,9 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.types.FireworksType.*;
 
+/**
+ * @author Dries007
+ */
 public class ExplosionGui extends HelperGuiBase
 {
     public JButton           saveButton;

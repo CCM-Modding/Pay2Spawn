@@ -5,6 +5,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * For structure spawning things
+ *
+ * @author Dries007
+ */
 public class Shapes
 {
     public static final String                  SHAPE_KEY = "shape";

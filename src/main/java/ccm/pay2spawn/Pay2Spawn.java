@@ -183,6 +183,7 @@ public class Pay2Spawn
         }
 
         ClientTickHandler.INSTANCE.init();
+        ConnectionHandler.INSTANCE.init();
     }
 
     @Mod.EventHandler

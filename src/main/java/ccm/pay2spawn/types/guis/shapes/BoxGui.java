@@ -19,6 +19,9 @@ import static ccm.pay2spawn.util.Constants.GSON;
 import static ccm.pay2spawn.util.Constants.JSON_PARSER;
 import static ccm.pay2spawn.util.shapes.Box.*;
 
+/**
+ * @author Dries007
+ */
 public class BoxGui extends ShapeGuiBase
 {
     public JButton       saveButton;

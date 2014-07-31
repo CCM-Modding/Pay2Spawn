@@ -22,6 +22,11 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+/**
+ * Request NBT from the server
+ *
+ * @author Dries007
+ */
 public class NbtRequestMessage implements IMessage
 {
     public static  IIHasCallback callbackItemType;

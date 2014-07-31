@@ -30,6 +30,11 @@ import net.minecraftforge.common.config.Configuration;
 
 import java.util.ArrayList;
 
+/**
+ * Base class for any on screen thing to display statistics
+ *
+ * @author Dries007
+ */
 public class StatisticsHudEntry implements IHudEntry
 {
     public final ArrayList<String> strings = new ArrayList<>();

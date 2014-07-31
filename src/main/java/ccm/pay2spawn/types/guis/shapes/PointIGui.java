@@ -20,6 +20,9 @@ import static ccm.pay2spawn.util.shapes.AbstractShape.CENTER_KEY;
 import static ccm.pay2spawn.util.shapes.AbstractShape.REPLACEABLEONLY_KEY;
 import static ccm.pay2spawn.util.shapes.Box.*;
 
+/**
+ * @author Dries007
+ */
 public class PointIGui extends ShapeGuiBase
 {
     public JTextField    sizeXTextField;

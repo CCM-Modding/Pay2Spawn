@@ -14,6 +14,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
 
+/**
+ * Does music reward on the client
+ * TODO: Replace with command in new version of MC
+ *
+ * @author Dries007
+ */
 public class MusicMessage implements IMessage
 {
     private String name;

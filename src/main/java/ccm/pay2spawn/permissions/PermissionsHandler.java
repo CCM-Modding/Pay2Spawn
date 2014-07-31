@@ -30,6 +30,11 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class PermissionsHandler
 {
     private static PermissionsDB   permissionsDB = new PermissionsDB();

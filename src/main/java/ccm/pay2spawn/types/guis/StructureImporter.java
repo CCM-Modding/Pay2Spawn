@@ -26,6 +26,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashSet;
 
+/**
+ * @author Dries007
+ */
 public class StructureImporter
 {
     final StructureImporter instance  = this;

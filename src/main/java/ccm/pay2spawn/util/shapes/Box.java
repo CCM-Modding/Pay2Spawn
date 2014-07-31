@@ -13,6 +13,11 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.INT;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * Spawns a box
+ *
+ * @author Dries007
+ */
 public class Box extends AbstractShape
 {
     public static final String X_KEY = "x";

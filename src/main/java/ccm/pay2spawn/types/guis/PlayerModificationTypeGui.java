@@ -38,6 +38,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.PlayerModificationType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class PlayerModificationTypeGui extends HelperGuiBase
 {
     public JScrollPane  scrollPane;

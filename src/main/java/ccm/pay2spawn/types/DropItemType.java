@@ -36,6 +36,9 @@ import java.util.HashSet;
 import static ccm.pay2spawn.util.Constants.INT;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * @author Dries007
+ */
 public class DropItemType extends TypeBase
 {
     public static final String TYPE_KEY = "type";

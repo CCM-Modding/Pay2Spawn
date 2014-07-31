@@ -25,6 +25,11 @@ package ccm.pay2spawn.permissions;
 
 import java.io.IOException;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class BanHelper
 {
     private static BanList banList = new BanList();

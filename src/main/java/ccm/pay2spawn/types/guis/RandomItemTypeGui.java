@@ -37,6 +37,9 @@ import java.util.HashMap;
 import static ccm.pay2spawn.types.RandomItemType.*;
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * @author Dries007
+ */
 public class RandomItemTypeGui extends HelperGuiBase
 {
     public JTextField  itemNameField;

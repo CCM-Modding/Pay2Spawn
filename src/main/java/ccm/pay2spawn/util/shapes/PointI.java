@@ -13,6 +13,11 @@ import java.util.HashMap;
 
 import static ccm.pay2spawn.util.Constants.*;
 
+/**
+ * Spawns a point
+ *
+ * @author Dries007
+ */
 public class PointI implements IShape
 {
     public static final HashMap<String, String> typeMap             = new HashMap<>();

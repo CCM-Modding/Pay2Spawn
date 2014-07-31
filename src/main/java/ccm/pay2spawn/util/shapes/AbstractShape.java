@@ -7,6 +7,11 @@ import java.util.HashMap;
 import static ccm.pay2spawn.util.Constants.BYTE;
 import static ccm.pay2spawn.util.Constants.NBTTypes;
 
+/**
+ * For structure spawning things
+ *
+ * @author Dries007
+ */
 public abstract class AbstractShape implements IShape
 {
     public static final HashMap<String, String> typeMap             = new HashMap<>();

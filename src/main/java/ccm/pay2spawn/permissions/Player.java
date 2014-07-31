@@ -30,6 +30,11 @@ import com.google.gson.JsonPrimitive;
 
 import java.util.HashSet;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class Player
 {
     private HashSet<String> groups        = new HashSet<>();

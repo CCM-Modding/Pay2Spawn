@@ -29,6 +29,11 @@ import com.google.common.base.Strings;
 import java.io.*;
 import java.util.HashSet;
 
+/**
+ * Permission system stuff
+ *
+ * @author Dries007
+ */
 public class BanList
 {
     public static final String[] BAD_CMD = {"stop", "op", "deop", "ban", "ban-ip", "pardon", "pardon-ip", "save-on", "save-off", "save-all"};

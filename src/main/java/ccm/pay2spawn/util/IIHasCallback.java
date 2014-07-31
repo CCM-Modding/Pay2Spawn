@@ -23,6 +23,11 @@
 
 package ccm.pay2spawn.util;
 
+/**
+ * For all things callback related
+ *
+ * @author Dries007
+ */
 public interface IIHasCallback
 {
     public void callback(Object... data);
