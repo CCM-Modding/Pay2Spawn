@@ -27,6 +27,7 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.checkers.CheckerHandler;
 import ccm.pay2spawn.configurator.ConfiguratorManager;
 import ccm.pay2spawn.util.Helper;
+import ccm.pay2spawn.util.Statistics;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -120,6 +121,14 @@ public class CommandP2S extends CommandBase
                     CheckerHandler.fakeDonation(amount);
                 }
                 break;
+            case "adjusttotal":
+                if (args.length == 1) Helper.msg(EnumChatFormatting.RED + "Use '/p2s adjusttotal <amount>'. You can use + and -");
+                else
+                {
+                    double amount = CommandBase.parseDouble(sender, args[1]);
+                    Statistics.addToDonationAmount(amount);
+                }
+                break;
             default:
                 Helper.msg(EnumChatFormatting.RED + "Unknown command. Protip: Use tab completion!");
                 break;
@@ -129,7 +138,7 @@ public class CommandP2S extends CommandBase
     @Override
     public List addTabCompletionOptions(ICommandSender sender, String[] args)
     {
-        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "permissions");
+        if (args.length == 1) return getListOfStringsMatchingLastWord(args, "reload", "configure", "getnbt", "off", "on", "donate", "permissions", "adjusttotal");
         return null;
     }
 }

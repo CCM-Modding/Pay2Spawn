@@ -34,6 +34,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -72,7 +73,7 @@ public class StructureType extends TypeBase
     }
 
     private static final String   NAME         = "structure";
-    public static        String[] bannedBlocks = {};
+    public static        int[][] bannedBlocks;
 
     public static void applyShape(IShape shape, EntityPlayer player, ArrayList<NBTTagCompound> blockDataNbtList, byte baseRotation)
     {
@@ -107,6 +108,10 @@ public class StructureType extends TypeBase
                     }
                 }
             }
+        }
+        catch (BlockData.BannedBlockException e)
+        {
+            ((EntityPlayerMP) player).playerNetServerHandler.kickPlayerFromServer(e.getMessage());
         }
         catch (Exception e)
         {
@@ -331,7 +336,14 @@ public class StructureType extends TypeBase
     {
         configuration.addCustomCategoryComment(Constants.MODID + "_types", "Reward config options");
         configuration.addCustomCategoryComment(Constants.MODID + "_types." + NAME, "Used when spawning structures");
-        bannedBlocks = configuration.get(Constants.MODID + "_types." + NAME, "bannedBlocks", bannedBlocks, "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
+        String[] bannedBlocksStrings = configuration.get(Constants.MODID + "_types." + NAME, "bannedBlocks", new String[0], "Banned blocks, format like this:\nid:metaData => Ban only that meta\nid => Ban all meta of that block").getStringList();
+        bannedBlocks = new int[bannedBlocksStrings.length][];
+        for (int i = 0; i < bannedBlocksStrings.length; i++)
+        {
+            String[] split = bannedBlocksStrings[i].split(":");
+            if (split.length == 1) bannedBlocks[i] = new int[] {Integer.parseInt(split[0])};
+            else bannedBlocks[i] = new int[] {Integer.parseInt(split[0]), Integer.parseInt(split[1])};
+        }
     }
 
     public static class BlockData
@@ -339,13 +351,19 @@ public class StructureType extends TypeBase
         final int id, meta, weight;
         final NBTTagCompound te;
 
-        private BlockData(NBTTagCompound compound)
+        private BlockData(NBTTagCompound compound) throws BannedBlockException
         {
             id = compound.getInteger(BLOCKID_KEY);
             meta = compound.getInteger(META_KEY);
             weight = compound.hasKey(WEIGHT_KEY) ? compound.getInteger(WEIGHT_KEY) : 1;
 
             te = compound.hasKey(TEDATA_KEY) ? compound.getCompoundTag(TEDATA_KEY) : null;
+
+            for (int[] ban : bannedBlocks)
+            {
+                if (ban.length == 1 && id == ban[0]) throw new BannedBlockException("You are trying to use a globally banned block!\nBlockid: " + ban[0]);
+                else if (ban.length == 2 && id == ban[0] && meta == ban[1]) throw new BannedBlockException("You are trying to use a globally banned block!\nBlockid:" + ban[0] + ":" + ban[1]);
+            }
         }
 
         @Override
@@ -368,6 +386,14 @@ public class StructureType extends TypeBase
                     ", weight=" + weight +
                     ", te=" + te +
                     '}';
+        }
+
+        public class BannedBlockException extends Exception {
+
+            public BannedBlockException(String s)
+            {
+                super(s);
+            }
         }
     }
 }

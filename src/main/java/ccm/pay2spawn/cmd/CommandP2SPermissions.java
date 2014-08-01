@@ -74,7 +74,7 @@ public class CommandP2SPermissions extends CommandBase
     {
         if (args.length == 0)
         {
-            Helper.sendChatToPlayer(sender, "Use '/p2s perm group|groups|player' for more info.", EnumChatFormatting.RED);
+            Helper.sendChatToPlayer(sender, "Use '/p2sperm group|groups|player' for more info.", EnumChatFormatting.RED);
             return;
         }
         switch (args[0])
@@ -168,6 +168,7 @@ public class CommandP2SPermissions extends CommandBase
                             {
                                 case "add":
                                     playero.addGroup(args[4]);
+                                    Helper.sendChatToPlayer(sender, "Added " + args[1] + " to " + args[4], EnumChatFormatting.GOLD);
                                     break;
                                 case "remove":
                                     if (playero.removeGroup(args[4])) Helper.sendChatToPlayer(sender, "Removed group: " + args[4], EnumChatFormatting.GOLD);
