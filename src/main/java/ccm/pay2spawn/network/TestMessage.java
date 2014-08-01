@@ -4,6 +4,7 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
+import ccm.pay2spawn.random.RndVariable;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Helper;
@@ -68,6 +69,8 @@ public class TestMessage implements IMessage
         {
             if (ctx.side.isServer())
             {
+                RndVariable.reset();
+
                 NBTTagCompound rewardData = new NBTTagCompound();
                 Helper.sendChatToPlayer(ctx.getServerHandler().playerEntity, "Testing reward " + message.name + ".");
                 Pay2Spawn.getLogger().info("Test by " + ctx.getServerHandler().playerEntity.getCommandSenderName() + " Type: " + message.name + " Data: " + message.data);

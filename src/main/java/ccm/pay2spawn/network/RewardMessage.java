@@ -4,6 +4,7 @@ import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.permissions.BanHelper;
 import ccm.pay2spawn.permissions.Node;
 import ccm.pay2spawn.permissions.PermissionsHandler;
+import ccm.pay2spawn.random.RndVariable;
 import ccm.pay2spawn.types.TypeBase;
 import ccm.pay2spawn.types.TypeRegistry;
 import ccm.pay2spawn.util.Donation;
@@ -68,6 +69,8 @@ public class RewardMessage implements IMessage
         {
             if (ctx.side.isServer())
             {
+                RndVariable.reset();
+
                 for (JsonElement element : message.rewards)
                 {
                     JsonObject reward = element.getAsJsonObject();

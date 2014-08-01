@@ -40,12 +40,12 @@ public class RandomRegistry
 
     static
     {
+        addRandomResolver(new RndVariable());
         addRandomResolver(new RndBoolean());
         addRandomResolver(new RndColors());
         addRandomResolver(new RndEntity());
         addRandomResolver(new RndListValue());
         addRandomResolver(new RndNumberRange());
-        addRandomResolver(new RndVariable());
     }
 
     /**
