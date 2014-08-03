@@ -24,7 +24,6 @@ public class TotalDonationHudEntry implements IHudEntry
         Configuration config = Pay2Spawn.getConfig().configuration;
 
         position = config.get(P2SConfig.HUD + "." + configCat, "position", defaultPosition, "0 = off, 1 = left top, 2 = right top, 3 = left bottom, 4 = right bottom.").getInt(defaultPosition);
-
         format = Helper.formatColors(config.get(P2SConfig.HUD + "." + configCat, "format", defaultFormat).getString());
         this.amount = amount;
 

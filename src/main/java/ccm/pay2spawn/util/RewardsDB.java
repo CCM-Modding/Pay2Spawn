@@ -137,6 +137,7 @@ public class RewardsDB
         if (reward != null)
         {
             Statistics.handleSpawn(reward.getName());
+            ClientTickHandler.INSTANCE.donationTrainEntry.resetTimeout();
             reward.addToCountdown(donation, true, null);
         }
 

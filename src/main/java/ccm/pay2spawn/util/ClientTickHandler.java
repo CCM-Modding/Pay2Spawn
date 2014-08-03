@@ -25,6 +25,7 @@ package ccm.pay2spawn.util;
 
 import ccm.pay2spawn.Pay2Spawn;
 import ccm.pay2spawn.hud.CountDownHudEntry;
+import ccm.pay2spawn.hud.DonationTrainEntry;
 import ccm.pay2spawn.hud.Hud;
 import ccm.pay2spawn.network.RewardMessage;
 import com.google.common.base.Strings;
@@ -46,6 +47,7 @@ public class ClientTickHandler
     public static final ClientTickHandler INSTANCE = new ClientTickHandler();
     HashSet<QueEntry> entries = new HashSet<>();
     private CountDownHudEntry countDownHudEntry;
+    public DonationTrainEntry donationTrainEntry;
     private int i = 0;
 
     private ClientTickHandler()
@@ -59,6 +61,8 @@ public class ClientTickHandler
         if (event.phase != TickEvent.Phase.START) return;
         if (i++ != 20) return;
         i = 0;
+
+        donationTrainEntry.tick();
 
         countDownHudEntry.lines.clear();
 
@@ -92,6 +96,9 @@ public class ClientTickHandler
     {
         countDownHudEntry = new CountDownHudEntry("countdown", 1, "$name incoming in $time sec.", "-- Countdown --");
         Hud.INSTANCE.set.add(countDownHudEntry);
+
+        donationTrainEntry = new DonationTrainEntry();
+        Hud.INSTANCE.set.add(donationTrainEntry);
     }
 
     public class QueEntry
